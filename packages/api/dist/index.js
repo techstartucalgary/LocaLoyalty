@@ -67,48 +67,8 @@ app.use("/trpc", trpcExpress.createExpressMiddleware({
     router: exports.appRouter,
     createContext,
 }));
-/*
-//clerk webhook for events of account creation and such
 app.post("/clerk/webhook", (req, res) => {
-  // Extract the payload data from the request body
-  const payload = req.body;
-
-  // Process the payload data (You can add your logic here)
-  console.log(req.body);
-
-  console.log(req.headers);
-  console.log(req.headers["svix-signature"]);
-
-  const signature = crypto
-    .createHmac("sha256", process.env.CLERK_WEBHOOK_SECRET_KEY!)
-    .update(Buffer.from(req.headers["svix-signature"] as string, "utf-8"))
-    .digest("hex");
-
-  console.log(signature);
-
-  switch (payload.type) {
-    //switch (payload.type) {
-    case "session.created":
-      //console.log("session id for the started session: " + payload.data.id);
-      //console.log("user id for the started session: " + payload.data.user_id);
-      break;
-    case "session.ended":
-      //when a user logs out or closes the tab
-      break;
-    case "session.removed":
-      //when a session expires??? or something like that idk
-      break;
-    case "user.created":
-      //when a new user signs up for active living through clerk
-      break;
-  }
-
-  // Respond to the webhook request with a success message
-  res.status(200).json({ message: "Webhook received successfully" });
-});
-*/
-app.post("/clerk/webhook", (req, res) => {
-    const payload = JSON.stringify(req.body); // Ensure payload is a string
+    const payload = JSON.stringify(req.body);
     const headers = {
         "svix-id": req.header("svix-id") || "",
         "svix-timestamp": req.header("svix-timestamp") || "",
@@ -120,6 +80,22 @@ app.post("/clerk/webhook", (req, res) => {
         const verified = wh.verify(payload, headers);
         // If verification succeeds, process the webhook event
         console.log("Webhook verified:", verified);
+        let body = req.body;
+        switch (body.type) {
+            case "session.created":
+                //console.log("session id for the started session: " + payload.data.id);
+                //console.log("user id for the started session: " + payload.data.user_id);
+                break;
+            case "session.ended":
+                //when a user logs out or closes the tab
+                break;
+            case "session.removed":
+                //when a session expires??? or something like that idk
+                break;
+            case "user.created":
+                //when a new user signs up for active living through clerk
+                break;
+        }
         res.status(200).json({
             success: true,
             message: "Webhook received",
@@ -127,47 +103,11 @@ app.post("/clerk/webhook", (req, res) => {
     }
     catch (err) {
         console.error("Error verifying webhook:", err);
-        res.status(400).json({});
+        res
+            .status(400)
+            .json({ success: false, message: "Webhook could not be processed" });
     }
 });
-/*
-app.post(
-  "/clerk/webhook",
-  bodyParser.raw({ type: "application/json" }),
-  async function (req, res) {
-    try {
-      const payloadString = req.body.toString();
-      //const svixHeaders = req.headers;
-
-      // Define the required headers explicitly
-      const svixHeaders: WebhookUnbrandedRequiredHeaders = {
-        "webhook-id": req.header("svix-id")!,
-        "webhook-timestamp": req.header("svix-timestamp")!,
-        "webhook-signature": req.header("svix-signature")!,
-      };
-
-      const wh = new Webhook(process.env.CLERK_WEBHOOK_SECRET_KEY!);
-      const evt = wh.verify(payloadString, svixHeaders) as unknown;
-      const { id, ...attributes } = evt.data;
-      // Handle the webhooks
-      const eventType = evt.type;
-      if (eventType === "user.created") {
-        console.log(`User ${id} was ${eventType}`);
-        console.log(attributes);
-      }
-      res.status(200).json({
-        success: true,
-        message: "Webhook received",
-      });
-    } catch (err) {
-      res.status(400).json({
-        success: false,
-        message: err.message,
-      });
-    }
-  }
-);
-*/
 app.get("/", (req, res) => {
     res.send("Hello");
 });
