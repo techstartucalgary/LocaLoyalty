@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@planetscale/database": "^1.13.0",
+    "dotenv": "^16.3.1",
+    "drizzle-kit": "^0.20.9",
+    "drizzle-orm": "^0.29.2"
+  }
+}
