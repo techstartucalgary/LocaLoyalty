@@ -1,2 +1,7 @@
 node_modules
 next/node_modules
+
+**/.env
+**/.env.local
+
+

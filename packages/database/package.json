@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "generate": "pnpm drizzle-kit generate:mysql --schema=./schema.ts",
+    "migrate": "node -r esbuild-register ./migrate.ts"
+  },
   "dependencies": {
     "@planetscale/database": "^1.13.0",
     "dotenv": "^16.3.1",
