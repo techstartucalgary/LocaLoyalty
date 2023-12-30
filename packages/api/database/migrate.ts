@@ -1,5 +1,7 @@
 /*
-Run this code with node to migrate the schema to Planetscale
+Database migration script. Run this to push schema to Planetscale. 
+Author: Max Pagels
+December 28, 2023
 */
 
 import "dotenv/config";

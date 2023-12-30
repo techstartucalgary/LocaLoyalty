@@ -1,3 +1,9 @@
+/*
+LocalLoyalty database schema
+Author: Max Pagels
+December 29, 2023
+*/
+
 import { int, text, mysqlTable, serial, varchar } from "drizzle-orm/mysql-core";
 
 export const users = mysqlTable("users", {
@@ -8,3 +14,5 @@ export const users = mysqlTable("users", {
 });
 
 //TODO...
+
+
