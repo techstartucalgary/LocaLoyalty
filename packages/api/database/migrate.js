@@ -1,6 +1,8 @@
 "use strict";
 /*
-Run this code with node to migrate the schema to Planetscale
+Database migration script. Run this to push schema to Planetscale.
+Author: Max Pagels
+December 28, 2023
 */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }

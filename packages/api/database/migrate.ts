@@ -17,8 +17,7 @@ const connection = connect({
   password: process.env.DATABASE_PASSWORD,
 });
 
-// export connection for use in other files
-export const db = drizzle(connection, { schema });
+const db = drizzle(connection, { schema });
 
 async function main() {
   console.log("Migration started...");

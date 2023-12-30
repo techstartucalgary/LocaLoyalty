@@ -1,4 +1,9 @@
 "use strict";
+/*
+LocalLoyalty database schema
+Author: Max Pagels
+December 29, 2023
+*/
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.users = void 0;
 var mysql_core_1 = require("drizzle-orm/mysql-core");
