@@ -55,9 +55,7 @@
       "compositePrimaryKeys": {
         "customer_customer_id": {
           "name": "customer_customer_id",
-          "columns": [
-            "customer_id"
-          ]
+          "columns": ["customer_id"]
         }
       },
       "uniqueConstraints": {}
@@ -100,12 +98,8 @@
           "name": "loyalty_card_customer_id_customer_customer_id_fk",
           "tableFrom": "loyalty_card",
           "tableTo": "customer",
-          "columnsFrom": [
-            "customer_id"
-          ],
-          "columnsTo": [
-            "customer_id"
-          ],
+          "columnsFrom": ["customer_id"],
+          "columnsTo": ["customer_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -113,12 +107,8 @@
           "name": "loyalty_card_program_id_rewards_program_program_id_fk",
           "tableFrom": "loyalty_card",
           "tableTo": "rewards_program",
-          "columnsFrom": [
-            "program_id"
-          ],
-          "columnsTo": [
-            "program_id"
-          ],
+          "columnsFrom": ["program_id"],
+          "columnsTo": ["program_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -126,9 +116,7 @@
       "compositePrimaryKeys": {
         "loyalty_card_loyalty_id": {
           "name": "loyalty_card_loyalty_id",
-          "columns": [
-            "loyalty_id"
-          ]
+          "columns": ["loyalty_id"]
         }
       },
       "uniqueConstraints": {}
@@ -171,12 +159,8 @@
           "name": "point_redemption_history_loyalty_id_loyalty_card_loyalty_id_fk",
           "tableFrom": "point_redemption_history",
           "tableTo": "loyalty_card",
-          "columnsFrom": [
-            "loyalty_id"
-          ],
-          "columnsTo": [
-            "loyalty_id"
-          ],
+          "columnsFrom": ["loyalty_id"],
+          "columnsTo": ["loyalty_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -184,9 +168,7 @@
       "compositePrimaryKeys": {
         "point_redemption_history_history_id": {
           "name": "point_redemption_history_history_id",
-          "columns": [
-            "history_id"
-          ]
+          "columns": ["history_id"]
         }
       },
       "uniqueConstraints": {}
@@ -222,12 +204,8 @@
           "name": "rewards_program_vendor_id_vendor_vendor_id_fk",
           "tableFrom": "rewards_program",
           "tableTo": "vendor",
-          "columnsFrom": [
-            "vendor_id"
-          ],
-          "columnsTo": [
-            "vendor_id"
-          ],
+          "columnsFrom": ["vendor_id"],
+          "columnsTo": ["vendor_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -235,9 +213,7 @@
       "compositePrimaryKeys": {
         "rewards_program_program_id": {
           "name": "rewards_program_program_id",
-          "columns": [
-            "program_id"
-          ]
+          "columns": ["program_id"]
         }
       },
       "uniqueConstraints": {}
@@ -301,12 +277,8 @@
           "name": "transaction_loyalty_id_loyalty_card_loyalty_id_fk",
           "tableFrom": "transaction",
           "tableTo": "loyalty_card",
-          "columnsFrom": [
-            "loyalty_id"
-          ],
-          "columnsTo": [
-            "loyalty_id"
-          ],
+          "columnsFrom": ["loyalty_id"],
+          "columnsTo": ["loyalty_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -314,12 +286,8 @@
           "name": "transaction_program_id_rewards_program_program_id_fk",
           "tableFrom": "transaction",
           "tableTo": "rewards_program",
-          "columnsFrom": [
-            "program_id"
-          ],
-          "columnsTo": [
-            "program_id"
-          ],
+          "columnsFrom": ["program_id"],
+          "columnsTo": ["program_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -327,9 +295,7 @@
       "compositePrimaryKeys": {
         "transaction_transaction_id": {
           "name": "transaction_transaction_id",
-          "columns": [
-            "transaction_id"
-          ]
+          "columns": ["transaction_id"]
         }
       },
       "uniqueConstraints": {}
@@ -378,9 +344,7 @@
       "compositePrimaryKeys": {
         "vendor_vendor_id": {
           "name": "vendor_vendor_id",
-          "columns": [
-            "vendor_id"
-          ]
+          "columns": ["vendor_id"]
         }
       },
       "uniqueConstraints": {}
