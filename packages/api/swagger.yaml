@@ -1,0 +1,22 @@
+#reference website to learn more https://editor.swagger.io/
+openapi: 3.0.3
+info:
+  title: LocaLoyalty API
+  description: API description
+  version: "1.0.0"
+tags:
+  - name: business
+    description: APIs for the website that small business owners will access
+  - name: customer
+    description: APIs for the mobile app that end-users will access
+paths:
+  /business/sample:
+    get:
+      tags:
+        - business
+      summary: Sample endpoint
+      description: Returns a sample data
+      operationId: getBusinessSampleAPI
+      responses:
+        200:
+          description: Successful response
