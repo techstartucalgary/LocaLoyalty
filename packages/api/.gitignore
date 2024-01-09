@@ -36,4 +36,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-dist
+# folder that stores the compiled JavaScript code
+/dist/ 
+
