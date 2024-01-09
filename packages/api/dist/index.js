@@ -15,6 +15,9 @@ const PORT = process.env.port || 5001;
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
+// parses data sent in HTTP request bodies, especially in web forms
+app.use(express_1.default.urlencoded({ extended: true }));
+// parses incoming request bodies that are in JSON format.
 app.use(express_1.default.json());
 app.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDocument));
 app.use("/business", businessRoutes_1.default);

@@ -14,7 +14,13 @@ dotenv.config();
 const app = express();
 
 app.use(cors());
+
+// parses data sent in HTTP request bodies, especially in web forms
+app.use(express.urlencoded({ extended: true }))
+
+// parses incoming request bodies that are in JSON format.
 app.use(express.json());
+
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use("/business", businessRoutes);
