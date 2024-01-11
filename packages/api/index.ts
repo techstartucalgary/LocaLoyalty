@@ -1,6 +1,12 @@
-import express from "express";
-import cors from "cors";
 import dotenv from "dotenv";
+import {
+  ClerkExpressWithAuth,
+  LooseAuthProp,
+  WithAuthProp,
+} from "@clerk/clerk-sdk-node";
+
+import express, { Application, Request, Response, NextFunction } from "express";
+import cors from "cors";
 import { Webhook } from "svix";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
@@ -8,22 +14,45 @@ import businessRoutes from "./routes/businessRoutes";
 import customerRoutes from "./routes/customerRoutes";
 
 const swaggerDocument = YAML.load("./swagger.yaml");
-const PORT = process.env.port || 5001;
+
 dotenv.config();
+const PORT = process.env.PORT || 5001;
 
-const app = express();
+dotenv.config({ path: ".env.local", override: true }); // Override with .env.local
 
+const app: Application = express();
+
+declare global {
+  namespace Express {
+    interface Request extends LooseAuthProp {}
+  }
+}
+
+// 1) Global Middlewares
 app.use(cors());
+app.use(express.urlencoded({ extended: true })); // parses data sent in HTTP request bodies, especially in web forms
+app.use(express.json()); // parses incoming request bodies that are in JSON format.
 
-// parses data sent in HTTP request bodies, especially in web forms
-app.use(express.urlencoded({ extended: true }))
+// app.get("/login", (req, res) => {
+//     // res.send("This is the login page.");
+//     res.json({ message: "Like this video!" });
+// });
 
-// parses incoming request bodies that are in JSON format.
-app.use(express.json());
-
+// 2) Routes
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+app.get(
+  "/protected-route",
+  ClerkExpressWithAuth({
+    // ...options
+  }),
+  (req: WithAuthProp<Request>, res: Response) => {
+    res.json(req.auth);
+  }
+);
+
 app.use("/business", businessRoutes);
+
 app.use("/customer", customerRoutes);
 
 /*
