@@ -65,3 +65,5 @@ export const transaction = mysqlTable("transaction", {
   timestamp: timestamp("timestamp").notNull(),
   payment_type: varchar("payment_type", { length: 16 }),
 });
+
+//

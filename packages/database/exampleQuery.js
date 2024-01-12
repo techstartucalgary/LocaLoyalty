@@ -46,11 +46,13 @@ var schema = require("./schema.js");
 var customer = schema.customer;
 function main() {
     return __awaiter(this, void 0, void 0, function () {
+        var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, dbObj_1.db.insert(customer).values({ fname: 'Max', lname: "Pagels", email: "mp@gmail.com" })];
+                case 0: return [4 /*yield*/, dbObj_1.db.select().from(customer)];
                 case 1:
-                    _a.sent();
+                    result = _a.sent();
+                    console.log(result);
                     return [2 /*return*/];
             }
         });

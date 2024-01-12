@@ -10,7 +10,11 @@ import * as schema from './schema.js';
 const customer = schema.customer;
 
 async function main() {
-    await db.insert(customer).values({ fname: 'Max' , lname: "Pagels", email: "mp@gmail.com"});
+    
+    //await db.insert(customer).values({ fname: 'Max' , lname: "Pagels", email: "mp@gmail.com"});
+    
+    const result = await db.select().from(customer); 
+    console.log(result);
 }
 
 main().catch((error) => console.error(error));
