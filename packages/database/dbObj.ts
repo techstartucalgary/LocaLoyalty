@@ -7,7 +7,6 @@ Jan 11 2024
 import "dotenv/config";
 import { drizzle } from "drizzle-orm/planetscale-serverless";
 import { connect } from "@planetscale/database";
-import * as schema from './schema.js';
 
 // create the connection
 const connection = connect({

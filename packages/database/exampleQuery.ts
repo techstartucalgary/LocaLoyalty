@@ -10,7 +10,7 @@ import * as schema from './schema.js';
 const customer = schema.customer;
 
 async function main() {
-    await db.insert(customer).values({ fname: 'Max' });
+    await db.insert(customer).values({ fname: 'Max' , lname: "Pagels", email: "mp@gmail.com"});
 }
 
 main().catch((error) => console.error(error));
