@@ -35,7 +35,9 @@
     "react-native-screens": "~3.22.0",
     "react-native-web": "~0.19.6",
     "tailwindcss": "^3.3.2",
-    "zustand": "^4.4.7"
+    "zustand": "^4.4.7",
+    "expo-auth-session": "~5.0.2",
+    "expo-crypto": "~12.4.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
