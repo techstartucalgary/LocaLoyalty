@@ -22,26 +22,6 @@ export default function RootLayout({
       <html lang="en">
         <body className={inter.className}>
           <Providers>
-            <nav className="flex justify-end fixed w-full top-0 right-0">
-              <Link
-                href="/sign-in"
-                className="w-28 text-md font-bold mt-2 mr-2 py-2 text-grey-500 border-solid border-2 border-black rounded-lg"
-              >
-                <p className="flex justify-center items-center">Log In</p>
-              </Link>
-              <Link
-                href="/sign-up"
-                className="w-28 text-md font-bold mt-2 mr-2 py-2 text-grey-500 border-solid border-2 border-black rounded-lg"
-              >
-                <p className="flex justify-center items-center">Sign Up</p>
-              </Link>
-              <SignedOut></SignedOut>
-              <SignedIn>
-                <div>
-                  <UserButton afterSignOutUrl="/" />
-                </div>
-              </SignedIn>
-            </nav>
             <main>{children}</main>
           </Providers>
         </body>
