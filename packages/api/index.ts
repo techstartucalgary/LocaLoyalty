@@ -1,8 +1,8 @@
 import dotenv from "dotenv";
 import {
-  ClerkExpressWithAuth,
-  LooseAuthProp,
-  WithAuthProp,
+  ClerkExpressRequireAuth,
+  RequireAuthProp,
+  StrictAuthProp,
 } from "@clerk/clerk-sdk-node";
 
 import express, { Application, Request, Response, NextFunction } from "express";
@@ -24,12 +24,15 @@ const app: Application = express();
 
 declare global {
   namespace Express {
-    interface Request extends LooseAuthProp {}
+    interface Request extends StrictAuthProp {}
   }
 }
 
+let corsOptions = {
+  origin: ["http://localhost:3000"],
+};
 // 1) Global Middlewares
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true })); // parses data sent in HTTP request bodies, especially in web forms
 app.use(express.json()); // parses incoming request bodies that are in JSON format.
 
@@ -43,17 +46,31 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get(
   "/protected-route",
-  ClerkExpressWithAuth({
-    // ...options
-  }),
-  (req: WithAuthProp<Request>, res: Response) => {
+  ClerkExpressRequireAuth(),
+  (req: RequireAuthProp<Request>, res) => {
     res.json(req.auth);
   }
 );
 
-app.use("/business", businessRoutes);
+app.use(
+  "/business",
+  ClerkExpressRequireAuth(),
+  (req: RequireAuthProp<Request>, res) => {
+    res.json(req.auth);
+  },
+  businessRoutes
+);
 
-app.use("/customer", customerRoutes);
+app.use(
+  "/customer",
+  ClerkExpressRequireAuth({
+    // ...options
+  }),
+  (req: RequireAuthProp<Request>, res) => {
+    res.json(req.auth);
+  },
+  customerRoutes
+);
 
 /*
 app.post("/clerk/webhook", (req, res) => {

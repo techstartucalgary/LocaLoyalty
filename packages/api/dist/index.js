@@ -3,23 +3,34 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const dotenv_1 = __importDefault(require("dotenv"));
+const clerk_sdk_node_1 = require("@clerk/clerk-sdk-node");
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
-const dotenv_1 = __importDefault(require("dotenv"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const yamljs_1 = __importDefault(require("yamljs"));
 const businessRoutes_1 = __importDefault(require("./routes/businessRoutes"));
 const customerRoutes_1 = __importDefault(require("./routes/customerRoutes"));
 const swaggerDocument = yamljs_1.default.load("./swagger.yaml");
-const PORT = process.env.port || 5001;
 dotenv_1.default.config();
+const PORT = process.env.PORT || 5001;
+dotenv_1.default.config({ path: ".env.local", override: true }); // Override with .env.local
 const app = (0, express_1.default)();
+// 1) Global Middlewares
 app.use((0, cors_1.default)());
-// parses data sent in HTTP request bodies, especially in web forms
-app.use(express_1.default.urlencoded({ extended: true }));
-// parses incoming request bodies that are in JSON format.
-app.use(express_1.default.json());
+app.use(express_1.default.urlencoded({ extended: true })); // parses data sent in HTTP request bodies, especially in web forms
+app.use(express_1.default.json()); // parses incoming request bodies that are in JSON format.
+// app.get("/login", (req, res) => {
+//     // res.send("This is the login page.");
+//     res.json({ message: "Like this video!" });
+// });
+// 2) Routes
 app.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDocument));
+app.get("/protected-route", (0, clerk_sdk_node_1.ClerkExpressWithAuth)({
+// ...options
+}), (req, res) => {
+    res.json(req.auth);
+});
 app.use("/business", businessRoutes_1.default);
 app.use("/customer", customerRoutes_1.default);
 /*
