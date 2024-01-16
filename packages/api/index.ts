@@ -1,7 +1,12 @@
-import express from "express";
-import cors from "cors";
-import bodyParser from "body-parser";
 import dotenv from "dotenv";
+import {
+  ClerkExpressRequireAuth,
+  RequireAuthProp,
+  StrictAuthProp,
+} from "@clerk/clerk-sdk-node";
+
+import express, { Application, Request, Response, NextFunction } from "express";
+import cors from "cors";
 import { Webhook } from "svix";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
@@ -9,17 +14,33 @@ import businessRoutes from "./routes/businessRoutes";
 import customerRoutes from "./routes/customerRoutes";
 
 const swaggerDocument = YAML.load("./swagger.yaml");
-const PORT = process.env.port || 5001;
+
 dotenv.config();
+const PORT = process.env.PORT || 5001;
 
-const app = express();
+dotenv.config({ path: ".env.local", override: true }); // Override with .env.local
 
-app.use(cors());
-app.use(bodyParser.json());
+const app: Application = express();
+
+declare global {
+  namespace Express {
+    interface Request extends StrictAuthProp {}
+  }
+}
+
+let corsOptions = {
+  origin: ["http://localhost:3000"],
+};
+// 1) Global Middlewares
+app.use(cors(corsOptions));
+app.use(express.urlencoded({ extended: true })); // parses data sent in HTTP request bodies, especially in web forms
+app.use(express.json()); // parses incoming request bodies that are in JSON format.
+
+// 2) Routes
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.use("/business", businessRoutes);
-app.use("/customer", customerRoutes);
+app.use("/business", ClerkExpressRequireAuth(), businessRoutes);
+app.use("/customer", ClerkExpressRequireAuth(), customerRoutes);
 
 /*
 app.post("/clerk/webhook", (req, res) => {
