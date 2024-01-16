@@ -23,23 +23,10 @@ let corsOptions = {
 app.use((0, cors_1.default)(corsOptions));
 app.use(express_1.default.urlencoded({ extended: true })); // parses data sent in HTTP request bodies, especially in web forms
 app.use(express_1.default.json()); // parses incoming request bodies that are in JSON format.
-// app.get("/login", (req, res) => {
-//     // res.send("This is the login page.");
-//     res.json({ message: "Like this video!" });
-// });
 // 2) Routes
 app.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDocument));
-app.get("/protected-route", (0, clerk_sdk_node_1.ClerkExpressRequireAuth)(), (req, res) => {
-    res.json(req.auth);
-});
-app.use("/business", (0, clerk_sdk_node_1.ClerkExpressRequireAuth)(), (req, res) => {
-    res.json(req.auth);
-}, businessRoutes_1.default);
-app.use("/customer", (0, clerk_sdk_node_1.ClerkExpressRequireAuth)({
-// ...options
-}), (req, res) => {
-    res.json(req.auth);
-}, customerRoutes_1.default);
+app.use("/business", (0, clerk_sdk_node_1.ClerkExpressRequireAuth)(), businessRoutes_1.default);
+app.use("/customer", (0, clerk_sdk_node_1.ClerkExpressRequireAuth)(), customerRoutes_1.default);
 /*
 app.post("/clerk/webhook", (req, res) => {
   const payload = JSON.stringify(req.body);
