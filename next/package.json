@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^4.29.3",
-    "@tanstack/react-query": "^4.36.1",
+    "@tanstack/react-query": "^5.17.12",
+    "@tanstack/react-query-devtools": "^5.17.12",
+    "axios": "^1.6.5",
     "next": "^14.0.4",
     "react": "^18",
     "react-dom": "^18"

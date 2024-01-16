@@ -16,8 +16,11 @@ dotenv_1.default.config();
 const PORT = process.env.PORT || 5001;
 dotenv_1.default.config({ path: ".env.local", override: true }); // Override with .env.local
 const app = (0, express_1.default)();
+let corsOptions = {
+    origin: ["http://localhost:3000"],
+};
 // 1) Global Middlewares
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)(corsOptions));
 app.use(express_1.default.urlencoded({ extended: true })); // parses data sent in HTTP request bodies, especially in web forms
 app.use(express_1.default.json()); // parses incoming request bodies that are in JSON format.
 // app.get("/login", (req, res) => {
@@ -26,13 +29,17 @@ app.use(express_1.default.json()); // parses incoming request bodies that are in
 // });
 // 2) Routes
 app.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDocument));
-app.get("/protected-route", (0, clerk_sdk_node_1.ClerkExpressWithAuth)({
+app.get("/protected-route", (0, clerk_sdk_node_1.ClerkExpressRequireAuth)(), (req, res) => {
+    res.json(req.auth);
+});
+app.use("/business", (0, clerk_sdk_node_1.ClerkExpressRequireAuth)(), (req, res) => {
+    res.json(req.auth);
+}, businessRoutes_1.default);
+app.use("/customer", (0, clerk_sdk_node_1.ClerkExpressRequireAuth)({
 // ...options
 }), (req, res) => {
     res.json(req.auth);
-});
-app.use("/business", businessRoutes_1.default);
-app.use("/customer", customerRoutes_1.default);
+}, customerRoutes_1.default);
 /*
 app.post("/clerk/webhook", (req, res) => {
   const payload = JSON.stringify(req.body);
