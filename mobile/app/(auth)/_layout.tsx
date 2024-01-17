@@ -1,7 +1,8 @@
 import { Stack, Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { Pressable } from "react-native";
+import { Pressable, Text } from "react-native";
 import { useAuth } from "@clerk/clerk-expo";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export const LogoutButton = () => {
   const { signOut } = useAuth();
@@ -11,9 +12,13 @@ export const LogoutButton = () => {
   };
 
   return (
-    <Pressable onPress={doLogout} style={{ marginRight: 10 }}>
-      <Ionicons name="log-out-outline" size={24} color={"#fff"} />
-    </Pressable>
+    <TouchableOpacity
+      onPress={doLogout}
+      className="flex flex-row items-center mr-5 space-x-1"
+    >
+      <Text>Logout</Text>
+      <Ionicons name="log-out-outline" size={24} color={"#000000"} />
+    </TouchableOpacity>
   );
 };
 
@@ -24,10 +29,7 @@ const TabsPage = () => {
     <>
       <Tabs
         screenOptions={{
-          headerStyle: {
-            backgroundColor: "#6c47ff",
-          },
-          headerTintColor: "#fff",
+          headerTransparent: true,
         }}
       >
         <Tabs.Screen
@@ -44,7 +46,7 @@ const TabsPage = () => {
         <Tabs.Screen
           name="profile"
           options={{
-            headerTitle: "My Profile",
+            headerTitle: "",
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="person-outline" size={size} color={color} />
             ),

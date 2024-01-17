@@ -1,13 +1,26 @@
-import { View, StyleSheet, TextInput, Button } from "react-native";
-import React, { useState } from "react";
+import {
+  View,
+  TextInput,
+  Button,
+  Text,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import { Stack } from "expo-router";
 import { useSignIn } from "@clerk/clerk-expo";
+import { usePasswordResetStore } from "../../utils/loginStores";
 
 const PwReset = () => {
-  const [emailAddress, setEmailAddress] = useState("");
-  const [password, setPassword] = useState("");
-  const [code, setCode] = useState("");
-  const [successfulCreation, setSuccessfulCreation] = useState(false);
+  const {
+    email,
+    password,
+    code,
+    successfulCreation,
+    setEmail,
+    setPassword,
+    setSuccessfulCreation,
+    setCode,
+  } = usePasswordResetStore();
   const { signIn, setActive } = useSignIn();
 
   // Request a passowrd reset code by email
@@ -15,9 +28,9 @@ const PwReset = () => {
     try {
       await signIn!.create({
         strategy: "reset_password_email_code",
-        identifier: emailAddress,
+        identifier: email,
       });
-      setSuccessfulCreation(true);
+      setSuccessfulCreation();
     } catch (err: any) {
       alert(err.errors[0].message);
     }
@@ -42,74 +55,66 @@ const PwReset = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View className="flex my-auto items-center">
       <Stack.Screen options={{ headerBackVisible: !successfulCreation }} />
 
       {!successfulCreation && (
-        <>
-          <TextInput
-            autoCapitalize="none"
-            placeholder="simon@galaxies.dev"
-            value={emailAddress}
-            onChangeText={setEmailAddress}
-            style={styles.inputField}
+        <View className="w-full flex items-center">
+          <Text className="text-5xl text-center font-bold">Password Reset</Text>
+
+          <Image
+            source={require("../../assets/images/illustration-2.png")}
+            className="h-72 w-72"
           />
 
-          <Button
-            onPress={onRequestReset}
-            title="Send Reset Email"
-            color={"#6c47ff"}
-          ></Button>
-        </>
+          <TextInput
+            autoCapitalize="none"
+            placeholder="coolemail@gmail.com"
+            value={email}
+            onChangeText={setEmail}
+            className="w-2/3 border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 rounded-md py-1 px-3 transition ease-in-out duration-150"
+          />
+
+          <TouchableOpacity onPress={onRequestReset}>
+            <Text className="font-bold text-white bg-black px-10 py-1 text-xl rounded-md mt-5">
+              Send Reset Email
+            </Text>
+          </TouchableOpacity>
+        </View>
       )}
 
       {successfulCreation && (
-        <>
-          <View>
-            <TextInput
-              value={code}
-              placeholder="Code..."
-              style={styles.inputField}
-              onChangeText={setCode}
-            />
-            <TextInput
-              placeholder="New password"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-              style={styles.inputField}
-            />
-          </View>
-          <Button
-            onPress={onReset}
-            title="Set new Password"
-            color={"#6c47ff"}
-          ></Button>
-        </>
+        <View className="w-full flex items-center">
+          <Text className="text-5xl text-center font-bold">Password Reset</Text>
+
+          <Image
+            source={require("../../assets/images/illustration-2.png")}
+            className="h-72 w-72"
+          />
+
+          <TextInput
+            value={code}
+            placeholder="Code..."
+            onChangeText={setCode}
+            className="w-2/3 border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 rounded-md py-1 px-3 transition ease-in-out duration-150"
+          />
+          <TextInput
+            placeholder="New password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            className="w-2/3 border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 rounded-md py-1 px-3 transition ease-in-out duration-150 mt-3"
+          />
+
+          <TouchableOpacity onPress={onReset}>
+            <Text className="font-bold text-white bg-black px-10 py-1 text-xl rounded-md mt-5">
+              Change Password
+            </Text>
+          </TouchableOpacity>
+        </View>
       )}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 20,
-  },
-  inputField: {
-    marginVertical: 4,
-    height: 50,
-    borderWidth: 1,
-    borderColor: "#6c47ff",
-    borderRadius: 4,
-    padding: 10,
-    backgroundColor: "#fff",
-  },
-  button: {
-    margin: 8,
-    alignItems: "center",
-  },
-});
 
 export default PwReset;

@@ -1,31 +1,47 @@
-import { Button, TextInput, View, StyleSheet } from "react-native";
+import {
+  Button,
+  TextInput,
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import { useSignUp } from "@clerk/clerk-expo";
 import Spinner from "react-native-loading-spinner-overlay";
 import { useState } from "react";
 import { Stack } from "expo-router";
+import { useRegisterStore } from "../../utils/loginStores";
 
 const Register = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
-
-  const [emailAddress, setEmailAddress] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [password, setPassword] = useState("");
-  const [pendingVerification, setPendingVerification] = useState(false);
-  const [code, setCode] = useState("");
-  const [loading, setLoading] = useState(false);
+  const {
+    loading,
+    email,
+    password,
+    phone,
+    pendingVerification,
+    code,
+    setLoading,
+    setEmail,
+    setPassword,
+    setPhone,
+    setPendingVerification,
+    setCode,
+    setNewUser,
+  } = useRegisterStore();
 
   // Create the user and send the verification email
   const onSignUpPress = async () => {
     if (!isLoaded) {
       return;
     }
-    setLoading(true);
+    setLoading();
 
     try {
       // Create the user on Clerk
       await signUp.create({
-        emailAddress,
-        phoneNumber,
+        emailAddress: email,
+        phoneNumber: phone,
         password,
       });
 
@@ -33,11 +49,11 @@ const Register = () => {
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
 
       // change the UI to verify the email address
-      setPendingVerification(true);
+      setPendingVerification();
     } catch (err: any) {
       alert(err.errors[0].message);
     } finally {
-      setLoading(false);
+      setLoading();
     }
   };
 
@@ -46,98 +62,95 @@ const Register = () => {
     if (!isLoaded) {
       return;
     }
-    setLoading(true);
+    setLoading();
 
     try {
       const completeSignUp = await signUp.attemptEmailAddressVerification({
         code,
       });
 
+      setNewUser();
       await setActive({ session: completeSignUp.createdSessionId });
     } catch (err: any) {
       alert(err.errors[0].message);
     } finally {
-      setLoading(false);
+      setLoading();
     }
   };
 
   return (
-    <View style={styles.container}>
+    <View className="flex my-auto items-center">
       <Stack.Screen options={{ headerBackVisible: !pendingVerification }} />
       <Spinner visible={loading} />
 
       {!pendingVerification && (
-        <>
+        <View className="w-full flex items-center">
+          <Text className="text-5xl text-center font-bold">
+            Create Your Account
+          </Text>
+
+          <Image
+            source={require("../../assets/images/illustration-1.png")}
+            className="h-72 w-72"
+          />
+
           <TextInput
             autoCapitalize="none"
             placeholder="coolemail@gmail.com"
-            value={emailAddress}
-            onChangeText={setEmailAddress}
-            style={styles.inputField}
+            value={email}
+            onChangeText={setEmail}
+            className="w-2/3 border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 rounded-md py-1 px-3 transition ease-in-out duration-150 mb-3"
           />
           <TextInput
             autoCapitalize="none"
             placeholder="4031231234"
-            value={phoneNumber}
-            onChangeText={setPhoneNumber}
-            style={styles.inputField}
+            value={phone}
+            onChangeText={setPhone}
+            className="w-2/3 border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 rounded-md py-1 px-3 transition ease-in-out duration-150 mb-3"
           />
           <TextInput
             placeholder="password"
             value={password}
             onChangeText={setPassword}
+            className="w-2/3 border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 rounded-md py-1 px-3 transition ease-in-out duration-150 mb-3"
             secureTextEntry
-            style={styles.inputField}
           />
 
-          <Button
-            onPress={onSignUpPress}
-            title="Sign up"
-            color={"#6c47ff"}
-          ></Button>
-        </>
+          <TouchableOpacity onPress={onSignUpPress}>
+            <Text className="font-bold text-white bg-black px-10 py-1 text-xl rounded-md mt-5">
+              Sign Up
+            </Text>
+          </TouchableOpacity>
+        </View>
       )}
 
       {pendingVerification && (
-        <>
-          <View>
-            <TextInput
-              value={code}
-              placeholder="Code..."
-              style={styles.inputField}
-              onChangeText={setCode}
-            />
-          </View>
-          <Button
-            onPress={onPressVerify}
-            title="Verify Email"
-            color={"#6c47ff"}
-          ></Button>
-        </>
+        <View className="w-full flex items-center">
+          <Text className="text-5xl text-center font-bold">
+            Enter Your Code
+          </Text>
+
+          <Image
+            source={require("../../assets/images/illustration-1.png")}
+            className="h-72 w-72"
+          />
+
+          <TextInput
+            value={code}
+            placeholder="Code..."
+            onChangeText={setCode}
+            className="w-2/3 border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 rounded-md py-1 px-3 transition ease-in-out duration-150 mb-3"
+          />
+
+          <TouchableOpacity onPress={onPressVerify}>
+            <Text className="font-bold text-white bg-black px-10 py-1 text-xl rounded-md mt-5">
+              Verify Email
+            </Text>
+          </TouchableOpacity>
+        </View>
       )}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 20,
-  },
-  inputField: {
-    marginVertical: 4,
-    height: 50,
-    borderWidth: 1,
-    borderColor: "#6c47ff",
-    borderRadius: 4,
-    padding: 10,
-    backgroundColor: "#fff",
-  },
-  button: {
-    margin: 8,
-    alignItems: "center",
-  },
-});
 
 export default Register;
