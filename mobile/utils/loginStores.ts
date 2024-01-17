@@ -75,3 +75,13 @@ export const usePasswordResetStore = create<PasswordResetState>((set) => ({
     set((state) => ({ successfulCreation: !state.successfulCreation })),
   setCode: (val) => set({ code: val }),
 }));
+
+type AuthState = {
+  token: string | null;
+  setToken: (val: string | null) => void;
+};
+
+export const useAuthStore = create<AuthState>((set) => ({
+  token: null,
+  setToken: (val) => set({ token: val }),
+}));

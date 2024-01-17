@@ -2,7 +2,7 @@ import { ClerkProvider, useAuth } from "@clerk/clerk-expo";
 import * as SecureStore from "expo-secure-store";
 import { useEffect } from "react";
 import { Slot, useRouter, useSegments } from "expo-router";
-import { useRegisterStore } from "../utils/loginStores";
+import { useAuthStore, useRegisterStore } from "../utils/loginStores";
 
 const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
@@ -24,10 +24,11 @@ const tokenCache = {
 };
 
 const InitialLayout = () => {
-  const { isLoaded, isSignedIn } = useAuth();
+  const { isLoaded, isSignedIn, getToken } = useAuth();
   const segments = useSegments();
   const router = useRouter();
   const { newUser } = useRegisterStore();
+  const { setToken } = useAuthStore();
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -35,10 +36,19 @@ const InitialLayout = () => {
     const inTabsGroup = segments[0] === "(auth)";
     console.log("isSignedIn", isSignedIn);
 
-    if (isSignedIn && !inTabsGroup && newUser) {
-      router.replace("/tutorial");
-    } else if (isSignedIn && !inTabsGroup) {
-      router.replace("/home");
+    if (isSignedIn) {
+      async function fetchToken() {
+        const toFetch = await getToken();
+        setToken(toFetch);
+      }
+
+      fetchToken();
+
+      if (!inTabsGroup && newUser) {
+        router.replace("/tutorial");
+      } else if (!inTabsGroup) {
+        router.replace("/home");
+      }
     } else if (!isSignedIn) {
       router.replace("login");
     }
