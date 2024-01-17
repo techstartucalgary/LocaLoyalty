@@ -71,7 +71,7 @@ export const transaction = mysqlTable("transaction", {
   payment_type: varchar("payment_type", { length: 256 }),
 });
 
-  // Reward
+// Reward
 export const reward = mysqlTable("reward", {
   reward_id: serial("reward_id").primaryKey(),
   program_id: int("program_id"), //references rewards_program.program_id
@@ -79,4 +79,3 @@ export const reward = mysqlTable("reward", {
   description: text("description"),
   points_cost: int("points_cost").notNull(),
 });
-
