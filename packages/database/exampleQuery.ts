@@ -1,7 +1,7 @@
 /*
 An example of how to query the database with test data
 Author: Max Pagels
-January 11 2023
+January 11 2024
 */
 
 import { db } from "./dbObj";

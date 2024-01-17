@@ -15,6 +15,13 @@
       "when": 1703971942706,
       "tag": "0001_mixed_doctor_octopus",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1705453296044,
+      "tag": "0002_silly_drax",
+      "breakpoints": true
     }
   ]
 }
