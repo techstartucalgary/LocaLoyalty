@@ -2,6 +2,7 @@ import { ClerkProvider, useAuth } from "@clerk/clerk-expo";
 import * as SecureStore from "expo-secure-store";
 import { useEffect } from "react";
 import { Slot, useRouter, useSegments } from "expo-router";
+import { useRegisterStore } from "../utils/loginStores";
 
 const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
@@ -26,6 +27,7 @@ const InitialLayout = () => {
   const { isLoaded, isSignedIn } = useAuth();
   const segments = useSegments();
   const router = useRouter();
+  const { newUser } = useRegisterStore();
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -33,7 +35,9 @@ const InitialLayout = () => {
     const inTabsGroup = segments[0] === "(auth)";
     console.log("isSignedIn", isSignedIn);
 
-    if (isSignedIn && !inTabsGroup) {
+    if (isSignedIn && !inTabsGroup && newUser) {
+      router.replace("/tutorial");
+    } else if (isSignedIn && !inTabsGroup) {
       router.replace("/home");
     } else if (!isSignedIn) {
       router.replace("login");

@@ -11,22 +11,21 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Spinner from "react-native-loading-spinner-overlay";
+import { useLoginStore } from "../../utils/loginStores";
 
 const Login = () => {
   const { signIn, setActive, isLoaded } = useSignIn();
-
-  const [emailAddress, setEmailAddress] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const { loading, email, password, setLoading, setPassword, setEmail } =
+    useLoginStore();
 
   const onSignInPress = async () => {
     if (!isLoaded) {
       return;
     }
-    setLoading(true);
+    setLoading();
     try {
       const completeSignIn = await signIn.create({
-        identifier: emailAddress,
+        identifier: email,
         password,
       });
 
@@ -35,7 +34,7 @@ const Login = () => {
     } catch (err: any) {
       alert(err.errors[0].message);
     } finally {
-      setLoading(false);
+      setLoading();
     }
   };
 
@@ -56,8 +55,8 @@ const Login = () => {
       <TextInput
         autoCapitalize="none"
         placeholder="email"
-        value={emailAddress}
-        onChangeText={setEmailAddress}
+        value={email}
+        onChangeText={setEmail}
         className="w-2/3 border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 rounded-md py-1 px-3 transition ease-in-out duration-150 mb-3"
       />
 
