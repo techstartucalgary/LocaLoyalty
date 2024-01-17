@@ -19,10 +19,10 @@ async function insert() {
     console.log("Inserted rewards program");
 
     await db.insert(schema.loyalty_card).values({points_amt:0, carry_over_amt:"0.0"});
-    console.log("Inserted rewards program");
+    console.log("Inserted loyalty card");
 
     await db.insert(schema.reward).values({name: "Free Burger", description: "Redeem 5 punches for a free burger! ", points_cost: 5});
-    console.log("Inserted rewards program");
+    console.log("Inserted reward");
 }
 
 insert().catch((error) => console.error(error));
