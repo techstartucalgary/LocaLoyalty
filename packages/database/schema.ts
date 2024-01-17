@@ -49,7 +49,7 @@ export const loyalty_card = mysqlTable("loyalty_card", {
   customer_id: int("customer_id"),  //references customer.customer_id
   program_id: int("program_id"),  //references rewards_program.program_id
   points_amt: int("points_amt").notNull(),
-  //carry over amount (dollars left over not in points)
+  carry_over_amt: decimal("carry_over_amt").notNull(), //dollars left over not in points
 });
 
 // Point Redemption History
@@ -68,13 +68,15 @@ export const transaction = mysqlTable("transaction", {
   purchase_amt: decimal("purchase_amt").notNull(),
   points_earned: int("points_earned").notNull(),
   timestamp: timestamp("timestamp").notNull(),
-  payment_type: varchar("payment_type", { length: 16 }),
+  payment_type: varchar("payment_type", { length: 256 }),
 });
 
-//Reward table
-  //pk
-  //fk to rewards prog
-  //name
-  //description
-  //oints cost
+  // Reward
+export const reward = mysqlTable("reward", {
+  reward_id: serial("reward_id").primaryKey(),
+  program_id: int("program_id"), //references rewards_program.program_id
+  name: varchar("name", { length: 256 }),
+  description: text("description"),
+  points_cost: int("points_cost").notNull(),
+});
 
