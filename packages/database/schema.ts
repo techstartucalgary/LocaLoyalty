@@ -21,6 +21,7 @@ export const customer = mysqlTable("customer", {
   email: varchar("email", { length: 256 }).notNull(),
   address: varchar("address", { length: 256 }),
   phone: varchar("phone", { length: 16 }),
+  clerk_id: varchar("clerk_id", { length: 16 }),
 });
 
 // Vendor
@@ -30,6 +31,7 @@ export const vendor = mysqlTable("vendor", {
   email: varchar("email", { length: 256 }).notNull(),
   address: varchar("address", { length: 256 }),
   phone: varchar("phone", { length: 16 }),
+  //store description
 });
 
 // Rewards Program
@@ -37,6 +39,8 @@ export const rewards_program = mysqlTable("rewards_program", {
   program_id: serial("program_id").primaryKey(),
   vendor_id: int("vendor_id"),  //references vendor.vendor_id
   details: text("details"),
+  
+  //dollars per point
 });
 
 // Loyalty Card
@@ -45,6 +49,7 @@ export const loyalty_card = mysqlTable("loyalty_card", {
   customer_id: int("customer_id"),  //references customer.customer_id
   program_id: int("program_id"),  //references rewards_program.program_id
   points_amt: int("points_amt").notNull(),
+  //carry over amount (dollars left over not in points)
 });
 
 // Point Redemption History
@@ -66,4 +71,10 @@ export const transaction = mysqlTable("transaction", {
   payment_type: varchar("payment_type", { length: 16 }),
 });
 
-//
+//Reward table
+  //pk
+  //fk to rewards prog
+  //name
+  //description
+  //oints cost
+
