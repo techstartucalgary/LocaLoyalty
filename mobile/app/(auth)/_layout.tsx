@@ -17,41 +17,45 @@ export const LogoutButton = () => {
 	);
 };
 
-const SearchButton = () => {
-  return (
-    // TODO: Implement functionality of search button
-    <Pressable className="pr-4">
-      <Ionicons name="search" size={24} color={"#000"} />
-    </Pressable>
-  )
-}
+// const SearchButton = () => {
+// 	return (
+// 		// TODO: Implement functionality of search button
+// 		<Pressable className="pr-4">
+// 			<Ionicons name="search" size={24} color={"#000"} />
+// 		</Pressable>
+// 	);
+// };
 
-const PersonButton = () => {
-  return (
-    // TODO: Implement functionality of person button
-    <Pressable className="pl-4">
-      <Ionicons name="person-circle-outline" size={24} color={"#000"} />
-    </Pressable>
-  )
-}
+// const PersonButton = () => {
+// 	return (
+// 		// TODO: Implement functionality of person button
+// 		<Pressable className="pl-4">
+// 			<Ionicons name="person-circle-outline" size={24} color={"#000"} />
+// 		</Pressable>
+// 	);
+// };
 
 const WalletHeader = () => {
 	const { user } = useUser();
 
 	return (
-		<View className="bg-[#266055] flex pt-12 pb-8 gap-8 rounded-b-3xl justify-center">
-			<View className="flex flex-row w-full justify-between px-12">
+		<View className="bg-[#9FBAFF] pt-16 pb-8 gap-8 rounded-b-3xl items-center px-12">
+			<View className="flex flex-row w-full justify-between">
 				<Pressable>
 					<Ionicons name="person-outline" size={24} color={"#000"} />
 				</Pressable>
-				<Text className="text-[#E9BCB7] text-xl font-semibold">
+				<Text className="text-[#EDEDFF] text-xl font-semibold">
 					Hello, {user?.firstName}
 				</Text>
-        <Pressable>
+				<Pressable>
 					<Ionicons name="search" size={24} color={"#000"} />
 				</Pressable>
 			</View>
-			<Text className="text-[#E9BCB7] text-3xl font-medium">Your Cards</Text>
+			<View className="w-full">
+				<Text className="text-[#091540] text-3xl font-medium text-left">
+					Your Cards
+				</Text>
+			</View>
 		</View>
 	);
 };
@@ -73,16 +77,22 @@ const TabsPage = () => {
 				<Tabs.Screen
 					name="wallet"
 					options={{
-						headerTitle: `Hello, ${user?.firstName}`,
+						// headerTitle: `Hello, ${user?.firstName}`,
+						// headerStyle: {
+						// 	backgroundColor: "#266055",
+						// },
+						// headerRight: () => <SearchButton />,
+						// headerLeft: () => <PersonButton />,
 						tabBarLabel: "Wallet",
-						headerStyle: {
-                backgroundColor: "#266055",
-            },
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="wallet" size={size} color={color} />
-            ),
-            headerRight: () => <SearchButton />,
-            headerLeft: () => <PersonButton />,
+						tabBarIcon: ({ color, size }) => (
+							<Ionicons name="wallet" size={size} color={color} />
+						),
+						header: () => <WalletHeader />,
+						// headerStyle: {
+						// 	display: "flex",
+						// 	alignItems: "center",
+						// 	justifyContent: "center",
+						// }
 					}}
 					redirect={!isSignedIn}
 				/>

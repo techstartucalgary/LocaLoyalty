@@ -11,16 +11,23 @@ const Card = ({
 	businessName: string;
 	businessImage: any;
 }) => {
+	const slug: string = `./card/${businessName}`;
+
 	return (
 		<View className="w-1/2 flex-initial p-2">
-			<View className="border rounded-md p-2 flex-row">
-				<View className="w-1/3 border-r">
-					<Text className="text-xs">{businessName}</Text>
-					<Image source={businessImage} />
-				</View>
-				<View className="w-2/3">
-					<Text>Hello</Text>
-				</View>
+			<View className="border rounded-md flex-row">
+				<Link href={slug} className="w-full rounded-md">
+					<View className="w-1/3 border-r p-2">
+						<Text className="text-xs">{businessName}</Text>
+						<Image source={businessImage} />
+					</View>
+					<View className="w-2/3 p-2">
+						<Image
+							source={require("../../assets/images/stamp.svg")}
+							className=""
+						/>
+					</View>
+				</Link>
 			</View>
 		</View>
 	);
@@ -31,15 +38,11 @@ const Wallet = () => {
 
 	return (
 		<View className="bg-[#F7F8F8]">
-			<View className="flex-row bg-[#F7F8F8] rounded-lg p-4">
-				<View className="bg-[#266055] rounded-3xl p-4">
-					<Text className="text-white text-lg">Your Cards</Text>
-				</View>
-			</View>
 			<View className="h-full w-full flex-row flex-wrap p-4">
 				{cardData.map((card) => {
 					return (
 						<Card
+							key={card.businessName}
 							businessName={card.businessName}
 							businessImage={card.businessImage}
 						/>
