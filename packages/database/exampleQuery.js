@@ -2,7 +2,7 @@
 /*
 An example of how to query the database with test data
 Author: Max Pagels
-January 11 2023
+January 11 2024
 */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -43,13 +43,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 var dbObj_1 = require("./dbObj");
 var schema = require("./schema.js");
+var drizzle_orm_1 = require("drizzle-orm");
 var customer = schema.customer;
 function main() {
     return __awaiter(this, void 0, void 0, function () {
         var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, dbObj_1.db.select().from(customer)];
+                case 0: return [4 /*yield*/, dbObj_1.db.select().from(customer).where((0, drizzle_orm_1.eq)(customer.fname, 'Hilton'))];
                 case 1:
                     result = _a.sent();
                     console.log(result);
