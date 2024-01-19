@@ -2,6 +2,8 @@
 LocaLoyalty database schema
 Author: Max Pagels
 December 29, 2023
+
+NOTE: "points" and "stamps" mean the same thing. 
 */
 
 import {
@@ -33,7 +35,7 @@ export const vendor = mysqlTable("vendor", {
   address: varchar("address", { length: 256 }),
   phone: varchar("phone", { length: 16 }),
   description: text("description"),
-  //color
+  color: varchar("color", { length: 16 }),
 });
 
 // Rewards Program
@@ -41,8 +43,8 @@ export const rewards_program = mysqlTable("rewards_program", {
   program_id: serial("program_id").primaryKey(),
   vendor_id: int("vendor_id"),  //references vendor.vendor_id
   details: text("details"),
-  spending_per_point: decimal("spending_per_point"),
-  //how many points per card
+  spending_per_point: decimal("spending_per_point").notNull(),
+  max_points : int("max_points").notNull(),
 });
 
 // Loyalty Card
