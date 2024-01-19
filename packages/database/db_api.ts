@@ -11,9 +11,41 @@ import { eq } from 'drizzle-orm';
 
 // Adds a new customer to the database
 // Parameters: 
-async function addCustomer() {
-    // TODO
-    // new transaction history
+async function addCustomer(
+    fname: string, 
+    lname: string,
+    email: string,
+    address?: string,
+    phone?: string,
+    clerk_id?: string
+    ) {
+
+        //insert base info
+        await db.insert(schema.customer).values({ 
+            fname: fname, 
+            lname: lname, 
+            email: email, 
+        });
+
+        //get customer id
+        const result = await db.select({
+            id: schema.customer.customer_id
+        }).from(schema.customer).where(eq(schema.customer.email, email)); 
+
+        //optional data
+        if (address){
+            //insert addr
+        }
+
+        if(phone){
+            //insert phone
+        }
+
+        if(clerk_id){
+            //insert clerk id
+        }
+
+    // create new transaction history
 }
 
 // Adds a new vendor to the database
