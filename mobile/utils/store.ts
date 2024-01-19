@@ -1,4 +1,3 @@
-// counterStore.ts
 import { create } from "zustand";
 
 type TutorialCounterState = {
