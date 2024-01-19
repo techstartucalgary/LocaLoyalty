@@ -6,9 +6,9 @@ const Navbar = () => {
   const { isSignedIn } = useAuth();
 
   return (
-    <nav className="bg-gray-800 text-white shadow-lg py-5 flex flex-row sticky top-0 z-50">
+    <nav className="bg-white text-black shadow-lg py-10 flex flex-row sticky top-0 z-50">
       {/* Website Logo */}
-      <Link href="/" className="text-xl">
+      <Link href="/" className="text-xl ml-8">
         LocaLoyalty
       </Link>
 
