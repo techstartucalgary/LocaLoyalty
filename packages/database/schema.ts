@@ -36,13 +36,7 @@ export const vendor = mysqlTable("vendor", {
   phone: varchar("phone", { length: 16 }),
   description: text("description"),
   color: varchar("color", { length: 16 }),
-});
-
-// Rewards Program
-export const rewards_program = mysqlTable("rewards_program", {
-  program_id: serial("program_id").primaryKey(),
-  vendor_id: int("vendor_id"),  //references vendor.vendor_id
-  details: text("details"),
+  reward_program_details: text("details"),
   spending_per_point: decimal("spending_per_point").notNull(),
   max_points : int("max_points").notNull(),
 });
@@ -51,7 +45,7 @@ export const rewards_program = mysqlTable("rewards_program", {
 export const loyalty_card = mysqlTable("loyalty_card", {
   loyalty_id: serial("loyalty_id").primaryKey(),
   customer_id: int("customer_id"),  //references customer.customer_id
-  program_id: int("program_id"),  //references rewards_program.program_id
+  vendor_id: int("vendor_id"),  //references vendor.vendor_id
   points_amt: int("points_amt").notNull(),
   carry_over_amt: decimal("carry_over_amt").notNull(), //dollars left over not in points
 });
@@ -68,7 +62,7 @@ export const point_redemption_history = mysqlTable("point_redemption_history", {
 export const transaction = mysqlTable("transaction", {
   transaction_id: serial("transaction_id").primaryKey(),
   loyalty_id: int("loyalty_id"), //references loyalty_card.loyalty_id
-  program_id: int("program_id"), //references rewards_program.program_id
+  vendor_id: int("vendor_id"),  //references vendor.vendor_id
   purchase_amt: decimal("purchase_amt").notNull(),
   points_earned: int("points_earned").notNull(),
   timestamp: timestamp("timestamp").notNull(),
@@ -78,7 +72,7 @@ export const transaction = mysqlTable("transaction", {
 // Reward
 export const reward = mysqlTable("reward", {
   reward_id: serial("reward_id").primaryKey(),
-  program_id: int("program_id"), //references rewards_program.program_id
+  vendor_id: int("vendor_id"),  //references vendor.vendor_id
   name: varchar("name", { length: 256 }),
   description: text("description"),
   points_cost: int("points_cost").notNull(),

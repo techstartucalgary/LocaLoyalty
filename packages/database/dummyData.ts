@@ -15,7 +15,7 @@ async function insert() {
     await db.insert(schema.vendor).values({ name: "Bobs Burgers", email: "bobb@gmail.com", address: "123 Main Street, Calgary", phone: "4031234444", description: "We make the best burgers!"});
     console.log("Inserted vendors");
 
-    await db.insert(schema.rewards_program).values({details: "Bob's rewards program.", spending_per_point: "10.0"});
+    await db.insert(schema.rewards_program).values({details: "Bob's rewards program.", spending_per_point: "10.0", max_points: 6});
     console.log("Inserted rewards program");
 
     await db.insert(schema.loyalty_card).values({points_amt:0, carry_over_amt:"0.0"});
