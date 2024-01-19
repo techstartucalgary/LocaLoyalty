@@ -42,3 +42,6 @@ dist
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+# folder that stores the compiled JavaScript code
+/dist/ 
+
