@@ -25,4 +25,8 @@ async function insert() {
     console.log("Inserted reward");
 }
 
-insert().catch((error) => console.error(error));
+async function linkCustCard(){
+    //await db.select().from(customer)
+}
+
+//insert().catch((error) => console.error(error));

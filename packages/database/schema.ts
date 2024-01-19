@@ -33,6 +33,7 @@ export const vendor = mysqlTable("vendor", {
   address: varchar("address", { length: 256 }),
   phone: varchar("phone", { length: 16 }),
   description: text("description"),
+  //color
 });
 
 // Rewards Program
@@ -41,6 +42,7 @@ export const rewards_program = mysqlTable("rewards_program", {
   vendor_id: int("vendor_id"),  //references vendor.vendor_id
   details: text("details"),
   spending_per_point: decimal("spending_per_point"),
+  //how many points per card
 });
 
 // Loyalty Card
