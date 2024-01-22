@@ -1,5 +1,4 @@
 "use client";
-import AuthNavbar from "@/components/AuthNavbar";
 import { fetchAPI } from "@/utils/generalAxios";
 import { useAuthStore } from "@/utils/store";
 import { useAuth } from "@clerk/nextjs";

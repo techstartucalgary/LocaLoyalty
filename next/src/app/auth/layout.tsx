@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/ui/toaster";
 import AuthNavbar from "../../components/AuthNavbar";
 
 export default function AuthLayout({
@@ -9,6 +10,7 @@ export default function AuthLayout({
     <>
       <AuthNavbar />
       <main>{children}</main>
+      <Toaster />
     </>
   );
 }
