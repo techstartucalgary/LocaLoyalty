@@ -1,11 +1,13 @@
-import { View, Text, Button, TextInput, StyleSheet } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { useState } from "react";
 import { useUser } from "@clerk/clerk-expo";
 
 const Profile = () => {
   const { user } = useUser();
+
   const [firstName, setFirstName] = useState(user?.firstName);
   const [lastName, setLastName] = useState(user?.lastName);
+  //const [phone, setPhone] = useState(user?.phoneNumbers[0].phoneNumber);
 
   const onSaveUser = async () => {
     try {
@@ -14,57 +16,62 @@ const Profile = () => {
         firstName: firstName!,
         lastName: lastName!,
       });
-      console.log("🚀 ~ file: profile.tsx:16 ~ onSaveUser ~ result:", result);
+
+      if (result) {
+        Alert.alert(
+          "Info Updated Successfully",
+          "",
+          [
+            {
+              text: "Cancel",
+              onPress: () => console.log("Cancel Pressed"),
+              style: "cancel",
+            },
+            { text: "OK", onPress: () => console.log("OK Pressed") },
+          ],
+          { cancelable: false }
+        );
+      }
     } catch (e) {
-      console.log(
-        "🚀 ~ file: profile.tsx:18 ~ onSaveUser ~ e",
-        JSON.stringify(e)
-      );
+      console.log(JSON.stringify(e));
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={{ textAlign: "center" }}>
-        Good morning {user?.firstName} {user?.lastName}!
+    <View className="flex my-auto items-center">
+      <Text className="text-5xl text-center font-bold mb-10">
+        Edit your profile
       </Text>
 
-      <TextInput
-        placeholder="First Name"
-        value={firstName!}
-        onChangeText={setFirstName}
-        style={styles.inputField}
-      />
-      <TextInput
-        placeholder="Last Name"
-        value={lastName!}
-        onChangeText={setLastName}
-        style={styles.inputField}
-      />
-      <Button
-        onPress={onSaveUser}
-        title="Update account"
-        color={"#6c47ff"}
-      ></Button>
+      <View className="flex w-full items-center">
+        <View className="flex w-2/3 my-2">
+          <Text>First Name</Text>
+          <TextInput
+            placeholder="First Name"
+            value={firstName!}
+            onChangeText={setFirstName}
+            className="border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 rounded-md py-1 px-3 transition ease-in-out duration-150"
+          />
+        </View>
+
+        <View className="flex w-2/3 my-2">
+          <Text>Last Name</Text>
+          <TextInput
+            placeholder="Last Name"
+            value={lastName!}
+            onChangeText={setLastName}
+            className="border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 rounded-md py-1 px-3 transition ease-in-out duration-150"
+          />
+        </View>
+      </View>
+
+      <TouchableOpacity onPress={onSaveUser}>
+        <Text className="font-bold text-white bg-black px-10 py-1 text-xl rounded-md mt-5">
+          Update account
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 40,
-  },
-  inputField: {
-    marginVertical: 4,
-    height: 50,
-    borderWidth: 1,
-    borderColor: "#6c47ff",
-    borderRadius: 4,
-    padding: 10,
-    backgroundColor: "#fff",
-  },
-});
 
 export default Profile;

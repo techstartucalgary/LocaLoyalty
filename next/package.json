@@ -9,14 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@clerk/nextjs": "^4.29.1",
-    "@tanstack/react-query": "^4.35.3",
-    "@trpc/client": "^10.43.1",
-    "@trpc/react-query": "^10.43.1",
-    "@trpc/server": "^10.43.1",
+    "@clerk/clerk-react": "^4.30.3",
+    "@clerk/nextjs": "^4.29.3",
+    "@tanstack/react-query": "^5.17.12",
+    "@tanstack/react-query-devtools": "^5.17.12",
+    "axios": "^1.6.5",
     "next": "^14.0.4",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "swr": "^2.2.4",
+    "zustand": "^4.4.7"
   },
   "devDependencies": {
     "@types/node": "^20",

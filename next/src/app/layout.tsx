@@ -1,8 +1,9 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import './globals.css'
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
 import { ClerkProvider, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
+import Providers from "./providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,28 +21,9 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body className={inter.className}>
-          <nav className="flex justify-end fixed w-full top-0 right-0">
-            <SignedOut>
-              <Link
-                href="/sign-in"
-                className="w-28 text-md font-bold mt-2 mr-2 py-2 text-grey-500 border-solid border-2 border-black rounded-lg"
-              >
-                <p className="flex justify-center items-center">Log In</p>
-              </Link>
-              <Link
-                href="/sign-up"
-                className="w-28 text-md font-bold mt-2 mr-2 py-2 text-grey-500 border-solid border-2 border-black rounded-lg"
-              >
-                <p className="flex justify-center items-center">Sign Up</p>
-              </Link>
-            </SignedOut>
-            <SignedIn>
-              <div>
-                <UserButton afterSignOutUrl="/" />
-              </div>
-            </SignedIn>
-          </nav>
-          <main>{children}</main>
+          <Providers>
+            <main>{children}</main>
+          </Providers>
         </body>
       </html>
     </ClerkProvider>

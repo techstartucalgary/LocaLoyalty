@@ -13,6 +13,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@clerk/clerk-js": "^4.68.3",
+    "@clerk/clerk-sdk-node": "^4.13.5",
     "@trpc/server": "^10.43.1",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
