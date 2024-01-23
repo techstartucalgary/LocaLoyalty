@@ -2,7 +2,7 @@
 openapi: 3.0.3
 info:
   title: LocaLoyalty API
-  description: API description
+  description: API routes for LocaLoyalty business website and customer mobile app ***You must be logged into clerk from the front-end to test API because it is protected by the clerk middleware***
   version: "1.0.0"
 tags:
   - name: business
@@ -20,3 +20,61 @@ paths:
       responses:
         200:
           description: Successful response
+  /business/profile:
+    get:
+      tags:
+        - business
+      summary: Get the current profile data of the user
+      description: Queries user profile table in DB for data and sends it back to the front-end. No params required because the header includes the clerk ID already
+      operationId: getBusinessProfile
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BusinessProfile"
+        500:
+          description: User Does not exist in DB
+    post:
+      tags:
+        - business
+      summary: Update user profile info
+      description: Updates the user profile information if valid. UserID is taken from header
+      operationId: updateBusinessProfile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BusinessProfile"
+      responses:
+        200:
+          description: Successful response
+        500:
+          description: Failure
+components:
+  schemas:
+    BusinessProfile:
+      type: object
+      properties:
+        businessName:
+          type: string
+          example: "Zhang's Bakery"
+        address:
+          type: string
+          example: "123 real address NE"
+        city:
+          type: string
+          example: "Calgary"
+        province:
+          type: string
+          example: "Alberta"
+        postalCode:
+          type: string
+          example: "A1B2C3"
+        merchantID:
+          type: string
+          example: "123456789"
+        apiKey:
+          type: string
+          example: "oqpweiopqwepioqiweop"
