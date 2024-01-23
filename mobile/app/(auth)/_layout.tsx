@@ -39,7 +39,7 @@ const WalletHeader = () => {
 	const { user } = useUser();
 
 	return (
-		<View className="bg-[#9FBAFF] pt-16 pb-8 gap-8 rounded-b-3xl items-center px-12">
+		<View className="bg-[#9FBAFF] pt-16 pb-8 gap-8 items-center px-12">
 			<View className="flex flex-row w-full justify-between">
 				<Pressable>
 					<Ionicons name="person-outline" size={24} color={"#000"} />
