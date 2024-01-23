@@ -19,7 +19,7 @@ router.get("/profile", (req: Request, res: Response) => {
   };
 
   //this is what you would use to query db for the specific user
-  console.log(req.auth.userId);
+  //console.log(req.auth.userId);
 
   res.send(dummyData);
 });
