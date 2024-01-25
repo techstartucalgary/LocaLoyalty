@@ -132,16 +132,16 @@ async function getReward(reward_id){
 
 //TODO: functions to edit existing entities
 
-module.exports = {
-    addCustomer,
-    addVendor,
-    addLoyaltyCard,
-    addTransaction,
-    addReward,
-    getCustomer,
-    getVendor,
-    getLoyaltyCard,
-    getPointRedemptionHistory,
-    getTransaction,
-    getReward
+export {
+  addCustomer,
+  addVendor,
+  addLoyaltyCard,
+  addTransaction,
+  addReward,
+  getCustomer,
+  getVendor,
+  getLoyaltyCard,
+  getPointRedemptionHistory,
+  getTransaction,
+  getReward,
 };
