@@ -1,7 +1,10 @@
 "use client";
-import { useAuthStore } from "@/utils/store";
+import {
+  CompletionCardProps,
+  useAuthStore,
+  useOnboardingStore,
+} from "@/utils/store";
 import { useAuth } from "@clerk/nextjs";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Progress } from "@/components/ui/progress";
 import { ProfileCompletionCard } from "@/components/ProfileCompletionCard";
@@ -23,9 +26,26 @@ export function ProgressDemo() {
   return <Progress value={progress} />;
 }
 
+const calculateProfileCompletion = (
+  completionCards: CompletionCardProps[]
+): number => {
+  let progress = 0;
+  const total = completionCards.length;
+
+  // Assuming each card has an `isCompleted` property
+  completionCards.forEach((card) => {
+    if (card.isCompleted) {
+      progress++;
+    }
+  });
+
+  return Math.round((progress / total) * 100);
+};
+
 export default function AuthHome() {
   const { getToken } = useAuth();
   const { setToken } = useAuthStore();
+  const { completionCards, setCompletionCards } = useOnboardingStore();
 
   useEffect(() => {
     async function fetchToken() {
@@ -36,23 +56,54 @@ export default function AuthHome() {
     fetchToken();
   }, [getToken, setToken]);
 
+  useEffect(() => {
+    const dummyCompletionCardData: CompletionCardProps[] = [
+      {
+        id: 1,
+        icon: "/assets/clover.png",
+        title: "Connect your Clover account",
+        order: 1,
+        isCompleted: false,
+        directory: "/auth/profile",
+        buttonText: "Connect",
+      },
+      {
+        id: 2,
+        icon: "/assets/briefcase.png",
+        title: "Add your business information",
+        order: 2,
+        isCompleted: false,
+        directory: "/auth/profile",
+        buttonText: "Add",
+      },
+      {
+        id: 3,
+        icon: "/assets/tag-icon.png",
+        title: "Create your loyalty program",
+        order: 3,
+        isCompleted: false,
+        directory: "/auth/rewards",
+        buttonText: "Create",
+      },
+    ];
+
+    setCompletionCards(dummyCompletionCardData);
+  }, [setCompletionCards]);
+
   return (
-    <div className="flex items-center justify-center my-auto h-full flex-col gap-10 my-20">
-      {/*
-        <Link href="/auth/profile" className="bg-red-500 p-5 mb-5">
-          temp profile direct
-        </Link>
-        */}
+    <div className="flex items-center justify-center h-full flex-col gap-10 my-20">
       <div className="flex justify-center flex-col items-center gap-10 w-2/3 border-4 rounded-md border-black p-10">
         <div className="flex justify-evenly items-center">
           <div className="flex flex-col text-left items-center justify-center">
-            <p className="text-7xl font-extrabold text-left w-2/3">25%</p>
+            <p className="text-7xl font-extrabold text-left w-2/3">
+              {calculateProfileCompletion(completionCards)}%
+            </p>
             <p className="font-bold w-2/3 text-left text-xl">
-              of your profile is complete!
+              of your profile is complete
             </p>
           </div>
           <div className="w-2/3 flex flex-col items-center gap-5 text-left">
-            <ProgressDemo />
+            <Progress value={calculateProfileCompletion(completionCards)} />
             <div className="w-full flex flex-col gap-2">
               <p className="text-xl font-semibold text-left w-full">
                 Complete your profile to start your loyalty rewards program!
@@ -72,9 +123,11 @@ export default function AuthHome() {
         </div>
 
         <div className="flex justify-evenly w-11/12">
-          <ProfileCompletionCard />
-          <ProfileCompletionCard />
-          <ProfileCompletionCard />
+          {completionCards
+            .filter((item) => !item.isCompleted)
+            .map((filteredItem) => (
+              <ProfileCompletionCard key={filteredItem.id} {...filteredItem} />
+            ))}
         </div>
       </div>
 
