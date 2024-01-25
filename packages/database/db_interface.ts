@@ -99,8 +99,11 @@ async function getCustomer(customer_id){
 
 // Gets the vendor object
 //Input: the vendor ID
-async function getVendor(vendor_id){
-    // TODO
+async function getVendor(input_id: number){
+
+    const result = await db.select().from(schema.vendor).where(eq(schema.vendor.vendor_id, input_id)); 
+
+    return result[0];
 }
 
 // Gets the loyalty card object
@@ -126,6 +129,8 @@ async function getTransaction(transaction_id){
 async function getReward(reward_id){
     // TODO
 }
+
+//TODO: functions to edit existing entities
 
 module.exports = {
     addCustomer,
