@@ -5,19 +5,18 @@ Author: Max Pagels
 January 18 2024
 */
 
-import { db } from "./dbObj";
+import { db } from "./dbObj.js";
 import * as schema from './schema.js';
 import { eq } from 'drizzle-orm';
 
-// Adds a new customer to the database
-// Parameters: 
+// Adds a new customer to the database, returns the generated customer_id
 async function addCustomer(
     fname: string, 
     lname: string,
     email: string,
-    address?: string,
-    phone?: string,
-    clerk_id?: string
+    address: string,
+    phone: string,
+    clerk_id: string
     ) {
 
         //insert base info
@@ -25,6 +24,9 @@ async function addCustomer(
             fname: fname, 
             lname: lname, 
             email: email, 
+            address: address,
+            phone: phone,
+            clerk_id: clerk_id
         });
 
         //get customer id
@@ -32,20 +34,7 @@ async function addCustomer(
             id: schema.customer.customer_id
         }).from(schema.customer).where(eq(schema.customer.email, email)); 
 
-        //optional data
-        if (address){
-            //insert addr
-        }
-
-        if(phone){
-            //insert phone
-        }
-
-        if(clerk_id){
-            //insert clerk id
-        }
-
-    // create new transaction history
+        return result[0].id;
 }
 
 // Adds a new vendor to the database
