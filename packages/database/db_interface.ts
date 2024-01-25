@@ -19,7 +19,7 @@ async function addCustomer(
     clerk_id: string
     ) {
 
-        //insert base info
+        //insert info
         await db.insert(schema.customer).values({ 
             fname: fname, 
             lname: lname, 
@@ -37,10 +37,39 @@ async function addCustomer(
         return result[0].id;
 }
 
-// Adds a new vendor to the database
-// Parameters: 
-async function addVendor() {
-    // TODO
+// Adds a new vendor to the database, returns the generated vendor_id
+// NOTE: must input decimal spending_per_point as a string because Drizzle is weird
+async function addVendor(
+    name: string,
+    email: string,
+    address: string,
+    phone: string,
+    description: string,
+    color: string,
+    reward_program_details: string,
+    spending_per_point: string, //must input decimal as a string
+    max_points : number
+    ) {
+    
+        //insert info
+        await db.insert(schema.vendor).values({ 
+            name: name,
+            email: email,
+            address: address,
+            phone: phone,
+            description: description,
+            color: color,
+            reward_program_details : reward_program_details,
+            spending_per_point: spending_per_point,
+            max_points : max_points
+        });
+
+        //get vendor id
+        const result = await db.select({
+            id: schema.vendor.vendor_id
+        }).from(schema.vendor).where(eq(schema.vendor.email, email)); 
+
+        return result[0].id;
 }
 
 // Adds a new loyalty card to the customer
