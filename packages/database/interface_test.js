@@ -1,8 +1,6 @@
 "use strict";
 /*
-Fills the db with some dummy data
-Author: Max Pagels
-January 16 2024
+To test db_interface
 */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -40,36 +38,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-var dbObj_1 = require("./dbObj");
-var schema = require("./schema.js");
-function insert() {
+exports.__esModule = true;
+var interfac = require("./db_interface");
+var customer_id = 34783478; //hardcoded id
+function myFunction() {
     return __awaiter(this, void 0, void 0, function () {
+        var result;
         return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, dbObj_1.db.insert(schema.customer).values({ fname: "Hilton", lname: "Luuuu", email: "hl@gmail.com", address: "123 Street, Calgary", phone: "4035557777" })];
-                case 1:
-                    _a.sent();
-                    console.log("Inserted customers");
-                    return [4 /*yield*/, dbObj_1.db.insert(schema.vendor).values({ name: "Bobs Burgers", email: "bobb@gmail.com", address: "123 Main Street, Calgary", phone: "4031234444", description: "We make the best burgers!" })];
-                case 2:
-                    _a.sent();
-                    console.log("Inserted vendors");
-                    return [4 /*yield*/, dbObj_1.db.insert(schema.rewards_program).values({ details: "Bob's rewards program.", spending_per_point: "10.0" })];
-                case 3:
-                    _a.sent();
-                    console.log("Inserted rewards program");
-                    return [4 /*yield*/, dbObj_1.db.insert(schema.loyalty_card).values({ points_amt: 0, carry_over_amt: "0.0" })];
-                case 4:
-                    _a.sent();
-                    console.log("Inserted rewards program");
-                    return [4 /*yield*/, dbObj_1.db.insert(schema.reward).values({ name: "Free Burger", description: "Redeem 5 punches for a free burger! ", points_cost: 5 })];
-                case 5:
-                    _a.sent();
-                    console.log("Inserted rewards program");
-                    return [2 /*return*/];
-            }
+            result = interfac.getCustomer(customer_id);
+            return [2 /*return*/, result];
         });
     });
 }
-insert().catch(function (error) { return console.error(error); });
+myFunction().then(function (data) { return console.log(data); });
