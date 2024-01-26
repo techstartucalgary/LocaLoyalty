@@ -123,14 +123,23 @@ async function addPointRedemption(
     loyalty_id, //TODO: enforce types
     points_redeemed,
         ) {
+            //take timestamp
+            const stamp = new Date();
+
+            //insert data
             await db.insert(schema.point_redemption_history).values({
                 loyalty_id: loyalty_id,
                 points_redeemed: points_redeemed,
-                timestamp: new Date()
+                timestamp: stamp
             });
 
-            //TODO: figure out how to return id??
-            const result = "id";
+            // Get point redemption id
+            const result = await db.select({
+                id: schema.point_redemption_history.history_id
+            }).from(schema.point_redemption_history).where(and(
+                eq(schema.point_redemption_history.loyalty_id, loyalty_id),
+                eq(schema.point_redemption_history.timestamp, stamp)
+            ));
 
             //if there is an error return null
             if (Object.keys(result).length === 0) {
