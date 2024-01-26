@@ -243,9 +243,19 @@ async function getAllPointRedemptionHistoryOfCard(loyalty_id) {
     return results;
 }
 
-//TODO: getAllTransactionsOfCard(loyalty_id)
+// Gets all previous transactions for a given loyalty card
+// Input: the loyalty_id of the loyalty card
+async function getAllTransactionsOfCard(loyalty_id) {
+    const results = await db.select().from(schema.transaction).where(eq(schema.transaction.loyalty_id, loyalty_id));
+    return results;
+}
 
-//TODO: getAllRewardsOfVendor(vendor_id)
+// Gets all rewards in the program of a given vendor
+// Input: the vendor_id of the vendor
+async function getAllRewardsOfVendor(vendor_id) {
+    const results = await db.select().from(schema.reward).where(eq(schema.reward.vendor_id, vendor_id));
+    return results;
+}
 
 //TODO: functions to edit existing entities
 
