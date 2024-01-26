@@ -228,7 +228,9 @@ async function addReward(
 // Gets the customer object
 // Input: the customer ID
 async function getCustomer(customer_id){
-        const result = await db.select().from(schema.customer).where(eq(schema.customer.customer_id, customer_id)); 
+        const result = await db.select()
+            .from(schema.customer)
+            .where(eq(schema.customer.customer_id, customer_id)); 
 
         //if there is an error return null
         if (Object.keys(result).length === 0) {
@@ -242,7 +244,9 @@ async function getCustomer(customer_id){
 // Gets the vendor object
 //Input: the vendor ID
 async function getVendor(input_id: number){
-        const result = await db.select().from(schema.vendor).where(eq(schema.vendor.vendor_id, input_id)); 
+        const result = await db.select()
+            .from(schema.vendor)
+            .where(eq(schema.vendor.vendor_id, input_id)); 
         
         //if there is an error return null
         if (Object.keys(result).length === 0) {
@@ -256,7 +260,9 @@ async function getVendor(input_id: number){
 // Gets the loyalty card object
 // Input: the loyalty car ID
 async function getLoyaltyCard(loyalty_id){
-    const result = await db.select().from(schema.loyalty_card).where(eq(schema.loyalty_card.loyalty_id, loyalty_id)); 
+    const result = await db.select()
+        .from(schema.loyalty_card)
+        .where(eq(schema.loyalty_card.loyalty_id, loyalty_id)); 
     
     //if there is an error return null
     if (Object.keys(result).length === 0) {
@@ -270,7 +276,9 @@ async function getLoyaltyCard(loyalty_id){
 // Gets the point redemption history object
 // Input: the loyalty card ID
 async function getPointRedemptionHistory(loyalty_id){
-    const result = await db.select().from(schema.point_redemption_history).where(eq(schema.point_redemption_history.loyalty_id, loyalty_id)); 
+    const result = await db.select()
+        .from(schema.point_redemption_history)
+        .where(eq(schema.point_redemption_history.loyalty_id, loyalty_id)); 
     
     //if there is an error return null
     if (Object.keys(result).length === 0) {
@@ -284,7 +292,9 @@ async function getPointRedemptionHistory(loyalty_id){
 // Gets the transaction object 
 // Input: the transaction ID
 async function getTransaction(transaction_id){
-    const result = await db.select().from(schema.transaction).where(eq(schema.transaction.transaction_id, transaction_id)); 
+    const result = await db.select()
+        .from(schema.transaction)
+        .where(eq(schema.transaction.transaction_id, transaction_id)); 
     
     //if there is an error return null
     if (Object.keys(result).length === 0) {
@@ -298,7 +308,9 @@ async function getTransaction(transaction_id){
 // Gets the reward object
 // Input: the reward ID
 async function getReward(reward_id){
-    const result = await db.select().from(schema.reward).where(eq(schema.reward.reward_id, reward_id)); 
+    const result = await db.select()
+        .from(schema.reward)
+        .where(eq(schema.reward.reward_id, reward_id)); 
     
     //if there is an error return null
     if (Object.keys(result).length === 0) {
@@ -313,7 +325,8 @@ async function getReward(reward_id){
 
 // Gets all vendors in the database
 async function getAllVendors() {
-    const results = await db.select().from(schema.vendor);
+    const results = await db.select()
+        .from(schema.vendor);
 
     //if there is an error return null
     if (Object.keys(results).length === 0) {
@@ -327,7 +340,9 @@ async function getAllVendors() {
 // Gets all loyalty cards for a given customer
 // Input: the customers customer_id
 async function getAllLoyaltyCardsOfCustomer(customer_id) {
-    const results = await db.select().from(schema.loyalty_card).where(eq(schema.loyalty_card.customer_id, customer_id));
+    const results = await db.select()
+        .from(schema.loyalty_card)
+        .where(eq(schema.loyalty_card.customer_id, customer_id));
     
     //if there is an error return null
     if (Object.keys(results).length === 0) {
@@ -341,7 +356,9 @@ async function getAllLoyaltyCardsOfCustomer(customer_id) {
 // Gets all point redemption history for a given loyalty card
 // Input: the loyalty_id of the loyalty card
 async function getAllPointRedemptionHistoryOfCard(loyalty_id) {
-    const results = await db.select().from(schema.point_redemption_history).where(eq(schema.point_redemption_history.loyalty_id, loyalty_id));
+    const results = await db.select()
+        .from(schema.point_redemption_history)
+        .where(eq(schema.point_redemption_history.loyalty_id, loyalty_id));
     
     //if there is an error return null
     if (Object.keys(results).length === 0) {
@@ -355,7 +372,9 @@ async function getAllPointRedemptionHistoryOfCard(loyalty_id) {
 // Gets all previous transactions for a given loyalty card
 // Input: the loyalty_id of the loyalty card
 async function getAllTransactionsOfCard(loyalty_id) {
-    const results = await db.select().from(schema.transaction).where(eq(schema.transaction.loyalty_id, loyalty_id));
+    const results = await db.select()
+        .from(schema.transaction)
+        .where(eq(schema.transaction.loyalty_id, loyalty_id));
     
     //if there is an error return null
     if (Object.keys(results).length === 0) {
@@ -369,7 +388,9 @@ async function getAllTransactionsOfCard(loyalty_id) {
 // Gets all rewards in the program of a given vendor
 // Input: the vendor_id of the vendor
 async function getAllRewardsOfVendor(vendor_id) {
-    const results = await db.select().from(schema.reward).where(eq(schema.reward.vendor_id, vendor_id));
+    const results = await db.select()
+        .from(schema.reward)
+        .where(eq(schema.reward.vendor_id, vendor_id));
     
     //if there is an error return null
     if (Object.keys(results).length === 0) {
@@ -383,7 +404,9 @@ async function getAllRewardsOfVendor(vendor_id) {
 // Gets a customer_id based on a clerk_id
 // Input: a clerk id as a string
 async function getCustomerFromClerkID(clerk_id: string){
-    const result = await db.select().from(schema.customer).where(eq(schema.customer.clerk_id, clerk_id));
+    const result = await db.select()
+        .from(schema.customer)
+        .where(eq(schema.customer.clerk_id, clerk_id));
 
     //if there is an error return null
     if (Object.keys(result).length === 0) {
@@ -392,6 +415,20 @@ async function getCustomerFromClerkID(clerk_id: string){
     }
     
     return result;
+}
+
+async function editCustomer(
+    customer_id,
+    attribute,
+    newValue
+    ){
+        //update value
+        await db.update(schema.customer)
+            .set({[attribute]: [newValue]})
+            .where(eq(schema.customer.customer_id, customer_id));
+
+        //test to see if the query was successfull
+        //TODO
 }
 
 //TODO: functions to edit existing entities
@@ -414,5 +451,6 @@ export {
     getAllPointRedemptionHistoryOfCard,
     getAllTransactionsOfCard,
     getAllRewardsOfVendor,
-    getCustomerFromClerkID
+    getCustomerFromClerkID,
+    editCustomer
 };
