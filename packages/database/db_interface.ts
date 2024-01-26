@@ -7,7 +7,7 @@ January 18 2024
 
 import { db } from "./dbObj.js";
 import * as schema from './schema.js';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 
 // Adds a new customer to the database, returns the generated customer_id
 async function addCustomer(
@@ -73,36 +73,122 @@ async function addVendor(
 }
 
 // Adds a new loyalty card to the customer
-// Parameters: 
-async function addLoyaltyCard() {
-    // TODO
-    // new point redemption history
+async function addLoyaltyCard(
+    customer_id, //TODO: enforce types
+    vendor_id, 
+    points_amt, 
+    carry_over_amt
+    ) {
+    
+    // Insert loyalty card information
+    await db.insert(schema.loyalty_card).values({
+        customer_id: customer_id,
+        vendor_id: vendor_id,
+        points_amt: points_amt,
+        carry_over_amt: carry_over_amt
+    });
+
+    // Get loyalty card id
+    const result = await db.select({
+        id: schema.loyalty_card.loyalty_id
+    }).from(schema.loyalty_card).where(and(
+        eq(schema.loyalty_card.customer_id, customer_id),
+        eq(schema.loyalty_card.vendor_id, vendor_id)
+    ));
+
+    return result[0].id;
+}
+
+// Adds a new point redemption
+// Timestamp auto generated
+async function addPointRedemption(
+    loyalty_id, //TODO: enforce types
+    points_redeemed,
+    ) {
+        await db.insert(schema.point_redemption_history).values({
+            loyalty_id: loyalty_id,
+            points_redeemed: points_redeemed,
+            timestamp: new Date()
+        });
+
+        //TODO: figure out how to return id??
 }
 
 // Adds a new transaction a customer completed
-// Parameters: 
-async function addTransaction() {
-    // TODO 
+async function addTransaction(
+    loyalty_id, //TODO: enforce types
+    vendor_id, 
+    purchase_amt, 
+    points_earned, 
+    timestamp, 
+    payment_type
+    ) {
+    
+    // Insert transaction information
+    await db.insert(schema.transaction).values({
+        loyalty_id: loyalty_id,
+        vendor_id: vendor_id,
+        purchase_amt: purchase_amt,
+        points_earned: points_earned,
+        timestamp: timestamp,
+        payment_type: payment_type
+    });
+
+    // Get transaction id
+    const result = await db.select({
+        id: schema.transaction.transaction_id
+    }).from(schema.transaction).where(
+        and(
+            eq(schema.transaction.timestamp, timestamp),
+            and(
+                eq(schema.transaction.loyalty_id, loyalty_id),
+                eq(schema.transaction.vendor_id, vendor_id)
+            )
+        )
+    );
+
+    return result[0].id;
 }
 
 // Adds a new reward to a vendor program
-// Parameters:
-async function addReward() {
-    // TODO
+async function addReward(
+    vendor_id, //TODO: enforce types
+    name, 
+    description, 
+    points_cost
+    ) {
+    
+    // Insert reward information
+    await db.insert(schema.reward).values({
+        vendor_id: vendor_id,
+        name: name,
+        description: description,
+        points_cost: points_cost
+    });
+
+    // Get reward id
+    const result = await db.select({
+        id: schema.reward.reward_id
+    }).from(schema.reward).where(and(
+        eq(schema.reward.vendor_id, vendor_id),
+        eq(schema.reward.name, name)
+    ));
+
+    return result[0].id;
 }
+
 
 // Gets the customer object
 // Input: the customer ID
 async function getCustomer(customer_id){
-    // TODO
+    const result = await db.select().from(schema.customer).where(eq(schema.customer.customer_id, customer_id)); 
+    return result[0];
 }
 
 // Gets the vendor object
 //Input: the vendor ID
 async function getVendor(input_id: number){
-
     const result = await db.select().from(schema.vendor).where(eq(schema.vendor.vendor_id, input_id)); 
-
     return result[0];
 }
 
@@ -138,6 +224,7 @@ module.exports = {
     addLoyaltyCard,
     addTransaction,
     addReward,
+    addPointRedemption,
     getCustomer,
     getVendor,
     getLoyaltyCard,
