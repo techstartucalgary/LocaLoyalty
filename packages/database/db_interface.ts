@@ -195,25 +195,29 @@ async function getVendor(input_id: number){
 // Gets the loyalty card object
 // Input: the loyalty car ID
 async function getLoyaltyCard(loyalty_id){
-    // TODO
+    const result = await db.select().from(schema.loyalty_card).where(eq(schema.loyalty_card.loyalty_id, loyalty_id)); 
+    return result[0];
 }
 
 // Gets the point redemption history object
 // Input: the loyalty card ID
 async function getPointRedemptionHistory(loyalty_id){
-    // TODO
+    const result = await db.select().from(schema.point_redemption_history).where(eq(schema.point_redemption_history.loyalty_id, loyalty_id)); 
+    return result[0];
 }
 
 // Gets the transaction object 
 // Input: the transaction ID
 async function getTransaction(transaction_id){
-    // TODO
+    const result = await db.select().from(schema.transaction).where(eq(schema.transaction.transaction_id, transaction_id)); 
+    return result[0];
 }
 
 // Gets the reward object
 // Input: the reward ID
 async function getReward(reward_id){
-    // TODO
+    const result = await db.select().from(schema.reward).where(eq(schema.reward.reward_id, reward_id)); 
+    return result[0];
 }
 
 //TODO: functions to edit existing entities
