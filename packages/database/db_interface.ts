@@ -380,6 +380,20 @@ async function getAllRewardsOfVendor(vendor_id) {
     return results;
 }
 
+// Gets a customer_id based on a clerk_id
+// Input: a clerk id as a string
+async function getCustomerFromClerkID(clerk_id: string){
+    const result = await db.select().from(schema.customer).where(eq(schema.customer.clerk_id, clerk_id));
+
+    //if there is an error return null
+    if (Object.keys(result).length === 0) {
+        console.log("Database query failed")
+        return null;
+    }
+    
+    return result;
+}
+
 //TODO: functions to edit existing entities
 
 export {
