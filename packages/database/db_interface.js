@@ -230,6 +230,12 @@ function getCustomer(customer_id) {
                 case 0: return [4 /*yield*/, dbObj_js_1.db.select().from(schema.customer).where((0, drizzle_orm_1.eq)(schema.customer.customer_id, customer_id))];
                 case 1:
                     result = _a.sent();
+                    console.log(result);
+                    //if there is an error return null
+                    if (Object.keys(result).length === 0) {
+                        console.log("Database query failed");
+                        return [2 /*return*/, null];
+                    }
                     return [2 /*return*/, result[0]];
             }
         });

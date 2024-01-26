@@ -40,7 +40,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 var interfac = require("./db_interface");
-var customer_id = 1; //hardcoded id
+var customer_id = 34783478; //hardcoded id
 function myFunction() {
     return __awaiter(this, void 0, void 0, function () {
         var result;

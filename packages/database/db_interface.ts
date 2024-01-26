@@ -34,6 +34,12 @@ async function addCustomer(
             id: schema.customer.customer_id
         }).from(schema.customer).where(eq(schema.customer.email, email)); 
 
+        //if there is an error return null
+        if (Object.keys(result).length === 0) {
+            console.log("Database query failed")
+            return null;
+        }
+
         return result[0].id;
 }
 
@@ -69,34 +75,46 @@ async function addVendor(
             id: schema.vendor.vendor_id
         }).from(schema.vendor).where(eq(schema.vendor.email, email)); 
 
+        //if there is an error return null
+        if (Object.keys(result).length === 0) {
+            console.log("Database query failed")
+            return null;
+        }
+
         return result[0].id;
 }
 
 // Adds a new loyalty card to the customer
 async function addLoyaltyCard(
-    customer_id, //TODO: enforce types
-    vendor_id, 
-    points_amt, 
-    carry_over_amt
-    ) {
-    
-    // Insert loyalty card information
-    await db.insert(schema.loyalty_card).values({
-        customer_id: customer_id,
-        vendor_id: vendor_id,
-        points_amt: points_amt,
-        carry_over_amt: carry_over_amt
-    });
+        customer_id, //TODO: enforce types
+        vendor_id, 
+        points_amt, 
+        carry_over_amt
+        ) {
+        
+        // Insert loyalty card information
+        await db.insert(schema.loyalty_card).values({
+            customer_id: customer_id,
+            vendor_id: vendor_id,
+            points_amt: points_amt,
+            carry_over_amt: carry_over_amt
+        });
 
-    // Get loyalty card id
-    const result = await db.select({
-        id: schema.loyalty_card.loyalty_id
-    }).from(schema.loyalty_card).where(and(
-        eq(schema.loyalty_card.customer_id, customer_id),
-        eq(schema.loyalty_card.vendor_id, vendor_id)
-    ));
+        // Get loyalty card id
+        const result = await db.select({
+            id: schema.loyalty_card.loyalty_id
+        }).from(schema.loyalty_card).where(and(
+            eq(schema.loyalty_card.customer_id, customer_id),
+            eq(schema.loyalty_card.vendor_id, vendor_id)
+        ));
 
-    return result[0].id;
+        //if there is an error return null
+        if (Object.keys(result).length === 0) {
+            console.log("Database query failed")
+            return null;
+        }
+
+        return result[0].id;
 }
 
 // Adds a new point redemption
@@ -104,14 +122,23 @@ async function addLoyaltyCard(
 async function addPointRedemption(
     loyalty_id, //TODO: enforce types
     points_redeemed,
-    ) {
-        await db.insert(schema.point_redemption_history).values({
-            loyalty_id: loyalty_id,
-            points_redeemed: points_redeemed,
-            timestamp: new Date()
-        });
+        ) {
+            await db.insert(schema.point_redemption_history).values({
+                loyalty_id: loyalty_id,
+                points_redeemed: points_redeemed,
+                timestamp: new Date()
+            });
 
-        //TODO: figure out how to return id??
+            //TODO: figure out how to return id??
+            const result = "id";
+
+            //if there is an error return null
+            if (Object.keys(result).length === 0) {
+                console.log("Database query failed")
+                return null;
+            }
+
+            return result;
 }
 
 // Adds a new transaction a customer completed
@@ -122,32 +149,38 @@ async function addTransaction(
     points_earned, 
     timestamp, 
     payment_type
-    ) {
-    
-    // Insert transaction information
-    await db.insert(schema.transaction).values({
-        loyalty_id: loyalty_id,
-        vendor_id: vendor_id,
-        purchase_amt: purchase_amt,
-        points_earned: points_earned,
-        timestamp: timestamp,
-        payment_type: payment_type
-    });
+        ) {
+        
+        // Insert transaction information
+        await db.insert(schema.transaction).values({
+            loyalty_id: loyalty_id,
+            vendor_id: vendor_id,
+            purchase_amt: purchase_amt,
+            points_earned: points_earned,
+            timestamp: timestamp,
+            payment_type: payment_type
+        });
 
-    // Get transaction id
-    const result = await db.select({
-        id: schema.transaction.transaction_id
-    }).from(schema.transaction).where(
-        and(
-            eq(schema.transaction.timestamp, timestamp),
+        // Get transaction id
+        const result = await db.select({
+            id: schema.transaction.transaction_id
+        }).from(schema.transaction).where(
             and(
-                eq(schema.transaction.loyalty_id, loyalty_id),
-                eq(schema.transaction.vendor_id, vendor_id)
+                eq(schema.transaction.timestamp, timestamp),
+                and(
+                    eq(schema.transaction.loyalty_id, loyalty_id),
+                    eq(schema.transaction.vendor_id, vendor_id)
+                )
             )
-        )
-    );
+        );
 
-    return result[0].id;
+        //if there is an error return null
+        if (Object.keys(result).length === 0) {
+            console.log("Database query failed")
+            return null;
+        }
+    
+         return result[0].id;
 }
 
 // Adds a new reward to a vendor program
@@ -156,46 +189,72 @@ async function addReward(
     name, 
     description, 
     points_cost
-    ) {
-    
-    // Insert reward information
-    await db.insert(schema.reward).values({
-        vendor_id: vendor_id,
-        name: name,
-        description: description,
-        points_cost: points_cost
-    });
+        ) {
+        
+        // Insert reward information
+        await db.insert(schema.reward).values({
+            vendor_id: vendor_id,
+            name: name,
+            description: description,
+            points_cost: points_cost
+        });
 
-    // Get reward id
-    const result = await db.select({
-        id: schema.reward.reward_id
-    }).from(schema.reward).where(and(
-        eq(schema.reward.vendor_id, vendor_id),
-        eq(schema.reward.name, name)
-    ));
+        // Get reward id
+        const result = await db.select({
+            id: schema.reward.reward_id
+        }).from(schema.reward).where(and(
+            eq(schema.reward.vendor_id, vendor_id),
+            eq(schema.reward.name, name)
+        ));
 
-    return result[0].id;
+        //if there is an error return null
+        if (Object.keys(result).length === 0) {
+            console.log("Database query failed")
+            return null;
+        }
+
+        return result[0].id;
 }
-
 
 // Gets the customer object
 // Input: the customer ID
 async function getCustomer(customer_id){
-    const result = await db.select().from(schema.customer).where(eq(schema.customer.customer_id, customer_id)); 
-    return result[0];
+        const result = await db.select().from(schema.customer).where(eq(schema.customer.customer_id, customer_id)); 
+
+        //if there is an error return null
+        if (Object.keys(result).length === 0) {
+            console.log("Database query failed")
+            return null;
+        }
+        
+        return result[0];
 }
 
 // Gets the vendor object
 //Input: the vendor ID
 async function getVendor(input_id: number){
-    const result = await db.select().from(schema.vendor).where(eq(schema.vendor.vendor_id, input_id)); 
-    return result[0];
+        const result = await db.select().from(schema.vendor).where(eq(schema.vendor.vendor_id, input_id)); 
+        
+        //if there is an error return null
+        if (Object.keys(result).length === 0) {
+            console.log("Database query failed")
+            return null;
+        }
+
+        return result[0];
 }
 
 // Gets the loyalty card object
 // Input: the loyalty car ID
 async function getLoyaltyCard(loyalty_id){
     const result = await db.select().from(schema.loyalty_card).where(eq(schema.loyalty_card.loyalty_id, loyalty_id)); 
+    
+    //if there is an error return null
+    if (Object.keys(result).length === 0) {
+        console.log("Database query failed")
+        return null;
+    }
+    
     return result[0];
 }
 
@@ -203,6 +262,13 @@ async function getLoyaltyCard(loyalty_id){
 // Input: the loyalty card ID
 async function getPointRedemptionHistory(loyalty_id){
     const result = await db.select().from(schema.point_redemption_history).where(eq(schema.point_redemption_history.loyalty_id, loyalty_id)); 
+    
+    //if there is an error return null
+    if (Object.keys(result).length === 0) {
+        console.log("Database query failed")
+        return null;
+    }
+    
     return result[0];
 }
 
@@ -210,6 +276,13 @@ async function getPointRedemptionHistory(loyalty_id){
 // Input: the transaction ID
 async function getTransaction(transaction_id){
     const result = await db.select().from(schema.transaction).where(eq(schema.transaction.transaction_id, transaction_id)); 
+    
+    //if there is an error return null
+    if (Object.keys(result).length === 0) {
+        console.log("Database query failed")
+        return null;
+    }
+    
     return result[0];
 }
 
@@ -217,6 +290,13 @@ async function getTransaction(transaction_id){
 // Input: the reward ID
 async function getReward(reward_id){
     const result = await db.select().from(schema.reward).where(eq(schema.reward.reward_id, reward_id)); 
+    
+    //if there is an error return null
+    if (Object.keys(result).length === 0) {
+        console.log("Database query failed")
+        return null;
+    }
+    
     return result[0];
 }
 
@@ -226,6 +306,12 @@ async function getReward(reward_id){
 async function getAllVendors() {
     const results = await db.select().from(schema.vendor);
 
+    //if there is an error return null
+    if (Object.keys(results).length === 0) {
+        console.log("Database query failed")
+        return null;
+    }
+
     return results;
 }
 
@@ -233,6 +319,13 @@ async function getAllVendors() {
 // Input: the customers customer_id
 async function getAllLoyaltyCardsOfCustomer(customer_id) {
     const results = await db.select().from(schema.loyalty_card).where(eq(schema.loyalty_card.customer_id, customer_id));
+    
+    //if there is an error return null
+    if (Object.keys(results).length === 0) {
+        console.log("Database query failed")
+        return null;
+    }
+    
     return results;
 }
 
@@ -240,6 +333,13 @@ async function getAllLoyaltyCardsOfCustomer(customer_id) {
 // Input: the loyalty_id of the loyalty card
 async function getAllPointRedemptionHistoryOfCard(loyalty_id) {
     const results = await db.select().from(schema.point_redemption_history).where(eq(schema.point_redemption_history.loyalty_id, loyalty_id));
+    
+    //if there is an error return null
+    if (Object.keys(results).length === 0) {
+        console.log("Database query failed")
+        return null;
+    }
+    
     return results;
 }
 
@@ -247,6 +347,13 @@ async function getAllPointRedemptionHistoryOfCard(loyalty_id) {
 // Input: the loyalty_id of the loyalty card
 async function getAllTransactionsOfCard(loyalty_id) {
     const results = await db.select().from(schema.transaction).where(eq(schema.transaction.loyalty_id, loyalty_id));
+    
+    //if there is an error return null
+    if (Object.keys(results).length === 0) {
+        console.log("Database query failed")
+        return null;
+    }
+    
     return results;
 }
 
@@ -254,6 +361,13 @@ async function getAllTransactionsOfCard(loyalty_id) {
 // Input: the vendor_id of the vendor
 async function getAllRewardsOfVendor(vendor_id) {
     const results = await db.select().from(schema.reward).where(eq(schema.reward.vendor_id, vendor_id));
+    
+    //if there is an error return null
+    if (Object.keys(results).length === 0) {
+        console.log("Database query failed")
+        return null;
+    }
+    
     return results;
 }
 
