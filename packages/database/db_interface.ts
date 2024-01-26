@@ -220,6 +220,33 @@ async function getReward(reward_id){
     return result[0];
 }
 
+// Get all customers has no use case for now...
+
+// Gets all vendors in the database
+async function getAllVendors() {
+    const results = await db.select().from(schema.vendor);
+
+    return results;
+}
+
+// Gets all loyalty cards for a given customer
+// Input: the customers customer_id
+async function getAllLoyaltyCardsOfCustomer(customer_id) {
+    const results = await db.select().from(schema.loyalty_card).where(eq(schema.loyalty_card.customer_id, customer_id));
+    return results;
+}
+
+// Gets all point redemption history for a given loyalty card
+// Input: the loyalty_id of the loyalty card
+async function getAllPointRedemptionHistoryOfCard(loyalty_id) {
+    const results = await db.select().from(schema.point_redemption_history).where(eq(schema.point_redemption_history.loyalty_id, loyalty_id));
+    return results;
+}
+
+//TODO: getAllTransactionsOfCard(loyalty_id)
+
+//TODO: getAllRewardsOfVendor(vendor_id)
+
 //TODO: functions to edit existing entities
 
 module.exports = {
@@ -235,4 +262,5 @@ module.exports = {
     getPointRedemptionHistory,
     getTransaction,
     getReward
+    //other exports
 };
