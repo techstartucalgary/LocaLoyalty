@@ -259,7 +259,7 @@ async function getAllRewardsOfVendor(vendor_id) {
 
 //TODO: functions to edit existing entities
 
-module.exports = {
+export {
     addCustomer,
     addVendor,
     addLoyaltyCard,
@@ -271,6 +271,10 @@ module.exports = {
     getLoyaltyCard,
     getPointRedemptionHistory,
     getTransaction,
-    getReward
-    //other exports
+    getReward, 
+    getAllVendors,
+    getAllLoyaltyCardsOfCustomer,
+    getAllPointRedemptionHistoryOfCard,
+    getAllTransactionsOfCard,
+    getAllRewardsOfVendor
 };
