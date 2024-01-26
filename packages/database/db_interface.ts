@@ -413,5 +413,6 @@ export {
     getAllLoyaltyCardsOfCustomer,
     getAllPointRedemptionHistoryOfCard,
     getAllTransactionsOfCard,
-    getAllRewardsOfVendor
+    getAllRewardsOfVendor,
+    getCustomerFromClerkID
 };
