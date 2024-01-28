@@ -1,8 +1,10 @@
-import { Stack, Tabs } from "expo-router";
+import { Link, Stack, Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, Text, View } from "react-native";
 import { useAuth, useUser } from "@clerk/clerk-expo";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { cardData } from "../../content/temp-card-data";
+
 
 export const LogoutButton = () => {
 	const { signOut } = useAuth();
@@ -66,9 +68,23 @@ const WalletHeader = () => {
 
 };
 
+const BusinessCardHeader = () => {
+
+
+	return (
+		<View className="bg-[#29524A] pt-16 pb-24 gap-8 items-center px-12">
+			<View className="flex flex-row w-full justify-between">
+				<Link href={"../wallet"}>
+					<Ionicons name="arrow-back" size={24} color={"#000"} />
+				</Link>
+			</View>
+		</View>
+	);
+
+};
+
 const TabsPage = () => {
 	const { isSignedIn } = useAuth();
-	const { user } = useUser();
 
 	return (
 		<>
@@ -125,6 +141,14 @@ const TabsPage = () => {
 				<Tabs.Screen
 					name="tutorial"
 					options={{ tabBarButton: () => null, headerShown: false }}
+				/>
+				<Tabs.Screen
+					name="card/[businessName]"
+					options={{
+						href: null,
+						header: () => <BusinessCardHeader />,
+					}}
+					redirect={!isSignedIn}
 				/>
 			</Tabs>
 		</>

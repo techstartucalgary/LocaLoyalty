@@ -28,20 +28,19 @@ const Card = ({
 	const emptyStamps = [];
 
 	for (let i = 0; i < completedStamps; i++) {
-		fullStamps.push(<Stamp key={i} color={primaryColor} />);
+		fullStamps.push(<Stamp factor={1} key={i} color={primaryColor} />);
 	}
 
 	for (let i = 0; i < maxStamps - completedStamps; i++) {
 		emptyStamps.push(<EmptyStamp key={i} />);
 	}
 
-	const borderStyle = `h-full w-full border-2 flex-1 rounded-xl py-2 bg-[${primaryColor}]`;
 
 	return (
 		<View className="h-64 flex-1 py-2">
 			<Link href={slug} className="h-full w-full rounded-xl" asChild>
 				<Pressable>
-					<View className={borderStyle}>
+					<View style={{backgroundColor: primaryColor}} className="h-full w-full border-2 flex-1 rounded-xl py-2">
 						<View className="flex-1 items-center px-4 bg-[#F7F8F8]">
 							<View className="flex-row px-4 py-8 w-full">
 								<Image source={businessImage} className="basis-1/4" />
@@ -66,12 +65,6 @@ const Card = ({
 								</View>
 							</View>
 						</View>
-						{/* <View className="p-2">
-						<Image
-							source={require("../../assets/images/stamp.svg")}
-							className=""
-						/>
-					</View> */}
 					</View>
 				</Pressable>
 			</Link>
@@ -80,12 +73,11 @@ const Card = ({
 };
 
 const Wallet = () => {
-	const { user } = useUser();
 
 	return (
-		<View className="h-full bg-[#F7F8F8]">
+		<View className="h-full bg-[#F7F8F8] pt-48">
 			<FlatList
-				className="h-full w-full p-6"
+				className="h-full w-full px-6 pt-6 pb-32"
 				data={cardData}
 				renderItem={({ item }) => {
 					return (
