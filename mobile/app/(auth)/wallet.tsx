@@ -6,6 +6,7 @@ import { cardData } from "../../content/temp-card-data";
 import Stamp from "../../assets/images/stamp";
 import EmptyStamp from "../../assets/images/emptyStamp";
 import { AntDesign } from "@expo/vector-icons";
+import { useWalletStore } from "../../utils/walletStore";
 
 type Card = {
 	businessName: string;
@@ -22,29 +23,60 @@ const Card = ({
 	maxStamps,
 	primaryColor,
 }: Card) => {
+	const {
+		setCurrentBusinessName,
+		setCurrentBusinessImage,
+		setCurrentCompletedStamps,
+		setCurrentMaxStamps,
+		setCurrentPrimaryColor,
+	} = useWalletStore();
+
+	function handleCardClick(cardPressed: Card) {
+		setCurrentBusinessName(cardPressed.businessName);
+		setCurrentBusinessImage(cardPressed.businessImage);
+		setCurrentCompletedStamps(cardPressed.completedStamps);
+		setCurrentMaxStamps(cardPressed.maxStamps);
+		setCurrentPrimaryColor(cardPressed.primaryColor);
+	}
+
 	const slug: string = `./card/${businessName}`;
 
 	const fullStamps = [];
 	const emptyStamps = [];
 
 	for (let i = 0; i < completedStamps; i++) {
-		fullStamps.push(<Stamp factor={1} key={i} color={primaryColor} />);
+		fullStamps.push(<Stamp key={i} color={primaryColor} />);
 	}
 
 	for (let i = 0; i < maxStamps - completedStamps; i++) {
 		emptyStamps.push(<EmptyStamp key={i} />);
 	}
 
-
 	return (
 		<View className="h-64 flex-1 py-2">
 			<Link href={slug} className="h-full w-full rounded-xl" asChild>
-				<Pressable>
-					<View style={{backgroundColor: primaryColor}} className="h-full w-full border-2 flex-1 rounded-xl py-2">
+				<Pressable
+					onPress={() => {
+						handleCardClick({
+							businessName: businessName,
+							businessImage: businessImage,
+							completedStamps: completedStamps,
+							maxStamps: maxStamps,
+							primaryColor: primaryColor,
+						});
+					}}
+				>
+					<View
+						style={{ backgroundColor: primaryColor }}
+						className="h-full w-full shadow border-2 flex-1 rounded-xl py-2"
+					>
 						<View className="flex-1 items-center px-4 bg-[#F7F8F8]">
-							<View className="flex-row px-4 py-8 w-full">
-								<Image source={businessImage} className="basis-1/4" />
-								<Text className="basis-3/4 text-3xl font-bold text-center">
+							<View className="flex-row px-4 py-6 w-full items-center">
+								<Image
+									source={businessImage}
+									className="rounded-lg w-[60px] h-[60px]"
+								/>
+								<Text className=" text-3xl font-bold text-center flex-1">
 									{businessName}
 								</Text>
 							</View>
@@ -55,7 +87,9 @@ const Card = ({
 							<View className="flex-row gap-6 py-4">
 								<View className="flex-row">
 									<AntDesign name="phone" size={16} color="black" />
-									<Text className="text-xs font-semibold pl-1">000-000-0000</Text>
+									<Text className="text-xs font-semibold pl-1">
+										000-000-0000
+									</Text>
 								</View>
 								<View className="flex-row">
 									<AntDesign name="mail" size={16} color="black" />
@@ -73,9 +107,13 @@ const Card = ({
 };
 
 const Wallet = () => {
-
 	return (
-		<View className="h-full bg-[#F7F8F8] pt-48">
+		<View className="h-full w-full bg-[#F7F8F8]">
+			<View className="w-full bg-[#9FBAFF] pb-8 h-52 rounded-b-[40px] pt-32 px-8">
+				<Text className="text-[#091540] text-3xl font-medium text-left">
+					Your Cards
+				</Text>
+			</View>
 			<FlatList
 				className="h-full w-full px-6 pt-6 pb-32"
 				data={cardData}

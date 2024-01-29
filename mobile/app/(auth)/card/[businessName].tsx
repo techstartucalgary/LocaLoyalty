@@ -5,63 +5,143 @@ import { cardData } from "../../../content/temp-card-data";
 import { AntDesign } from "@expo/vector-icons";
 import Stamp from "../../../assets/images/stamp";
 import EmptyStamp from "../../../assets/images/emptyStamp";
-
+import SmallStamp from "../../../assets/images/smallStamp";
+import SmallEmptyStamp from "../../../assets/images/smallEmptyStamp";
+import { useWalletStore } from "../../../utils/walletStore";
+import ExtraSmallStamp from "../../../assets/images/extraSmallStamp";
 
 const BusinessCardPage = () => {
-	const queryParam = useLocalSearchParams()
+	const {
+		currentBusinessName,
+		currentBusinessImage,
+		currentCompletedStamps,
+		currentMaxStamps,
+		currentPrimaryColor,
+	} = useWalletStore();
 
-	const thisBusiness = cardData.find((business) => business.businessName === queryParam.businessName)
-	
-	// TODO: GET BUSINESS INFO BY USING ZUSTAND OR STACK NAVIGATION PROP PASSING
-	const completedStamps = 2
-	const maxStamps = 6
-	const primaryColor = "#29524A"
+	// TODO: GET THE CURRENT PROGRESS AND THRESHOLD
+	const currentRewardProgress = 3.5;
+	const rewardThreshold = 5;
+	// TODO: GET THE LIST OF REWARDS (SHOULD BE PRESORTED)
+	type Reward = {
+		rewardName: string;
+		rewardStampCost: number;
+	};
+	const rewards: Reward[] = [
+		{
+			rewardName: "Free Pineapple Bun",
+			rewardStampCost: 3,
+		},
+		{
+			rewardName: "Free BBQ Pork Bun",
+			rewardStampCost: 3,
+		},
+		{
+			rewardName: "Free Roll Cake",
+			rewardStampCost: 10,
+		},
+	];
 
 	const fullStamps = [];
 	const emptyStamps = [];
 
-	for (let i = 0; i < completedStamps; i++) {
-		fullStamps.push(<Stamp factor={0.8} key={i} color={primaryColor} />);
+	for (let i = 0; i < currentCompletedStamps; i++) {
+		fullStamps.push(<SmallStamp key={i} color={"#000"} />);
 	}
 
-	for (let i = 0; i < maxStamps - completedStamps; i++) {
-		emptyStamps.push(<EmptyStamp key={i} />);
+	for (let i = 0; i < currentMaxStamps - currentCompletedStamps; i++) {
+		emptyStamps.push(<SmallEmptyStamp key={i} />);
 	}
 
 	return (
-		<View className="w-full h-full pt-48">
-			<View className="h-64 px-12">
-				<View className="w-full border-2 flex-1 rounded-xl">
-					<View className="flex-1 items-center px-6 bg-[#F7F8F8] rounded-xl">
-						<View className="flex-row py-4 w-full justify-between items-center">
-							<Image source={thisBusiness?.businessImage} className="w-12 h-12" />
-							<Text className="text-2xl font-bold text-center">
-								{thisBusiness?.businessName}
-							</Text>
-						</View>
-						<View className="flex-row gap-2 py-2">
-							{fullStamps}
-							{emptyStamps}
-						</View>
-						<View className="flex-row gap-2 py-4">
-							<View className="flex-row">
-								<AntDesign name="phone" size={16} color="black" />
-								<Text className="text-xs font-semibold pl-1">000-000-0000</Text>
-							</View>
-							<View className="flex-row">
-								<AntDesign name="mail" size={16} color="black" />
-								<Text className="text-xs font-semibold pl-1">
-									businessname@gmail.com
+		<View className="w-full h-full">
+			<View
+				style={{ backgroundColor: currentPrimaryColor }}
+				className="w-full h-52 pt-28 mb-28 rounded-b-[40px]"
+			>
+				<View className="h-full px-12">
+					<View className="w-full border-2 rounded-xl shadow">
+						<View className="items-center px-6 bg-[#F7F8F8] rounded-xl">
+							<View className="flex-row pt-5 w-full items-center">
+								<Image
+									source={currentBusinessImage}
+									className="rounded-lg w-[60px] h-[60px]"
+								/>
+								<Text className="flex-1 text-2xl font-bold text-center">
+									{currentBusinessName}
 								</Text>
+							</View>
+							<View className="flex-row w-full justify-between py-4">
+								{fullStamps}
+								{emptyStamps}
+							</View>
+							<View className="flex-row gap-2 py-4">
+								<View className="flex-row">
+									<AntDesign name="phone" size={16} color="black" />
+									<Text className="text-xs font-semibold pl-1">
+										000-000-0000
+									</Text>
+								</View>
+								<View className="flex-row">
+									<AntDesign name="mail" size={16} color="black" />
+									<Text className="text-xs font-semibold pl-1">
+										businessname@gmail.com
+									</Text>
+								</View>
 							</View>
 						</View>
 					</View>
 				</View>
 			</View>
-			<Link href={"../wallet"}>
-				<Text>{queryParam.businessName}</Text>
-			</Link>
 
+			<View className="py-6">
+				<View className="flex-row justify-between w-full px-12">
+					<Text>Your Progress:</Text>
+					<Text className="text-[#7B7B7B]">{`$${currentRewardProgress} / $${rewardThreshold}`}</Text>
+				</View>
+				<View className="w-full px-12 py-1">
+					<View className="relative w-full h-3 border border-[#999999] rounded-full">
+						<View
+							style={{
+								backgroundColor: currentPrimaryColor,
+								width: `${(currentRewardProgress / rewardThreshold) * 100}%`,
+							}}
+							className="absolute h-full rounded-full"
+						></View>
+					</View>
+				</View>
+				<View className="flex-row justify-between w-full px-12">
+					<Text>{`$${currentRewardProgress}`}</Text>
+					<Text>{`$${rewardThreshold}`}</Text>
+				</View>
+			</View>
+
+			<View className="flex-row h-12 px-10">
+				<View className="flex-1 items-center justify-center border border-[#B1B1B1]">
+					<Text className="text-lg">Rewards</Text>
+				</View>
+				<View className="flex-1 items-center justify-center border border-[#B1B1B1]">
+					<Text className="text-lg">Details</Text>
+				</View>
+			</View>
+
+			<FlatList
+				className="h-full w-full px-12 py-4"
+				data={rewards}
+				renderItem={({ item }) => {
+					return (
+						<View className="bg-[#EBEBEB] p-3 shadow my-4 rounded-xl flex-row justify-between items-center">
+							<Text className="text-xl font-semibold">{item.rewardName}</Text>
+							<View className="flex-row items-center">
+								<Text className="text-2xl font-medium">
+									{item.rewardStampCost}
+								</Text>
+								<ExtraSmallStamp className="scale-150 px-4" />
+							</View>
+						</View>
+					);
+				}}
+			/>
 		</View>
 	);
 };

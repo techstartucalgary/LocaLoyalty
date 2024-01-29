@@ -4,7 +4,7 @@ import { Pressable, Text, View } from "react-native";
 import { useAuth, useUser } from "@clerk/clerk-expo";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { cardData } from "../../content/temp-card-data";
-
+import { useWalletStore } from "../../utils/walletStore";
 
 export const LogoutButton = () => {
 	const { signOut } = useAuth();
@@ -58,21 +58,18 @@ const WalletHeader = () => {
 					<Ionicons name="search" size={24} color={"#000"} />
 				</Pressable>
 			</View>
-			<View className="w-full">
-				<Text className="text-[#091540] text-3xl font-medium text-left">
-					Your Cards
-				</Text>
-			</View>
 		</View>
 	);
-
 };
 
 const BusinessCardHeader = () => {
-
+	const { currentPrimaryColor } = useWalletStore();
 
 	return (
-		<View className="bg-[#29524A] pt-16 pb-24 gap-8 items-center px-12">
+		<View
+			style={{ backgroundColor: currentPrimaryColor }}
+			className="pt-16 gap-8 items-center px-12"
+		>
 			<View className="flex flex-row w-full justify-between">
 				<Link href={"../wallet"}>
 					<Ionicons name="arrow-back" size={24} color={"#000"} />
@@ -80,7 +77,6 @@ const BusinessCardHeader = () => {
 			</View>
 		</View>
 	);
-
 };
 
 const TabsPage = () => {
