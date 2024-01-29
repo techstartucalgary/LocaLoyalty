@@ -1,6 +1,11 @@
 import express, { Request, Response } from "express";
+import multer from "multer";
 
 const router = express.Router();
+
+//these are used for file uploading and such
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 // Sample route
 router.get("/sample", (req: Request, res: Response) => {
@@ -24,16 +29,30 @@ router.get("/profile", (req: Request, res: Response) => {
   res.send(dummyData);
 });
 
-router.post("/profile", (req: Request, res: Response) => {
-  //this is what you would use to query db for the specific user
-  console.log(req.auth.userId);
+interface MulterFile {
+  [fieldname: string]: Express.Multer.File[];
+}
 
-  //This is the content you would use to update the database
-  console.log(req.body);
+// In your route handler
+router.post(
+  "/profile",
+  upload.fields([
+    { name: "businessImage", maxCount: 1 },
+    { name: "businessLogo", maxCount: 1 },
+  ]),
+  (req: Request, res: Response) => {
+    const files = req.files as MulterFile; // Type assertion here
 
-  res.status(200).json({ message: "dummy success" });
+    const businessImage = files.businessImage ? files.businessImage[0] : null;
+    const businessLogo = files.businessLogo ? files.businessLogo[0] : null;
 
-  //res.sendStatus(500).json({ message: "dummy error" });
-});
+    console.log(req.auth.userId);
+    console.log(req.body);
+    console.log(businessImage);
+    console.log(businessLogo);
+
+    res.status(200).json({ message: "Profile updated successfully" });
+  }
+);
 
 export default router;

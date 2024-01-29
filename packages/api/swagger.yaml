@@ -78,3 +78,14 @@ components:
         apiKey:
           type: string
           example: "oqpweiopqwepioqiweop"
+        businessImage:
+          type: string
+          format: binary
+          description: "The business image file"
+        businessLogo:
+          type: string
+          format: binary
+          description: "The business logo file"
+        description:
+          type: string
+          example: "this is a really cool store"
