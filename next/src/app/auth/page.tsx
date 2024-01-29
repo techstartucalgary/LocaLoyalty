@@ -1,10 +1,10 @@
 "use client";
-import AuthNavbar from "@/components/AuthNavbar";
 import { fetchAPI } from "@/utils/generalAxios";
 import { useAuthStore } from "@/utils/store";
 import { useAuth } from "@clerk/nextjs";
 import { useQuery } from "@tanstack/react-query";
 import Head from "next/head";
+import Link from "next/link";
 import { useEffect } from "react";
 
 export default function AuthHome() {
@@ -38,7 +38,6 @@ export default function AuthHome() {
 
   return (
     <>
-      <AuthNavbar />
       <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-500 to-purple-500">
         <Head>
           <title>Hello Pages Router with Next.js & Clerk</title>
@@ -48,6 +47,10 @@ export default function AuthHome() {
           />
           <link rel="icon" href="/favicon.ico" />
         </Head>
+
+        <Link href="/auth/profile" className="bg-red-500 p-5 mb-5">
+          temp profile direct
+        </Link>
 
         <div className="flex flex-col items-center bg-white p-8 rounded-xl shadow-lg">
           <div>
