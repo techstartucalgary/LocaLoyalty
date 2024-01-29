@@ -1,5 +1,4 @@
 import express, { Request, Response } from "express";
-import * as vendorController from "../controllers/vendorController";
 
 const router = express.Router();
 
@@ -36,7 +35,5 @@ router.post("/profile", (req: Request, res: Response) => {
 
   //res.sendStatus(500).json({ message: "dummy error" });
 });
-
-router.post("/vendor", vendorController.addCard);
 
 export default router;
