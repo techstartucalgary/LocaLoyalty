@@ -16,9 +16,9 @@ const Navbar = () => {
   const { open, setOpen } = useNavBarStore();
   
   return (
-    <div className={`bg-white text-black flex flex-col h-screen px-3 pt-10 shadow-[5.0px_0px_15px_rgba(0,0,0,5%)] ${open ? "w-[280px]" : "w-[82px]"} duration-300`}>
+    <div className={`bg-white text-black h-screen flex flex-col px-3 pt-10 shadow-[5.0px_0px_15px_rgba(0,0,0,5%)] duration-300 ${open ? "w-[280px]" : "w-[82px]"}`}>
       {/* LocaLoyalty Logo + Hamburger Button */}
-      <div className={`flex flex-row items-center gap-4 ${!open && "justify-center"}`}>
+      <div className={`flex flex-row items-center gap-4 duration-300 ${!open && "justify-center"}`}>
         <Image
           src="/assets/logo.png"
           alt="LocaLoyalty Logo"
@@ -26,7 +26,7 @@ const Navbar = () => {
           width={50}
           height={50}
         />
-        <h1 className={`font-extrabold text-xl ${!open && "hidden"}`}>LOCALOYALTY</h1>
+        <h1 className={`font-extrabold text-xl duration-300 ${!open && "hidden"}`}>LOCALOYALTY</h1>
         <button className={`${!open && "pt-[13px]"}`}>
           <FiMenu 
             size={25}
@@ -39,10 +39,6 @@ const Navbar = () => {
       <div className={`${open ? "pt-10" : "pt-[78.5px]"}`}>
         <h2 className={`font-extrabold pl-4 ${!open && "hidden"}`}>STORE</h2>
         <div className="space-y-3 pt-3">
-          {/* <Link href="" className="flex flex-row items-center p-4 rounded-md border-2 border-black border-500">
-            <TbLayoutDashboard size={25}/>
-            <h3 className="font-semibold pl-4 text-sm">Dashboard</h3>
-          </Link> */}
           <SideNavBarOptions title="Dashboard" icon={TbLayoutDashboard} link="" />
 
           <SideNavBarOptions title="Loyalty Program" icon={BiGift} link="" />
