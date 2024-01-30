@@ -4,15 +4,24 @@ export async function fetchAPI(
   url: string,
   method: string,
   token: string | null,
-  data: object | null = null,
+  data: object | FormData | null = null,
   params = {}
 ) {
   try {
+    const headers: Record<string, string> = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    // If the data is an instance of FormData, do not set the Content-Type header
+    if (!(data instanceof FormData)) {
+      headers["Content-Type"] = "application/json";
+    }
+
     const options = {
       method: method,
       url: url,
-      headers: { Authorization: `Bearer ${token}` },
-      params: params, // Add query parameters to the request
+      headers: headers,
+      params: params,
       ...(data && { data: data }),
     };
 
