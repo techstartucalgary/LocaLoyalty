@@ -13,6 +13,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.502.0",
+    "@aws-sdk/s3-request-presigner": "^3.502.0",
     "@clerk/clerk-js": "^4.68.3",
     "@clerk/clerk-sdk-node": "^4.13.5",
     "@trpc/server": "^10.43.1",
