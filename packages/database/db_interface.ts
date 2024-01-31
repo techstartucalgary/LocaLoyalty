@@ -50,25 +50,20 @@ async function addCustomer(
 async function addVendor(
   name: string,
   email: string,
-  address: string,
   phone: string,
-  description: string,
-  color: string,
-  reward_program_details: string,
-  spending_per_point: string, //must input decimal as a string
-  max_points: number
+  clerk_id: string
 ) {
   //insert info
   await db.insert(schema.vendor).values({
     name: name,
     email: email,
-    address: address,
     phone: phone,
-    description: description,
-    color: color,
-    reward_program_details: reward_program_details,
-    spending_per_point: spending_per_point,
-    max_points: max_points,
+    clerk_id: clerk_id,
+    address: "",
+    description: "",
+    spending_per_point: "0.0",
+    max_points: 0,
+    color: "",
   });
 
   //get vendor id
@@ -247,10 +242,10 @@ async function addReward(
 
   return result[0].id;
 }
-
+*/
 // Gets the customer object
 // Input: the customer ID
-async function getCustomer(customer_id) {
+async function getCustomer(customer_id: number) {
   const result = await db
     .select()
     .from(schema.customer)
@@ -264,7 +259,6 @@ async function getCustomer(customer_id) {
 
   return result[0];
 }
-*/
 
 // Gets the vendor object
 //Input: the vendor ID
@@ -485,12 +479,13 @@ export {
   addVendor,
   getCustomerFromClerkID,
   getAllLoyaltyCardsOfCustomer,
+  getCustomer,
   /*
   addLoyaltyCard,
   addTransaction,
   addReward,
   addPointRedemption,
-  getCustomer,
+  
   getVendor,
   getLoyaltyCard,
   getPointRedemptionHistory,

@@ -4,14 +4,14 @@ import {
   RequireAuthProp,
   StrictAuthProp,
 } from "@clerk/clerk-sdk-node";
-
 import express, { Application, Request, Response, NextFunction } from "express";
 import cors from "cors";
-import { Webhook } from "svix";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 import businessRoutes from "./routes/businessRoutes";
 import customerRoutes from "./routes/customerRoutes";
+import { Webhook } from "svix";
+import { addVendor } from "../database/db_interface";
 
 const swaggerDocument = YAML.load("./swagger.yaml");
 
@@ -42,8 +42,8 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/business", ClerkExpressRequireAuth(), businessRoutes);
 app.use("/customer", ClerkExpressRequireAuth(), customerRoutes);
 
-/*
-app.post("/clerk/webhook", (req, res) => {
+// 3) webhooks for login
+app.post("/website-webhook", async (req, res) => {
   const payload = JSON.stringify(req.body);
   const headers = {
     "svix-id": req.header("svix-id") || "",
@@ -58,22 +58,29 @@ app.post("/clerk/webhook", (req, res) => {
     const verified = wh.verify(payload, headers);
 
     // If verification succeeds, process the webhook event
-    console.log("Webhook verified:", verified);
+    //console.log("Webhook verified:", verified);
 
-    let body = req.body;
-    switch (body.type) {
-      case "session.created":
-        //console.log("session id for the started session: " + payload.data.id);
-        //console.log("user id for the started session: " + payload.data.user_id);
-        break;
-      case "session.ended":
-        //when a user logs out or closes the tab
-        break;
-      case "session.removed":
+    let data = req.body.data;
+    switch (req.body.type) {
+      case "user.updated":
         //when a session expires??? or something like that idk
         break;
       case "user.created":
-        //when a new user signs up for active living through clerk
+        //when a new user signs up through clerk to the business website
+        console.log(data);
+        console.log(data.first_name);
+        console.log(data.last_name);
+        console.log(data.email_addresses[0].email_address);
+        console.log(data.phone_numbers[0].phone_number);
+        console.log(data.id);
+
+        await addVendor(
+          data.first_name,
+          data.email_addresses[0].email_address,
+          data.phone_numbers[0].phone_number,
+          data.id
+        );
+
         break;
     }
 
@@ -88,7 +95,6 @@ app.post("/clerk/webhook", (req, res) => {
       .json({ success: false, message: "Webhook could not be processed" });
   }
 });
-*/
 
 app.get("/", (req, res) => {
   res.send("Hello");
