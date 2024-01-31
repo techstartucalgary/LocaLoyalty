@@ -4,11 +4,21 @@ info:
   title: LocaLoyalty API
   description: API routes for LocaLoyalty business website and customer mobile app ***You must be logged into clerk from the front-end to test API because it is protected by the clerk middleware***
   version: "1.0.0"
+  contact:
+    name: API Support
+    url: http://www.example.com/support
+    email: support@example.com
+
+servers:
+  - url:
+    description:
+
 tags:
   - name: business
     description: APIs for the website that small business owners will access
   - name: customer
     description: APIs for the mobile app that end-users will access
+
 paths:
   /business/sample:
     get:
@@ -78,3 +88,12 @@ components:
         apiKey:
           type: string
           example: "oqpweiopqwepioqiweop"
+        businessImage:
+          type: string
+          description: "Either a file or a url that will be used to render the image"
+        businessLogo:
+          type: string
+          description: "Either a file or a url that will be used to render the image"
+        description:
+          type: string
+          example: "this is a really cool store"

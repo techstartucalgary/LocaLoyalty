@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "f8a5e2cb-d967-4b69-a493-0986f6ac3d34",
-  "prevId": "6528775c-5315-431a-80c7-b272a284ddc0",
+  "id": "384a30d4-09f1-4d88-b044-6c09c897ffa4",
+  "prevId": "7e2accf3-6c4f-4092-8468-fbec15cdf702",
   "tables": {
     "customer": {
       "name": "customer",
@@ -159,57 +159,6 @@
           "name": "point_redemption_history_history_id",
           "columns": [
             "history_id"
-          ]
-        }
-      },
-      "uniqueConstraints": {}
-    },
-    "reward": {
-      "name": "reward",
-      "columns": {
-        "reward_id": {
-          "name": "reward_id",
-          "type": "serial",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": true
-        },
-        "program_id": {
-          "name": "program_id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "points_cost": {
-          "name": "points_cost",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "reward_reward_id": {
-          "name": "reward_reward_id",
-          "columns": [
-            "reward_id"
           ]
         }
       },
