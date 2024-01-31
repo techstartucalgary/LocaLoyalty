@@ -78,3 +78,12 @@ components:
         apiKey:
           type: string
           example: "oqpweiopqwepioqiweop"
+        businessImage:
+          type: string
+          description: "Either a file or a url that will be used to render the image"
+        businessLogo:
+          type: string
+          description: "Either a file or a url that will be used to render the image"
+        description:
+          type: string
+          example: "this is a really cool store"
