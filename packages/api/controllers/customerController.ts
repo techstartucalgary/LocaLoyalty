@@ -5,27 +5,35 @@ import {
 } from "../../database/db_interface";
 
 export const getAllCards = async (req: Request, res: Response) => {
-  // get the clerk id of the user
-  const clerk_id: string = req.auth.userId;
-
   try {
-    // get the customer id from clerk id
-    const customer_id = await getCustomerFromClerkID(clerk_id);
-    if (customer_id === null) {
-      throw new Error("The customer does not exist!");
-    }
-    // retrieve of the vendors associated with this user
-    const results = await getAllLoyaltyCardsOfCustomer(customer_id);
+    // Retrieve Clerk user ID from the authentication information
+    const clerkId = req.auth.userId;
 
-    // If the retrieval was successful, send back all of the vendor information
-    res.status(201).json(results);
-  } catch (error) {
-    // If there's an error, send back a 500 server error response
-    if (error instanceof Error) {
-      res.status(500).json({ error: error.message });
-    } else {
-      // Handle the case where the error is not an Error object
-      res.status(500).json({ error: "An unknown error occurred" });
+    if (!clerkId) {
+      return res.status(401).json({ message: "User not authenticated" });
     }
+
+    // Use the helper function to get the customer ID based on Clerk ID
+    const customer = await getCustomerFromClerkID(clerkId);
+
+    if (!customer) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+
+    // Assuming the customer object contains a customer_id field
+    const customer_id = customer.customer_id;
+
+    // Use the helper function to get all loyalty cards for the customer
+    const loyaltyCards = await getAllLoyaltyCardsOfCustomer(customer_id);
+
+    if (!loyaltyCards) {
+      return res.status(404).json({ message: "Loyalty cards not found" });
+    }
+
+    // Send the loyalty cards back in the response
+    res.status(200).json(loyaltyCards);
+  } catch (error) {
+    console.error("Error fetching loyalty cards:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };

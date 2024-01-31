@@ -13,6 +13,6 @@ router.get("/sample", (req, res) => {
 router.get("/vendors", vendorController.index);
 
 // API endpoint to view all of the associated vendors
-// router.get("/cards", customerController.getAllCards);
+router.get("/{userId}/loyalty-cards", customerController.getAllCards);
 
 export default router;
