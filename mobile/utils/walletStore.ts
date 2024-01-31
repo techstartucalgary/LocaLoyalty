@@ -34,5 +34,17 @@ export const useWalletStore = create<WalletState>((set) => ({
     setCurrentPrimaryColor: (color) => {
         set({ currentPrimaryColor: color })
     },
-    
+
+}))
+
+type CardState = {
+    isDetailsSelected: boolean,
+    setDetailsSelected: (bool: boolean) => void,
+}
+
+export const useCardStore = create<CardState>((set) => ({
+    isDetailsSelected: false,
+    setDetailsSelected: (bool) => {
+        set({ isDetailsSelected: bool })
+    }
 }))

@@ -7,8 +7,9 @@ import Stamp from "../../../assets/images/stamp";
 import EmptyStamp from "../../../assets/images/emptyStamp";
 import SmallStamp from "../../../assets/images/smallStamp";
 import SmallEmptyStamp from "../../../assets/images/smallEmptyStamp";
-import { useWalletStore } from "../../../utils/walletStore";
+import { useCardStore, useWalletStore } from "../../../utils/walletStore";
 import ExtraSmallStamp from "../../../assets/images/extraSmallStamp";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const BusinessCardPage = () => {
 	const {
@@ -19,6 +20,21 @@ const BusinessCardPage = () => {
 		currentPrimaryColor,
 	} = useWalletStore();
 
+	const { isDetailsSelected, setDetailsSelected } = useCardStore();
+
+	function handleDetailButtonPress() {
+		if (isDetailsSelected) {
+			return
+		}
+		setDetailsSelected(true)
+	}
+
+	function handleRewardButtonPress() {
+		if (!isDetailsSelected) {
+			return
+		}
+		setDetailsSelected(false)
+	}
 	// TODO: GET THE CURRENT PROGRESS AND THRESHOLD
 	const currentRewardProgress = 3.5;
 	const rewardThreshold = 5;
@@ -117,12 +133,12 @@ const BusinessCardPage = () => {
 			</View>
 
 			<View className="flex-row h-12 px-10">
-				<View className="flex-1 items-center justify-center border border-[#B1B1B1]">
+				<TouchableOpacity className="flex-1 items-center justify-center border border-[#B1B1B1]">
 					<Text className="text-lg">Rewards</Text>
-				</View>
-				<View className="flex-1 items-center justify-center border border-[#B1B1B1]">
+				</TouchableOpacity>
+				<TouchableOpacity className="flex-1 items-center justify-center border border-[#B1B1B1]">
 					<Text className="text-lg">Details</Text>
-				</View>
+				</TouchableOpacity>
 			</View>
 
 			<FlatList
