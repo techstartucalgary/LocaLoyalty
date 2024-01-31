@@ -17,42 +17,13 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
-
-interface ProfileInputProps {
-  id: string;
-  title: string;
-  disabled: boolean;
-  placeholder: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
-
-const ProfileInput = ({
-  id,
-  title,
-  disabled,
-  placeholder,
-  value,
-  onChange,
-}: ProfileInputProps) => {
-  return (
-    <>
-      <Label htmlFor={id} className="text-slate-500">
-        {title}
-      </Label>
-      <Input
-        disabled={disabled}
-        type="text"
-        id={id}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-      />
-    </>
-  );
-};
+import {
+  LongTextInput,
+  ProfileImageInput,
+  ProfileTextInput,
+} from "@/components/ProfileInputs";
 
 export default function Profile() {
   //this is where the api call should be made
@@ -65,6 +36,9 @@ export default function Profile() {
     postalCode: string;
     merchantID: string;
     apiKey: string;
+    businessImage: File | null;
+    businessLogo: File | null;
+    description: string;
   }
 
   const defaultProfileData: ProfileData = {
@@ -75,6 +49,9 @@ export default function Profile() {
     postalCode: "",
     merchantID: "",
     apiKey: "",
+    businessImage: null,
+    businessLogo: null,
+    description: "",
   };
 
   const { getToken } = useAuth();
@@ -91,12 +68,33 @@ export default function Profile() {
   };
 
   const sendModifiedProfileData = async () => {
+    // Loop over the savedProfileData and append each item to formData
+    const formData = new FormData();
+
+    (Object.keys(savedProfileData) as Array<keyof ProfileData>).forEach(
+      (key) => {
+        const value = savedProfileData[key];
+        if (key === "businessImage" || key === "businessLogo") {
+          // Only append if it's a file
+          if (value instanceof File) {
+            formData.append(key, value, value.name);
+          }
+        } else if (value != null) {
+          // Check for null or undefined
+          formData.append(key, String(value));
+        }
+      }
+    );
+
+    // Make the API call with formData
     return fetchAPI(
       "http://localhost:5001/business/profile",
       "POST",
       token,
-      savedProfileData,
-      {}
+      formData,
+      {
+        /* headers (if necessary) */
+      }
     );
   };
 
@@ -147,108 +145,158 @@ export default function Profile() {
     fetchToken();
   }, [getToken, setToken]);
 
-  const handleInputChange = (fieldName: keyof ProfileData, value: string) => {
+  const handleTextInputChange = (
+    fieldName: keyof ProfileData,
+    value: string
+  ) => {
     setProfileData((prevState) => ({
       ...prevState,
       [fieldName]: value,
     }));
   };
 
+  const handleImageInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    imageKey: keyof ProfileData // Add this parameter
+  ) => {
+    const file = event.target.files ? event.target.files[0] : null;
+    if (file) {
+      setProfileData((prevState) => ({
+        ...prevState,
+        [imageKey]: file, // Use the key to update the correct property
+      }));
+
+      // Additional logic for the file
+    }
+  };
+
   return (
-    <div className="h-screen flex items-center justify-center">
+    <div className="flex items-center justify-center my-10">
       {isLoading && (
         <div>
           <p>loading....</p>
         </div>
       )}
       {data && (
-        <div className="flex items-center w-5/6 h-3/4 border-4 rounded-md border-slate-500 ">
-          <div className="flex justify-evenly items-center w-full ">
-            <div className="flex flex-col gap-1.5 self-start">
-              <p className="text-xl font-bold">Business Details</p>
-              <div className="ml-5 flex flex-col gap-3 mt-3">
-                <ProfileInput
+        <div className="flex items-center justify-center w-5/6 border-4 flex-col rounded-md border-slate-500">
+          <div className="flex justify-evenly items-center flex-col my-5">
+            <p className="text-xl font-bold text-left w-full">
+              Business Details
+            </p>
+            <div className="flex ml-5 gap-32 mt-3">
+              <div className="flex flex-col gap-3">
+                <ProfileTextInput
                   id="businessName"
                   title="Business Name"
                   disabled={!isEditing}
                   placeholder="Your business name"
                   value={profileData.businessName}
                   onChange={(e) =>
-                    handleInputChange("businessName", e.target.value)
+                    handleTextInputChange("businessName", e.target.value)
                   }
                 />
 
-                <ProfileInput
+                <ProfileTextInput
                   id="address"
                   title="Address"
                   disabled={!isEditing}
                   placeholder="123 Real Address"
                   value={profileData.address}
-                  onChange={(e) => handleInputChange("address", e.target.value)}
+                  onChange={(e) =>
+                    handleTextInputChange("address", e.target.value)
+                  }
                 />
 
-                <ProfileInput
+                <ProfileTextInput
                   id="city"
                   title="City"
                   disabled={!isEditing}
                   placeholder="Calgary"
                   value={profileData.city}
-                  onChange={(e) => handleInputChange("city", e.target.value)}
+                  onChange={(e) =>
+                    handleTextInputChange("city", e.target.value)
+                  }
                 />
 
-                <ProfileInput
+                <ProfileTextInput
                   id="province"
                   title="Province"
                   disabled={!isEditing}
                   placeholder="Alberta"
                   value={profileData.province}
                   onChange={(e) =>
-                    handleInputChange("province", e.target.value)
+                    handleTextInputChange("province", e.target.value)
                   }
                 />
 
-                <ProfileInput
+                <ProfileTextInput
                   id="postal"
                   title="Postal Code"
                   disabled={!isEditing}
                   placeholder="A1B2C3"
                   value={profileData.postalCode}
                   onChange={(e) =>
-                    handleInputChange("postalCode", e.target.value)
+                    handleTextInputChange("postalCode", e.target.value)
+                  }
+                />
+              </div>
+              <div className="flex flex-col gap-3">
+                <ProfileImageInput
+                  id="businessImage"
+                  title="Business Image"
+                  disabled={!isEditing}
+                  onChange={(e) => handleImageInputChange(e, "businessImage")}
+                />
+                <ProfileImageInput
+                  id="businessLogo"
+                  title="Business Logo"
+                  disabled={!isEditing}
+                  onChange={(e) => handleImageInputChange(e, "businessLogo")}
+                />
+                <LongTextInput
+                  id="description"
+                  title="Business Description"
+                  disabled={!isEditing}
+                  placeholder="your store is really cool"
+                  value={profileData.description}
+                  onChange={(e) =>
+                    handleTextInputChange("description", e.target.value)
                   }
                 />
               </div>
             </div>
-            <div className="flex flex-col gap-3 self-start">
+
+            <div className="flex gap-20 self-start mt-10">
               <div>
                 <p className="text-xl font-bold">Contact Details</p>
-                <p className="ml-5 mt-3">
-                  Click on icon in the top right to edit
+                <p className="ml-5 mt-3 w-60">
+                  To change details such as your phone number or email, click on
+                  icon in the top right to edit!
                 </p>
               </div>
 
               <div>
-                <p className="text-xl font-bold mt-10">Clover Details</p>
+                <p className="text-xl font-bold">Clover Details</p>
                 <div className="flex flex-col gap-3 ml-5 mt-3">
-                  <ProfileInput
+                  <ProfileTextInput
                     id="merchantID"
                     title="Merchant ID"
                     disabled={!isEditing}
                     placeholder="123456789"
                     value={profileData.merchantID}
                     onChange={(e) =>
-                      handleInputChange("merchantID", e.target.value)
+                      handleTextInputChange("merchantID", e.target.value)
                     }
                   />
 
-                  <ProfileInput
+                  <ProfileTextInput
                     id="apiKey"
                     title="API Key"
                     disabled={!isEditing}
                     placeholder=""
                     value={profileData.apiKey}
                     onChange={(e) =>
-                      handleInputChange("apiKey", e.target.value)
+                      handleTextInputChange("apiKey", e.target.value)
                     }
                   />
                 </div>

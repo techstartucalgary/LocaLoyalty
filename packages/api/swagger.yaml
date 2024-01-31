@@ -88,42 +88,12 @@ components:
         apiKey:
           type: string
           example: "oqpweiopqwepioqiweop"
-    Card:
-      type: object
-      required:
-        - id
-        - name
-        - color
-        - points_amt
-      properties:
-        id:
-          type: integer
-          format: int64
-          example: 1
-        name:
+        businessImage:
           type: string
-          example: Zhang's Bakery
-        color:
+          description: "Either a file or a url that will be used to render the image"
+        businessLogo:
           type: string
-          format: email
-          example: #000000
-        points_amt:
-          type: integer
-          format: int32
-          example: 3
-  /customer/cards:
-    get:
-      tags:
-        - customer
-      summary: Lists all reward cards
-      description: Returns the list of all cards that the user holds.
-      operationId: getBusinessSampleAPI
-      responses:
-        "200":
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Card"
+          description: "Either a file or a url that will be used to render the image"
+        description:
+          type: string
+          example: "this is a really cool store"

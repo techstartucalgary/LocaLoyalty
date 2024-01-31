@@ -70,6 +70,11 @@ function addCustomer(fname, lname, email, address, phone, clerk_id) {
                         }).from(schema.customer).where((0, drizzle_orm_1.eq)(schema.customer.email, email))];
                 case 2:
                     result = _a.sent();
+                    //if there is an error return null
+                    if (Object.keys(result).length === 0) {
+                        console.log("Database query failed");
+                        return [2 /*return*/, null];
+                    }
                     return [2 /*return*/, result[0].id];
             }
         });
@@ -105,6 +110,11 @@ max_points) {
                         }).from(schema.vendor).where((0, drizzle_orm_1.eq)(schema.vendor.email, email))];
                 case 2:
                     result = _a.sent();
+                    //if there is an error return null
+                    if (Object.keys(result).length === 0) {
+                        console.log("Database query failed");
+                        return [2 /*return*/, null];
+                    }
                     return [2 /*return*/, result[0].id];
             }
         });
@@ -134,6 +144,11 @@ vendor_id, points_amt, carry_over_amt) {
                         }).from(schema.loyalty_card).where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(schema.loyalty_card.customer_id, customer_id), (0, drizzle_orm_1.eq)(schema.loyalty_card.vendor_id, vendor_id)))];
                 case 2:
                     result = _a.sent();
+                    //if there is an error return null
+                    if (Object.keys(result).length === 0) {
+                        console.log("Database query failed");
+                        return [2 /*return*/, null];
+                    }
                     return [2 /*return*/, result[0].id];
             }
         });
@@ -145,6 +160,7 @@ exports.addLoyaltyCard = addLoyaltyCard;
 function addPointRedemption(loyalty_id, //TODO: enforce types
 points_redeemed) {
     return __awaiter(this, void 0, void 0, function () {
+        var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, dbObj_js_1.db.insert(schema.point_redemption_history).values({
@@ -154,7 +170,13 @@ points_redeemed) {
                     })];
                 case 1:
                     _a.sent();
-                    return [2 /*return*/];
+                    result = "id";
+                    //if there is an error return null
+                    if (Object.keys(result).length === 0) {
+                        console.log("Database query failed");
+                        return [2 /*return*/, null];
+                    }
+                    return [2 /*return*/, result];
             }
         });
     });
@@ -185,6 +207,11 @@ vendor_id, purchase_amt, points_earned, timestamp, payment_type) {
                         }).from(schema.transaction).where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(schema.transaction.timestamp, timestamp), (0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(schema.transaction.loyalty_id, loyalty_id), (0, drizzle_orm_1.eq)(schema.transaction.vendor_id, vendor_id))))];
                 case 2:
                     result = _a.sent();
+                    //if there is an error return null
+                    if (Object.keys(result).length === 0) {
+                        console.log("Database query failed");
+                        return [2 /*return*/, null];
+                    }
                     return [2 /*return*/, result[0].id];
             }
         });
@@ -214,6 +241,11 @@ name, description, points_cost) {
                         }).from(schema.reward).where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(schema.reward.vendor_id, vendor_id), (0, drizzle_orm_1.eq)(schema.reward.name, name)))];
                 case 2:
                     result = _a.sent();
+                    //if there is an error return null
+                    if (Object.keys(result).length === 0) {
+                        console.log("Database query failed");
+                        return [2 /*return*/, null];
+                    }
                     return [2 /*return*/, result[0].id];
             }
         });
@@ -230,7 +262,6 @@ function getCustomer(customer_id) {
                 case 0: return [4 /*yield*/, dbObj_js_1.db.select().from(schema.customer).where((0, drizzle_orm_1.eq)(schema.customer.customer_id, customer_id))];
                 case 1:
                     result = _a.sent();
-                    console.log(result);
                     //if there is an error return null
                     if (Object.keys(result).length === 0) {
                         console.log("Database query failed");
@@ -252,6 +283,11 @@ function getVendor(input_id) {
                 case 0: return [4 /*yield*/, dbObj_js_1.db.select().from(schema.vendor).where((0, drizzle_orm_1.eq)(schema.vendor.vendor_id, input_id))];
                 case 1:
                     result = _a.sent();
+                    //if there is an error return null
+                    if (Object.keys(result).length === 0) {
+                        console.log("Database query failed");
+                        return [2 /*return*/, null];
+                    }
                     return [2 /*return*/, result[0]];
             }
         });
@@ -268,6 +304,11 @@ function getLoyaltyCard(loyalty_id) {
                 case 0: return [4 /*yield*/, dbObj_js_1.db.select().from(schema.loyalty_card).where((0, drizzle_orm_1.eq)(schema.loyalty_card.loyalty_id, loyalty_id))];
                 case 1:
                     result = _a.sent();
+                    //if there is an error return null
+                    if (Object.keys(result).length === 0) {
+                        console.log("Database query failed");
+                        return [2 /*return*/, null];
+                    }
                     return [2 /*return*/, result[0]];
             }
         });
@@ -284,6 +325,11 @@ function getPointRedemptionHistory(loyalty_id) {
                 case 0: return [4 /*yield*/, dbObj_js_1.db.select().from(schema.point_redemption_history).where((0, drizzle_orm_1.eq)(schema.point_redemption_history.loyalty_id, loyalty_id))];
                 case 1:
                     result = _a.sent();
+                    //if there is an error return null
+                    if (Object.keys(result).length === 0) {
+                        console.log("Database query failed");
+                        return [2 /*return*/, null];
+                    }
                     return [2 /*return*/, result[0]];
             }
         });
@@ -300,6 +346,11 @@ function getTransaction(transaction_id) {
                 case 0: return [4 /*yield*/, dbObj_js_1.db.select().from(schema.transaction).where((0, drizzle_orm_1.eq)(schema.transaction.transaction_id, transaction_id))];
                 case 1:
                     result = _a.sent();
+                    //if there is an error return null
+                    if (Object.keys(result).length === 0) {
+                        console.log("Database query failed");
+                        return [2 /*return*/, null];
+                    }
                     return [2 /*return*/, result[0]];
             }
         });
@@ -316,6 +367,11 @@ function getReward(reward_id) {
                 case 0: return [4 /*yield*/, dbObj_js_1.db.select().from(schema.reward).where((0, drizzle_orm_1.eq)(schema.reward.reward_id, reward_id))];
                 case 1:
                     result = _a.sent();
+                    //if there is an error return null
+                    if (Object.keys(result).length === 0) {
+                        console.log("Database query failed");
+                        return [2 /*return*/, null];
+                    }
                     return [2 /*return*/, result[0]];
             }
         });
@@ -332,6 +388,11 @@ function getAllVendors() {
                 case 0: return [4 /*yield*/, dbObj_js_1.db.select().from(schema.vendor)];
                 case 1:
                     results = _a.sent();
+                    //if there is an error return null
+                    if (Object.keys(results).length === 0) {
+                        console.log("Database query failed");
+                        return [2 /*return*/, null];
+                    }
                     return [2 /*return*/, results];
             }
         });
@@ -348,6 +409,11 @@ function getAllLoyaltyCardsOfCustomer(customer_id) {
                 case 0: return [4 /*yield*/, dbObj_js_1.db.select().from(schema.loyalty_card).where((0, drizzle_orm_1.eq)(schema.loyalty_card.customer_id, customer_id))];
                 case 1:
                     results = _a.sent();
+                    //if there is an error return null
+                    if (Object.keys(results).length === 0) {
+                        console.log("Database query failed");
+                        return [2 /*return*/, null];
+                    }
                     return [2 /*return*/, results];
             }
         });
@@ -364,6 +430,11 @@ function getAllPointRedemptionHistoryOfCard(loyalty_id) {
                 case 0: return [4 /*yield*/, dbObj_js_1.db.select().from(schema.point_redemption_history).where((0, drizzle_orm_1.eq)(schema.point_redemption_history.loyalty_id, loyalty_id))];
                 case 1:
                     results = _a.sent();
+                    //if there is an error return null
+                    if (Object.keys(results).length === 0) {
+                        console.log("Database query failed");
+                        return [2 /*return*/, null];
+                    }
                     return [2 /*return*/, results];
             }
         });
@@ -380,6 +451,11 @@ function getAllTransactionsOfCard(loyalty_id) {
                 case 0: return [4 /*yield*/, dbObj_js_1.db.select().from(schema.transaction).where((0, drizzle_orm_1.eq)(schema.transaction.loyalty_id, loyalty_id))];
                 case 1:
                     results = _a.sent();
+                    //if there is an error return null
+                    if (Object.keys(results).length === 0) {
+                        console.log("Database query failed");
+                        return [2 /*return*/, null];
+                    }
                     return [2 /*return*/, results];
             }
         });
@@ -396,6 +472,11 @@ function getAllRewardsOfVendor(vendor_id) {
                 case 0: return [4 /*yield*/, dbObj_js_1.db.select().from(schema.reward).where((0, drizzle_orm_1.eq)(schema.reward.vendor_id, vendor_id))];
                 case 1:
                     results = _a.sent();
+                    //if there is an error return null
+                    if (Object.keys(results).length === 0) {
+                        console.log("Database query failed");
+                        return [2 /*return*/, null];
+                    }
                     return [2 /*return*/, results];
             }
         });

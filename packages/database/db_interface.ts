@@ -443,6 +443,17 @@ async function getCustomerFromClerkID(clerk_id: string) {
   return result;
 }
 
+async function editCustomer(customer_id, attribute, newValue) {
+  //update value
+  await db
+    .update(schema.customer)
+    .set({ [attribute]: [newValue] })
+    .where(eq(schema.customer.customer_id, customer_id));
+
+  //test to see if the query was successfull
+  //TODO
+}
+
 //TODO: functions to edit existing entities
 
 export {
@@ -464,4 +475,5 @@ export {
   getAllTransactionsOfCard,
   getAllRewardsOfVendor,
   getCustomerFromClerkID,
+  editCustomer,
 };
