@@ -9,10 +9,6 @@ info:
     url: http://www.example.com/support
     email: support@example.com
 
-servers:
-  - url:
-    description:
-
 tags:
   - name: business
     description: APIs for the website that small business owners will access

@@ -7,7 +7,7 @@ January 18 2024
 
 import { db } from "./dbObj.js";
 import * as schema from "./schema.js";
-import { and, eq } from "drizzle-orm";
+import { SQLWrapper, and, eq } from "drizzle-orm";
 
 // Adds a new customer to the database, returns the generated customer_id
 async function addCustomer(
@@ -89,6 +89,7 @@ async function addVendor(
 }
 
 // Adds a new loyalty card to the customer
+/*
 async function addLoyaltyCard(
   customer_id, //TODO: enforce types
   vendor_id,
@@ -124,9 +125,11 @@ async function addLoyaltyCard(
 
   return result[0].id;
 }
+*/
 
 // Adds a new point redemption
 // Timestamp auto generated
+/*
 async function addPointRedemption(
   loyalty_id, //TODO: enforce types
   points_redeemed
@@ -162,8 +165,10 @@ async function addPointRedemption(
 
   return result;
 }
+*/
 
 // Adds a new transaction a customer completed
+/*
 async function addTransaction(
   loyalty_id, //TODO: enforce types
   vendor_id,
@@ -206,8 +211,10 @@ async function addTransaction(
 
   return result[0].id;
 }
+*/
 
 // Adds a new reward to a vendor program
+/*
 async function addReward(
   vendor_id, //TODO: enforce types
   name,
@@ -257,9 +264,11 @@ async function getCustomer(customer_id) {
 
   return result[0];
 }
+*/
 
 // Gets the vendor object
 //Input: the vendor ID
+/*
 async function getVendor(input_id: number) {
   const result = await db
     .select()
@@ -291,9 +300,11 @@ async function getLoyaltyCard(loyalty_id) {
 
   return result[0];
 }
+*/
 
 // Gets the point redemption history object
 // Input: the loyalty card ID
+/*
 async function getPointRedemptionHistory(loyalty_id) {
   const result = await db
     .select()
@@ -325,9 +336,11 @@ async function getTransaction(transaction_id) {
 
   return result[0];
 }
+*/
 
 // Gets the reward object
 // Input: the reward ID
+/*
 async function getReward(reward_id) {
   const result = await db
     .select()
@@ -342,10 +355,12 @@ async function getReward(reward_id) {
 
   return result[0];
 }
+*/
 
 // Get all customers has no use case for now...
 
 // Gets all vendors in the database
+/*
 async function getAllVendors() {
   const results = await db.select().from(schema.vendor);
 
@@ -357,10 +372,11 @@ async function getAllVendors() {
 
   return results;
 }
+*/
 
 // Gets all loyalty cards for a given customer
 // Input: the customers customer_id
-async function getAllLoyaltyCardsOfCustomer(customer_id) {
+async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
   const results = await db
     .select()
     .from(schema.loyalty_card)
@@ -377,6 +393,7 @@ async function getAllLoyaltyCardsOfCustomer(customer_id) {
 
 // Gets all point redemption history for a given loyalty card
 // Input: the loyalty_id of the loyalty card
+/*
 async function getAllPointRedemptionHistoryOfCard(loyalty_id) {
   const results = await db
     .select()
@@ -391,9 +408,11 @@ async function getAllPointRedemptionHistoryOfCard(loyalty_id) {
 
   return results;
 }
+*/
 
 // Gets all previous transactions for a given loyalty card
 // Input: the loyalty_id of the loyalty card
+/*
 async function getAllTransactionsOfCard(loyalty_id) {
   const results = await db
     .select()
@@ -408,9 +427,11 @@ async function getAllTransactionsOfCard(loyalty_id) {
 
   return results;
 }
+*/
 
 // Gets all rewards in the program of a given vendor
 // Input: the vendor_id of the vendor
+/*
 async function getAllRewardsOfVendor(vendor_id) {
   const results = await db
     .select()
@@ -425,6 +446,7 @@ async function getAllRewardsOfVendor(vendor_id) {
 
   return results;
 }
+*/
 
 // Gets a customer_id based on a clerk_id
 // Input: a clerk id as a string
@@ -443,6 +465,7 @@ async function getCustomerFromClerkID(clerk_id: string) {
   return result;
 }
 
+/*
 async function editCustomer(customer_id, attribute, newValue) {
   //update value
   await db
@@ -453,12 +476,16 @@ async function editCustomer(customer_id, attribute, newValue) {
   //test to see if the query was successfull
   //TODO
 }
+*/
 
 //TODO: functions to edit existing entities
 
 export {
   addCustomer,
   addVendor,
+  getCustomerFromClerkID,
+  getAllLoyaltyCardsOfCustomer,
+  /*
   addLoyaltyCard,
   addTransaction,
   addReward,
@@ -470,10 +497,11 @@ export {
   getTransaction,
   getReward,
   getAllVendors,
-  getAllLoyaltyCardsOfCustomer,
+  
   getAllPointRedemptionHistoryOfCard,
   getAllTransactionsOfCard,
   getAllRewardsOfVendor,
-  getCustomerFromClerkID,
+  
   editCustomer,
+  */
 };
