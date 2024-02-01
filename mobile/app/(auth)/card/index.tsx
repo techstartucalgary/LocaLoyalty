@@ -45,16 +45,14 @@ const Card = ({
 	}
 
 	const slug: string = `./card/${businessName}`;
-
-	const fullStamps = [];
-	const emptyStamps = [];
+	const stampArray = []; // Boolean array representing if completed stamp or not
 
 	for (let i = 0; i < completedStamps; i++) {
-		fullStamps.push(<Stamp key={i} color={primaryColor} />);
+		stampArray.push(true);
 	}
 
 	for (let i = 0; i < maxStamps - completedStamps; i++) {
-		emptyStamps.push(<EmptyStamp key={i} />);
+		stampArray.push(false);
 	}
 
 	return (
@@ -86,10 +84,18 @@ const Card = ({
 									{businessName}
 								</Text>
 							</View>
-							<View className="flex-row gap-2 py-2">
-								{fullStamps}
-								{emptyStamps}
-							</View>
+							<FlatList
+								data={stampArray}
+								renderItem={({ item }) => {
+									if (item) {
+										return <Stamp color={primaryColor} />;
+									} else {
+										return <EmptyStamp />;
+									}
+								}}
+								className="w-full py-2"
+								horizontal={true}
+							></FlatList>
 							<View className="flex-row gap-6 py-4">
 								<View className="flex-row">
 									<AntDesign name="phone" size={16} color="black" />
@@ -121,7 +127,7 @@ const Wallet = () => {
 				</Text>
 			</View>
 			<FlatList
-				className="h-full w-full px-6 pt-6" 
+				className="h-full w-full px-6 pt-6"
 				data={cardData}
 				renderItem={({ item }) => {
 					return (

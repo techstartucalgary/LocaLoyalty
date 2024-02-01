@@ -9,8 +9,10 @@ import SmallStamp from "../../../assets/images/smallStamp";
 import SmallEmptyStamp from "../../../assets/images/smallEmptyStamp";
 import { useWalletStore } from "../../../utils/walletStore";
 import ExtraSmallStamp from "../../../assets/images/extraSmallStamp";
-import { TouchableOpacity } from "react-native-gesture-handler";
-
+import {
+	TouchableOpacity,
+	TouchableWithoutFeedback,
+} from "react-native-gesture-handler";
 
 const BusinessCardPage = () => {
 	const {
@@ -22,7 +24,7 @@ const BusinessCardPage = () => {
 		currentPrimaryColor,
 	} = useWalletStore();
 
-	const [ isDetailsSelected, setDetailsSelected ] = useState<boolean>(false);
+	const [isDetailsSelected, setDetailsSelected] = useState<boolean>(false);
 
 	function handleDetailButtonPress() {
 		if (isDetailsSelected) {
@@ -62,14 +64,16 @@ const BusinessCardPage = () => {
 
 	const fullStamps = [];
 	const emptyStamps = [];
+	const stampArray = []; // Boolean array representing if completed stamp or not
 
 	for (let i = 0; i < currentCompletedStamps; i++) {
-		fullStamps.push(<SmallStamp key={i} color={"#000"} />);
+		stampArray.push(true);
 	}
 
 	for (let i = 0; i < currentMaxStamps - currentCompletedStamps; i++) {
-		emptyStamps.push(<SmallEmptyStamp key={i} />);
+		stampArray.push(false);
 	}
+	console.log(stampArray);
 
 	return (
 		<View className="w-full h-full">
@@ -89,10 +93,18 @@ const BusinessCardPage = () => {
 									{currentBusinessName}
 								</Text>
 							</View>
-							<View className="flex-row w-full justify-between py-4">
-								{fullStamps}
-								{emptyStamps}
-							</View>
+							<FlatList
+								data={stampArray}
+								renderItem={({ item }) => {
+									if (item) {
+										return <SmallStamp color={"#000"} />;
+									} else {
+										return <SmallEmptyStamp />;
+									}
+								}}
+								className="w-full py-4"
+								horizontal={true}
+							></FlatList>
 							<View className="flex-row gap-2 py-4">
 								<View className="flex-row">
 									<AntDesign name="phone" size={16} color="black" />
@@ -175,7 +187,9 @@ const BusinessCardPage = () => {
 
 			{isDetailsSelected ? (
 				<View className="px-12 py-8">
-					<Text className="text-lg font-semibold pb-2">About {currentBusinessName}</Text>
+					<Text className="text-lg font-semibold pb-2">
+						About {currentBusinessName}
+					</Text>
 					<Text>{currentBusinessDescription}</Text>
 				</View>
 			) : (
