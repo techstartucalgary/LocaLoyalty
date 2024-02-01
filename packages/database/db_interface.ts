@@ -10,20 +10,12 @@ import * as schema from "./schema.js";
 import { SQLWrapper, and, eq } from "drizzle-orm";
 
 // Adds a new customer to the database, returns the generated customer_id
-async function addCustomer(
-  fname: string,
-  lname: string,
-  email: string,
-  address: string,
-  phone: string,
-  clerk_id: string
-) {
+async function addCustomer(email: string, phone: string, clerk_id: string) {
   //insert info
   await db.insert(schema.customer).values({
-    fname: fname,
-    lname: lname,
+    fname: "",
+    lname: "",
     email: email,
-    address: address,
     phone: phone,
     clerk_id: clerk_id,
   });
@@ -459,18 +451,20 @@ async function getCustomerFromClerkID(clerk_id: string) {
   return result;
 }
 
-/*
-async function editCustomer(customer_id, attribute, newValue) {
+async function editCustomer(
+  clerk_id: string,
+  first_name: string,
+  last_name: string
+) {
   //update value
   await db
     .update(schema.customer)
-    .set({ [attribute]: [newValue] })
-    .where(eq(schema.customer.customer_id, customer_id));
+    .set({ fname: first_name || "", lname: last_name || "" })
+    .where(eq(schema.customer.clerk_id, clerk_id));
 
   //test to see if the query was successfull
   //TODO
 }
-*/
 
 //TODO: functions to edit existing entities
 
@@ -480,6 +474,7 @@ export {
   getCustomerFromClerkID,
   getAllLoyaltyCardsOfCustomer,
   getCustomer,
+  editCustomer,
   /*
   addLoyaltyCard,
   addTransaction,
@@ -497,6 +492,6 @@ export {
   getAllTransactionsOfCard,
   getAllRewardsOfVendor,
   
-  editCustomer,
+  
   */
 };
