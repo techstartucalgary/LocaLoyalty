@@ -73,7 +73,6 @@ const BusinessCardPage = () => {
 	for (let i = 0; i < currentMaxStamps - currentCompletedStamps; i++) {
 		stampArray.push(false);
 	}
-	console.log(stampArray);
 
 	return (
 		<View className="w-full h-full">

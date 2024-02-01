@@ -2,7 +2,7 @@ import * as React from "react";
 import Svg, { Circle, Path } from "react-native-svg";
 const SmallStamp = ({ color, ...props }: { color: string; props?: any }) => {
 	return (
-		<Svg width={42} height={42} fill="none" {...props}>
+		<Svg width={44} height={42} fill="none" {...props}>
 			<Circle cx={20.4435} cy={20.4435} r={20.4435} fill="#000" />
 			<Path
 				stroke="#fff"
