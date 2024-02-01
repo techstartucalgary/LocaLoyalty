@@ -1,39 +1,41 @@
 import { View, Text, Image, FlatList, Pressable } from "react-native";
-import React from "react";
-import { Link, useLocalSearchParams } from "expo-router";
+import React, { useState } from "react";
+import { Link, Stack, useLocalSearchParams } from "expo-router";
 import { cardData } from "../../../content/temp-card-data";
-import { AntDesign } from "@expo/vector-icons";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
 import Stamp from "../../../assets/images/stamp";
 import EmptyStamp from "../../../assets/images/emptyStamp";
 import SmallStamp from "../../../assets/images/smallStamp";
 import SmallEmptyStamp from "../../../assets/images/smallEmptyStamp";
-import { useCardStore, useWalletStore } from "../../../utils/walletStore";
+import { useWalletStore } from "../../../utils/walletStore";
 import ExtraSmallStamp from "../../../assets/images/extraSmallStamp";
 import { TouchableOpacity } from "react-native-gesture-handler";
+
 
 const BusinessCardPage = () => {
 	const {
 		currentBusinessName,
 		currentBusinessImage,
+		currentBusinessDescription,
 		currentCompletedStamps,
 		currentMaxStamps,
 		currentPrimaryColor,
 	} = useWalletStore();
 
-	const { isDetailsSelected, setDetailsSelected } = useCardStore();
+	const [ isDetailsSelected, setDetailsSelected ] = useState<boolean>(false);
 
 	function handleDetailButtonPress() {
 		if (isDetailsSelected) {
-			return
+			return;
 		}
-		setDetailsSelected(true)
+		setDetailsSelected(true);
 	}
 
 	function handleRewardButtonPress() {
 		if (!isDetailsSelected) {
-			return
+			return;
 		}
-		setDetailsSelected(false)
+		setDetailsSelected(false);
 	}
 	// TODO: GET THE CURRENT PROGRESS AND THRESHOLD
 	const currentRewardProgress = 3.5;
@@ -76,7 +78,7 @@ const BusinessCardPage = () => {
 				className="w-full h-52 pt-28 mb-28 rounded-b-[40px]"
 			>
 				<View className="h-full px-12">
-					<View className="w-full border-2 rounded-xl shadow">
+					<View className="w-full border-2 rounded-xl">
 						<View className="items-center px-6 bg-[#F7F8F8] rounded-xl">
 							<View className="flex-row pt-5 w-full items-center">
 								<Image
@@ -132,32 +134,69 @@ const BusinessCardPage = () => {
 				</View>
 			</View>
 
-			<View className="flex-row h-12 px-10">
-				<TouchableOpacity className="flex-1 items-center justify-center border border-[#B1B1B1]">
-					<Text className="text-lg">Rewards</Text>
-				</TouchableOpacity>
-				<TouchableOpacity className="flex-1 items-center justify-center border border-[#B1B1B1]">
-					<Text className="text-lg">Details</Text>
-				</TouchableOpacity>
+			<View className="flex-row h-12 px-10 w-full">
+				<Pressable
+					onPress={handleRewardButtonPress}
+					disabled={!isDetailsSelected}
+					style={({ pressed }) => [
+						{
+							opacity: pressed ? 0.5 : 1.0,
+							flex: 1,
+							borderStyle: "solid",
+							borderColor: isDetailsSelected ? "#B1B1B1" : currentPrimaryColor,
+							borderWidth: 2,
+							backgroundColor: pressed ? "#B1B1B1" : "transparent",
+						},
+					]}
+				>
+					<View className="w-full h-full justify-center items-center">
+						<Text className="text-lg">Rewards</Text>
+					</View>
+				</Pressable>
+				<Pressable
+					onPress={handleDetailButtonPress}
+					disabled={isDetailsSelected}
+					style={({ pressed }) => [
+						{
+							opacity: pressed ? 0.5 : 1.0,
+							flex: 1,
+							borderStyle: "solid",
+							borderColor: isDetailsSelected ? currentPrimaryColor : "#B1B1B1",
+							borderWidth: 2,
+							backgroundColor: pressed ? "#B1B1B1" : "transparent",
+						},
+					]}
+				>
+					<View className="w-full h-full justify-center items-center">
+						<Text className="text-lg">Details</Text>
+					</View>
+				</Pressable>
 			</View>
 
-			<FlatList
-				className="h-full w-full px-12 py-4"
-				data={rewards}
-				renderItem={({ item }) => {
-					return (
-						<View className="bg-[#EBEBEB] p-3 shadow my-4 rounded-xl flex-row justify-between items-center">
-							<Text className="text-xl font-semibold">{item.rewardName}</Text>
-							<View className="flex-row items-center">
-								<Text className="text-2xl font-medium">
-									{item.rewardStampCost}
-								</Text>
-								<ExtraSmallStamp className="scale-150 px-4" />
+			{isDetailsSelected ? (
+				<View className="px-12 py-8">
+					<Text className="text-lg font-semibold pb-2">About {currentBusinessName}</Text>
+					<Text>{currentBusinessDescription}</Text>
+				</View>
+			) : (
+				<FlatList
+					className="h-full w-full px-12 py-4"
+					data={rewards}
+					renderItem={({ item }) => {
+						return (
+							<View className="bg-[#EBEBEB] p-3 shadow my-4 rounded-xl flex-row justify-between items-center">
+								<Text className="text-xl font-semibold">{item.rewardName}</Text>
+								<View className="flex-row items-center">
+									<Text className="text-2xl font-medium">
+										{item.rewardStampCost}
+									</Text>
+									<ExtraSmallStamp className="scale-150 px-4" />
+								</View>
 							</View>
-						</View>
-					);
-				}}
-			/>
+						);
+					}}
+				/>
+			)}
 		</View>
 	);
 };

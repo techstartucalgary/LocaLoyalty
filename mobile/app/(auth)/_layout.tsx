@@ -87,6 +87,7 @@ const TabsPage = () => {
 			<Tabs
 				screenOptions={{
 					headerTransparent: true,
+					headerShown: false,
 				}}
 			>
 				<Tabs.Screen
@@ -139,12 +140,13 @@ const TabsPage = () => {
 					options={{ tabBarButton: () => null, headerShown: false }}
 				/>
 				<Tabs.Screen
-					name="card/[businessName]"
+					name="card"
 					options={{
-						href: null,
-						header: () => <BusinessCardHeader />,
+						tabBarLabel: "New Wallet",
+						tabBarIcon: ({ color, size }) => (
+							<Ionicons name="wallet" size={size} color={color} />
+						),
 					}}
-					redirect={!isSignedIn}
 				/>
 			</Tabs>
 		</>

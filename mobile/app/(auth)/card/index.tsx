@@ -2,11 +2,11 @@ import { View, Text, Image, FlatList, Pressable } from "react-native";
 import React from "react";
 import { useUser } from "@clerk/clerk-expo";
 import { Link } from "expo-router";
-import { cardData } from "../../content/temp-card-data";
-import Stamp from "../../assets/images/stamp";
-import EmptyStamp from "../../assets/images/emptyStamp";
+import { cardData } from "../../../content/temp-card-data";
+import Stamp from "../../../assets/images/stamp";
+import EmptyStamp from "../../../assets/images/emptyStamp";
 import { AntDesign } from "@expo/vector-icons";
-import { useWalletStore } from "../../utils/walletStore";
+import { useWalletStore } from "../../../utils/walletStore";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 type Card = {
@@ -58,7 +58,7 @@ const Card = ({
 	}
 
 	return (
-		<View className="h-64 flex-1 py-2">
+		<View className="flex-1 py-2">
 			<Link href={slug} className="h-full w-full rounded-xl" asChild>
 				<TouchableOpacity
 					onPress={() => {
@@ -121,7 +121,7 @@ const Wallet = () => {
 				</Text>
 			</View>
 			<FlatList
-				className="h-full w-full px-6 pt-6 pb-32"
+				className="h-full w-full px-6 pt-6" 
 				data={cardData}
 				renderItem={({ item }) => {
 					return (
