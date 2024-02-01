@@ -2,6 +2,7 @@
 import { IoMdHeart } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
 import Image from 'next/image'
+import Link from 'next/link'
 
 const PublicFooter = () => {
   return (
@@ -30,28 +31,19 @@ const PublicFooter = () => {
               </h5>
               <ul className="list-none mt-3.5 space-y-2">
                 <li>
-                  <a
-                    href="#"
-                    className="flex items-center font-medium text-lg hover:text-black transition-all duration-500 ease-in-out"
-                  >
+                  <Link href="" className="flex items-center font-medium text-lg hover:text-black transition-all duration-500 ease-in-out">
                     <IoIosArrowForward /> About
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="#"
-                    className="flex items-center font-medium text-lg hover:text-black transition-all duration-500 ease-in-out"
-                  >
+                  <Link href="" className="flex items-center font-medium text-lg hover:text-black transition-all duration-500 ease-in-out">
                     <IoIosArrowForward /> Contact
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="#"
-                    className="flex items-center font-medium text-lg hover:text-black transition-all duration-500 ease-in-out"
-                  >
+                  <Link href="" className="flex items-center font-medium text-lg hover:text-black transition-all duration-500 ease-in-out">
                     <IoIosArrowForward /> Pricing
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -61,12 +53,9 @@ const PublicFooter = () => {
               </h5>
               <ul className="list-none mt-3.5 space-y-2">
                 <li>
-                  <a
-                    href="#"
-                    className="flex items-center font-medium text-lg hover:text-black transition-all duration-500 ease-in-out"
-                  >
+                  <Link href="" className="flex items-center font-medium text-lg hover:text-black transition-all duration-500 ease-in-out">
                     <IoIosArrowForward /> FAQs
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -85,19 +74,40 @@ const PublicFooter = () => {
               </ul>
               <ul className="list-none mt-3.5 space-y-2">
                 <li>
-                  <a
-                    href="#"
-                    className="flex items-center hover:text-sky-600 font-medium text-lg hover:text-black transition-all duration-500 ease-in-out"
-                  >
+                  <Link href="" className="flex items-center hover:text-sky-600 font-medium text-lg hover:text-black transition-all duration-500 ease-in-out">
                     localoyaltycalgary@gmail.com
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
           </div>
         </div>
       </div>
-      <hr className="h-px mx-24 mt-10 mb-16 bg-black border-l border-black" />
+      <hr className="h-px mx-24 mt-10 mb-2 bg-black border-l border-black" />
+      <div className="flex mx-24 mb-8">
+        <ul className="list-none mt-3.5 space-y-2">
+          <li>
+            <Link href="" className="flex pr-20 items-center hover:text-gray-600 font-medium text-lg hover:text-black transition-all duration-500 ease-in-out">
+              Privacy Policy
+            </Link>
+          </li>
+        </ul>
+        <ul className="list-none mt-3.5 space-y-2">
+          <li>
+            <Link href="" className="flex pr-20 items-center hover:text-gray-600 font-medium text-lg hover:text-black transition-all duration-500 ease-in-out">
+              Cookie Policy
+            </Link>
+          </li>
+        </ul>
+        <ul className="list-none mt-3.5 space-y-2">
+          <li>
+            <Link href="" className="flex items-center hover:text-gray-600 font-medium text-lg hover:text-black transition-all duration-500 ease-in-out">
+              Terms & Conditions
+            </Link>
+          </li>
+        </ul>
+      </div>
+
     </footer >
   );
 };
