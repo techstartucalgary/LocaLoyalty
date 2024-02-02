@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "31131922-28e6-494c-ab1f-e0e26089be98",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "f8a5e2cb-d967-4b69-a493-0986f6ac3d34",
+  "prevId": "6528775c-5315-431a-80c7-b272a284ddc0",
   "tables": {
     "customer": {
       "name": "customer",
@@ -48,6 +48,13 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
+        },
+        "clerk_id": {
+          "name": "clerk_id",
+          "type": "varchar(16)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         }
       },
       "indexes": {},
@@ -55,7 +62,9 @@
       "compositePrimaryKeys": {
         "customer_customer_id": {
           "name": "customer_customer_id",
-          "columns": ["customer_id"]
+          "columns": [
+            "customer_id"
+          ]
         }
       },
       "uniqueConstraints": {}
@@ -90,33 +99,23 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "carry_over_amt": {
+          "name": "carry_over_amt",
+          "type": "decimal",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "loyalty_card_customer_id_customer_customer_id_fk": {
-          "name": "loyalty_card_customer_id_customer_customer_id_fk",
-          "tableFrom": "loyalty_card",
-          "tableTo": "customer",
-          "columnsFrom": ["customer_id"],
-          "columnsTo": ["customer_id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "loyalty_card_program_id_rewards_program_program_id_fk": {
-          "name": "loyalty_card_program_id_rewards_program_program_id_fk",
-          "tableFrom": "loyalty_card",
-          "tableTo": "rewards_program",
-          "columnsFrom": ["program_id"],
-          "columnsTo": ["program_id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {
         "loyalty_card_loyalty_id": {
           "name": "loyalty_card_loyalty_id",
-          "columns": ["loyalty_id"]
+          "columns": [
+            "loyalty_id"
+          ]
         }
       },
       "uniqueConstraints": {}
@@ -154,21 +153,64 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "point_redemption_history_loyalty_id_loyalty_card_loyalty_id_fk": {
-          "name": "point_redemption_history_loyalty_id_loyalty_card_loyalty_id_fk",
-          "tableFrom": "point_redemption_history",
-          "tableTo": "loyalty_card",
-          "columnsFrom": ["loyalty_id"],
-          "columnsTo": ["loyalty_id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {
         "point_redemption_history_history_id": {
           "name": "point_redemption_history_history_id",
-          "columns": ["history_id"]
+          "columns": [
+            "history_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "reward": {
+      "name": "reward",
+      "columns": {
+        "reward_id": {
+          "name": "reward_id",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "program_id": {
+          "name": "program_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "points_cost": {
+          "name": "points_cost",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "reward_reward_id": {
+          "name": "reward_reward_id",
+          "columns": [
+            "reward_id"
+          ]
         }
       },
       "uniqueConstraints": {}
@@ -196,24 +238,23 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
+        },
+        "spending_per_point": {
+          "name": "spending_per_point",
+          "type": "decimal",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "rewards_program_vendor_id_vendor_vendor_id_fk": {
-          "name": "rewards_program_vendor_id_vendor_vendor_id_fk",
-          "tableFrom": "rewards_program",
-          "tableTo": "vendor",
-          "columnsFrom": ["vendor_id"],
-          "columnsTo": ["vendor_id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {
         "rewards_program_program_id": {
           "name": "rewards_program_program_id",
-          "columns": ["program_id"]
+          "columns": [
+            "program_id"
+          ]
         }
       },
       "uniqueConstraints": {}
@@ -244,7 +285,7 @@
         },
         "purchase_amt": {
           "name": "purchase_amt",
-          "type": "int",
+          "type": "decimal",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -265,37 +306,20 @@
         },
         "payment_type": {
           "name": "payment_type",
-          "type": "varchar(16)",
+          "type": "varchar(256)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "transaction_loyalty_id_loyalty_card_loyalty_id_fk": {
-          "name": "transaction_loyalty_id_loyalty_card_loyalty_id_fk",
-          "tableFrom": "transaction",
-          "tableTo": "loyalty_card",
-          "columnsFrom": ["loyalty_id"],
-          "columnsTo": ["loyalty_id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "transaction_program_id_rewards_program_program_id_fk": {
-          "name": "transaction_program_id_rewards_program_program_id_fk",
-          "tableFrom": "transaction",
-          "tableTo": "rewards_program",
-          "columnsFrom": ["program_id"],
-          "columnsTo": ["program_id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {
         "transaction_transaction_id": {
           "name": "transaction_transaction_id",
-          "columns": ["transaction_id"]
+          "columns": [
+            "transaction_id"
+          ]
         }
       },
       "uniqueConstraints": {}
@@ -337,6 +361,13 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         }
       },
       "indexes": {},
@@ -344,7 +375,9 @@
       "compositePrimaryKeys": {
         "vendor_vendor_id": {
           "name": "vendor_vendor_id",
-          "columns": ["vendor_id"]
+          "columns": [
+            "vendor_id"
+          ]
         }
       },
       "uniqueConstraints": {}

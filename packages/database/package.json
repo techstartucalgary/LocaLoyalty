@@ -9,5 +9,8 @@
     "drizzle-kit": "^0.20.9",
     "drizzle-orm": "^0.29.2",
     "mysql-core": "^0.1.16"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5"
   }
 }

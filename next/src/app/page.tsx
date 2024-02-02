@@ -1,6 +1,7 @@
 import Head from "next/head";
 import PublicNavbar from "@/components/PublicNavbar";
 import Image from "next/image";
+import PublicFooter from "@/components/PublicFooter";
 
 export default function Home() {
   return (
@@ -23,6 +24,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <PublicFooter />
     </>
   );
 }
