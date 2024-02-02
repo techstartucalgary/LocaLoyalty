@@ -3,30 +3,29 @@ import { Link } from "expo-router";
 import React, { useState } from "react";
 import {
   View,
-  StyleSheet,
   TextInput,
   Button,
   Pressable,
   Text,
-  Alert,
+  Image,
+  TouchableOpacity,
 } from "react-native";
 import Spinner from "react-native-loading-spinner-overlay";
+import { useLoginStore } from "../../utils/loginStores";
 
 const Login = () => {
   const { signIn, setActive, isLoaded } = useSignIn();
-
-  const [emailAddress, setEmailAddress] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const { loading, email, password, setLoading, setPassword, setEmail } =
+    useLoginStore();
 
   const onSignInPress = async () => {
     if (!isLoaded) {
       return;
     }
-    setLoading(true);
+    setLoading();
     try {
       const completeSignIn = await signIn.create({
-        identifier: emailAddress,
+        identifier: email,
         password,
       });
 
@@ -35,64 +34,60 @@ const Login = () => {
     } catch (err: any) {
       alert(err.errors[0].message);
     } finally {
-      setLoading(false);
+      setLoading();
     }
   };
 
   return (
-    <View style={styles.container}>
+    <View className="flex justify-center my-auto items-center">
       <Spinner visible={loading} />
+
+      <Text className="text-5xl text-center font-bold">LocaLoyalty</Text>
+      <Text className="text-xl text-center font-bold">
+        "Get rewarded for supporting local!"
+      </Text>
+
+      <Image
+        source={require("../../assets/images/illustration-5.png")}
+        className="h-40 w-40"
+      />
 
       <TextInput
         autoCapitalize="none"
         placeholder="email"
-        value={emailAddress}
-        onChangeText={setEmailAddress}
-        style={styles.inputField}
+        value={email}
+        onChangeText={setEmail}
+        className="w-2/3 border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 rounded-md py-1 px-3 transition ease-in-out duration-150 mb-3"
       />
+
       <TextInput
         placeholder="password"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
-        style={styles.inputField}
+        className="w-2/3 border-2 border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 rounded-md py-1 px-3 transition ease-in-out duration-150 mb-5"
       />
 
-      <Button onPress={onSignInPress} title="Login" color={"#6c47ff"}></Button>
+      <TouchableOpacity onPress={onSignInPress}>
+        <Text className="font-bold text-white bg-black px-10 py-1 text-xl rounded-md">
+          Login
+        </Text>
+      </TouchableOpacity>
 
-      <Link href="/reset" asChild>
-        <Pressable style={styles.button}>
-          <Text>Forgot password?</Text>
-        </Pressable>
-      </Link>
-      <Link href="/register" asChild>
-        <Pressable style={styles.button}>
-          <Text>Create Account</Text>
-        </Pressable>
-      </Link>
+      <View className="flex flex-col items-center space-y-2 mt-2">
+        <Link href="/reset" asChild>
+          <Pressable>
+            <Text>Forgot password?</Text>
+          </Pressable>
+        </Link>
+        <Link href="/register" asChild>
+          <Pressable>
+            <Text>Create Account</Text>
+          </Pressable>
+        </Link>
+      </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 20,
-  },
-  inputField: {
-    marginVertical: 4,
-    height: 50,
-    borderWidth: 1,
-    borderColor: "#6c47ff",
-    borderRadius: 4,
-    padding: 10,
-    backgroundColor: "#fff",
-  },
-  button: {
-    margin: 8,
-    alignItems: "center",
-  },
-});
 
 export default Login;

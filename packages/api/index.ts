@@ -1,63 +1,48 @@
-import { string, z } from "zod";
-import { inferAsyncReturnType, initTRPC } from "@trpc/server";
-import * as trpcExpress from "@trpc/server/adapters/express";
-import express from "express";
-import cors from "cors";
-import bodyParser from "body-parser";
 import dotenv from "dotenv";
+import {
+  ClerkExpressRequireAuth,
+  RequireAuthProp,
+  StrictAuthProp,
+} from "@clerk/clerk-sdk-node";
+
+import express, { Application, Request, Response, NextFunction } from "express";
+import cors from "cors";
 import { Webhook } from "svix";
+import swaggerUi from "swagger-ui-express";
+import YAML from "yamljs";
+import businessRoutes from "./routes/businessRoutes";
+import customerRoutes from "./routes/customerRoutes";
 
-const PORT = process.env.port || 5001;
+const swaggerDocument = YAML.load("./swagger.yaml");
+
 dotenv.config();
-// created for each request
-const createContext = ({
-  req,
-  res,
-}: trpcExpress.CreateExpressContextOptions) => ({
-  // TODO: CREATE context for each request where we provide the auth session and the db connection
-}); // no context
-type Context = inferAsyncReturnType<typeof createContext>;
+const PORT = process.env.PORT || 5001;
 
-export const t = initTRPC.context<Context>().create();
+dotenv.config({ path: ".env.local", override: true }); // Override with .env.local
 
-export const router = t.router;
+const app: Application = express();
 
-export const appRouter = t.router({
-  //   getUser: t.procedure.input(z.string()).query((opts) => {
-  //     opts.input; // string
-  //     return { id: opts.input, name: 'Bilbo' };
-  //   }),
-  //   createUser: t.procedure
-  //     .input(z.object({ name: z.string().min(5) }))
-  //     .mutation(async (opts) => {
-  //       // use your ORM of choice
-  //       return await UserModel.create({
-  //         data: opts.input,
-  //       });
-  //     }),
-  getHello: t.procedure.query(() => {
-    return [1, 2, 3];
-  }),
+declare global {
+  namespace Express {
+    interface Request extends StrictAuthProp {}
+  }
+}
 
-  // TODO: Make procedures, ideally in another file for organization
-});
+let corsOptions = {
+  origin: ["http://localhost:3000"],
+};
+// 1) Global Middlewares
+app.use(cors(corsOptions));
+app.use(express.urlencoded({ extended: true })); // parses data sent in HTTP request bodies, especially in web forms
+app.use(express.json()); // parses incoming request bodies that are in JSON format.
 
-// export type definition of API
-export type AppRouter = typeof appRouter;
+// 2) Routes
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-const app = express();
+app.use("/business", ClerkExpressRequireAuth(), businessRoutes);
+app.use("/customer", ClerkExpressRequireAuth(), customerRoutes);
 
-app.use(cors());
-app.use(bodyParser.json());
-
-app.use(
-  "/trpc",
-  trpcExpress.createExpressMiddleware({
-    router: appRouter,
-    createContext,
-  })
-);
-
+/*
 app.post("/clerk/webhook", (req, res) => {
   const payload = JSON.stringify(req.body);
   const headers = {
@@ -103,6 +88,7 @@ app.post("/clerk/webhook", (req, res) => {
       .json({ success: false, message: "Webhook could not be processed" });
   }
 });
+*/
 
 app.get("/", (req, res) => {
   res.send("Hello");
