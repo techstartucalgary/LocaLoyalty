@@ -11,10 +11,13 @@ const Home = () => {
   //note to anthony when making api call to backend, make sure you use use the function defined in generalAxios.ts
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Welcome, {user?.emailAddresses[0].emailAddress} 🎉</Text>
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", gap: 24 }}>
+      <Text>Hello, {user?.emailAddresses[0].emailAddress} 🎉</Text>
       <Link href={"/tutorial"}>
         <Text>go to tutorial</Text>
+      </Link>
+      <Link href={"/wallet"}>
+        <Text>go to wallet</Text>
       </Link>
     </View>
   );

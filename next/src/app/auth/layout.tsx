@@ -9,6 +9,7 @@ export default function AuthLayout({
   return (
     <>
       <AuthNavbar />
+
       <main>{children}</main>
       <Toaster />
     </>
