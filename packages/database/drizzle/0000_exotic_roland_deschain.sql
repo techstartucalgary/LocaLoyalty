@@ -1,3 +1,4 @@
+/*
 CREATE TABLE `customer` (
 	`customer_id` serial AUTO_INCREMENT NOT NULL,
 	`fname` varchar(256) NOT NULL,
@@ -63,3 +64,4 @@ CREATE TABLE `vendor` (
 	`description` text,
 	CONSTRAINT `vendor_vendor_id` PRIMARY KEY(`vendor_id`)
 );
+*/

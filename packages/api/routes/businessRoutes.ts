@@ -8,6 +8,8 @@ import {
 } from "@aws-sdk/client-s3";
 import crypto from "crypto";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { Webhook } from "svix";
+import { getVendor } from "../../database/db_interface";
 
 const router = express.Router();
 
@@ -50,7 +52,7 @@ router.get("/test-s3-get", async (req: Request, res: Response) => {
   res.send({ url: url });
 });
 
-router.get("/profile", (req: Request, res: Response) => {
+router.get("/profile", async (req: Request, res: Response) => {
   const dummyData = {
     businessName: "Zhang's Bakery",
     address: "123 real address NE",
@@ -61,10 +63,8 @@ router.get("/profile", (req: Request, res: Response) => {
     apiKey: "opqwieop12p3oiop",
   };
 
-  //this is what you would use to query db for the specific user
-  //console.log(req.auth.userId);
-
-  res.send(dummyData);
+  let profileData = await getVendor(req.auth.userId);
+  res.send(profileData);
 });
 
 // In your route handler

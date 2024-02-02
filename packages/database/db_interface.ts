@@ -7,23 +7,15 @@ January 18 2024
 
 import { db } from "./dbObj.js";
 import * as schema from "./schema.js";
-import { and, eq } from "drizzle-orm";
+import { SQLWrapper, and, eq } from "drizzle-orm";
 
 // Adds a new customer to the database, returns the generated customer_id
-async function addCustomer(
-  fname: string,
-  lname: string,
-  email: string,
-  address: string,
-  phone: string,
-  clerk_id: string
-) {
+async function addCustomer(email: string, phone: string, clerk_id: string) {
   //insert info
   await db.insert(schema.customer).values({
-    fname: fname,
-    lname: lname,
+    fname: "",
+    lname: "",
     email: email,
-    address: address,
     phone: phone,
     clerk_id: clerk_id,
   });
@@ -50,25 +42,20 @@ async function addCustomer(
 async function addVendor(
   name: string,
   email: string,
-  address: string,
   phone: string,
-  description: string,
-  color: string,
-  reward_program_details: string,
-  spending_per_point: string, //must input decimal as a string
-  max_points: number
+  clerk_id: string
 ) {
   //insert info
   await db.insert(schema.vendor).values({
     name: name,
     email: email,
-    address: address,
     phone: phone,
-    description: description,
-    color: color,
-    reward_program_details: reward_program_details,
-    spending_per_point: spending_per_point,
-    max_points: max_points,
+    clerk_id: clerk_id,
+    address: "",
+    description: "",
+    spending_per_point: "0.0",
+    max_points: 0,
+    color: "",
   });
 
   //get vendor id
@@ -89,6 +76,7 @@ async function addVendor(
 }
 
 // Adds a new loyalty card to the customer
+/*
 async function addLoyaltyCard(
   customer_id, //TODO: enforce types
   vendor_id,
@@ -124,9 +112,11 @@ async function addLoyaltyCard(
 
   return result[0].id;
 }
+*/
 
 // Adds a new point redemption
 // Timestamp auto generated
+/*
 async function addPointRedemption(
   loyalty_id, //TODO: enforce types
   points_redeemed
@@ -162,8 +152,10 @@ async function addPointRedemption(
 
   return result;
 }
+*/
 
 // Adds a new transaction a customer completed
+/*
 async function addTransaction(
   loyalty_id, //TODO: enforce types
   vendor_id,
@@ -206,8 +198,10 @@ async function addTransaction(
 
   return result[0].id;
 }
+*/
 
 // Adds a new reward to a vendor program
+/*
 async function addReward(
   vendor_id, //TODO: enforce types
   name,
@@ -240,10 +234,10 @@ async function addReward(
 
   return result[0].id;
 }
-
+*/
 // Gets the customer object
 // Input: the customer ID
-async function getCustomer(customer_id) {
+async function getCustomer(customer_id: number) {
   const result = await db
     .select()
     .from(schema.customer)
@@ -260,11 +254,12 @@ async function getCustomer(customer_id) {
 
 // Gets the vendor object
 //Input: the vendor ID
-async function getVendor(input_id: number) {
+
+async function getVendor(clerk_id: string) {
   const result = await db
     .select()
     .from(schema.vendor)
-    .where(eq(schema.vendor.vendor_id, input_id));
+    .where(eq(schema.vendor.clerk_id, clerk_id));
 
   //if there is an error return null
   if (Object.keys(result).length === 0) {
@@ -275,6 +270,7 @@ async function getVendor(input_id: number) {
   return result[0];
 }
 
+/*
 // Gets the loyalty card object
 // Input: the loyalty car ID
 async function getLoyaltyCard(loyalty_id) {
@@ -291,9 +287,11 @@ async function getLoyaltyCard(loyalty_id) {
 
   return result[0];
 }
+*/
 
 // Gets the point redemption history object
 // Input: the loyalty card ID
+/*
 async function getPointRedemptionHistory(loyalty_id) {
   const result = await db
     .select()
@@ -325,9 +323,11 @@ async function getTransaction(transaction_id) {
 
   return result[0];
 }
+*/
 
 // Gets the reward object
 // Input: the reward ID
+/*
 async function getReward(reward_id) {
   const result = await db
     .select()
@@ -342,10 +342,12 @@ async function getReward(reward_id) {
 
   return result[0];
 }
+*/
 
 // Get all customers has no use case for now...
 
 // Gets all vendors in the database
+/*
 async function getAllVendors() {
   const results = await db.select().from(schema.vendor);
 
@@ -357,10 +359,11 @@ async function getAllVendors() {
 
   return results;
 }
+*/
 
 // Gets all loyalty cards for a given customer
 // Input: the customers customer_id
-async function getAllLoyaltyCardsOfCustomer(customer_id) {
+async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
   const results = await db
     .select()
     .from(schema.loyalty_card)
@@ -377,6 +380,7 @@ async function getAllLoyaltyCardsOfCustomer(customer_id) {
 
 // Gets all point redemption history for a given loyalty card
 // Input: the loyalty_id of the loyalty card
+/*
 async function getAllPointRedemptionHistoryOfCard(loyalty_id) {
   const results = await db
     .select()
@@ -391,9 +395,11 @@ async function getAllPointRedemptionHistoryOfCard(loyalty_id) {
 
   return results;
 }
+*/
 
 // Gets all previous transactions for a given loyalty card
 // Input: the loyalty_id of the loyalty card
+/*
 async function getAllTransactionsOfCard(loyalty_id) {
   const results = await db
     .select()
@@ -408,9 +414,11 @@ async function getAllTransactionsOfCard(loyalty_id) {
 
   return results;
 }
+*/
 
 // Gets all rewards in the program of a given vendor
 // Input: the vendor_id of the vendor
+/*
 async function getAllRewardsOfVendor(vendor_id) {
   const results = await db
     .select()
@@ -425,6 +433,7 @@ async function getAllRewardsOfVendor(vendor_id) {
 
   return results;
 }
+*/
 
 // Gets a customer_id based on a clerk_id
 // Input: a clerk id as a string
@@ -443,19 +452,18 @@ async function getCustomerFromClerkID(clerk_id: string) {
   return result;
 }
 
-// Edits one attribute of a customer
-// Input: The customer_id, the attribute name, and the new attribute value
-// Returns 1 if successfull, or null if the query failed
 async function editCustomer(
-    customer_id,
-    attribute: string,
-    newValue: string
-    ){
-        //update value
-        await db.update(schema.customer)
-            .set({[attribute]: [newValue]})
-            .where(eq(schema.customer.customer_id, customer_id));
+  clerk_id: string,
+  first_name: string,
+  last_name: string
+) {
+  //update value
+  await db
+    .update(schema.customer)
+    .set({ fname: first_name || "", lname: last_name || "" })
+    .where(eq(schema.customer.clerk_id, clerk_id));
 
+        /*
         //test to see if the query was successfull
         const result = await db.select({
             r: schema.customer[attribute]
@@ -468,7 +476,8 @@ async function editCustomer(
             return 1
         }else{
             return null
-        }           
+        }     
+        */
 }
 
 // Edits one attribute of a vendor

@@ -21,7 +21,7 @@ export const getAllCards = async (req: Request, res: Response) => {
     }
 
     // Assuming the customer object contains a customer_id field
-    const customer_id = customer.customer_id;
+    const customer_id = customer[0].customer_id;
 
     // Use the helper function to get all loyalty cards for the customer
     const loyaltyCards = await getAllLoyaltyCardsOfCustomer(customer_id);
