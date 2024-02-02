@@ -254,12 +254,12 @@ async function getCustomer(customer_id: number) {
 
 // Gets the vendor object
 //Input: the vendor ID
-/*
-async function getVendor(input_id: number) {
+
+async function getVendor(clerk_id: string) {
   const result = await db
     .select()
     .from(schema.vendor)
-    .where(eq(schema.vendor.vendor_id, input_id));
+    .where(eq(schema.vendor.clerk_id, clerk_id));
 
   //if there is an error return null
   if (Object.keys(result).length === 0) {
@@ -270,6 +270,7 @@ async function getVendor(input_id: number) {
   return result[0];
 }
 
+/*
 // Gets the loyalty card object
 // Input: the loyalty car ID
 async function getLoyaltyCard(loyalty_id) {
@@ -475,23 +476,19 @@ export {
   getAllLoyaltyCardsOfCustomer,
   getCustomer,
   editCustomer,
+  getVendor,
   /*
   addLoyaltyCard,
   addTransaction,
   addReward,
   addPointRedemption,
-  
-  getVendor,
   getLoyaltyCard,
   getPointRedemptionHistory,
   getTransaction,
   getReward,
   getAllVendors,
-  
   getAllPointRedemptionHistoryOfCard,
   getAllTransactionsOfCard,
   getAllRewardsOfVendor,
-  
-  
   */
 };
