@@ -42,7 +42,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.getAllRewardsOfVendor = exports.getAllTransactionsOfCard = exports.getAllPointRedemptionHistoryOfCard = exports.getAllLoyaltyCardsOfCustomer = exports.getAllVendors = exports.getReward = exports.getTransaction = exports.getPointRedemptionHistory = exports.getLoyaltyCard = exports.getVendor = exports.getCustomer = exports.addPointRedemption = exports.addReward = exports.addTransaction = exports.addLoyaltyCard = exports.addVendor = exports.addCustomer = void 0;
+exports.editCustomer = exports.getCustomerFromClerkID = exports.getAllRewardsOfVendor = exports.getAllTransactionsOfCard = exports.getAllPointRedemptionHistoryOfCard = exports.getAllLoyaltyCardsOfCustomer = exports.getAllVendors = exports.getReward = exports.getTransaction = exports.getPointRedemptionHistory = exports.getLoyaltyCard = exports.getVendor = exports.getCustomer = exports.addPointRedemption = exports.addReward = exports.addTransaction = exports.addLoyaltyCard = exports.addVendor = exports.addCustomer = void 0;
 var dbObj_js_1 = require("./dbObj.js");
 var schema = require("./schema.js");
 var drizzle_orm_1 = require("drizzle-orm");
@@ -160,17 +160,25 @@ exports.addLoyaltyCard = addLoyaltyCard;
 function addPointRedemption(loyalty_id, //TODO: enforce types
 points_redeemed) {
     return __awaiter(this, void 0, void 0, function () {
-        var result;
+        var stamp, result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, dbObj_js_1.db.insert(schema.point_redemption_history).values({
-                        loyalty_id: loyalty_id,
-                        points_redeemed: points_redeemed,
-                        timestamp: new Date()
-                    })];
+                case 0:
+                    stamp = new Date();
+                    //insert data
+                    return [4 /*yield*/, dbObj_js_1.db.insert(schema.point_redemption_history).values({
+                            loyalty_id: loyalty_id,
+                            points_redeemed: points_redeemed,
+                            timestamp: stamp
+                        })];
                 case 1:
+                    //insert data
                     _a.sent();
-                    result = "id";
+                    return [4 /*yield*/, dbObj_js_1.db.select({
+                            id: schema.point_redemption_history.history_id
+                        }).from(schema.point_redemption_history).where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(schema.point_redemption_history.loyalty_id, loyalty_id), (0, drizzle_orm_1.eq)(schema.point_redemption_history.timestamp, stamp)))];
+                case 2:
+                    result = _a.sent();
                     //if there is an error return null
                     if (Object.keys(result).length === 0) {
                         console.log("Database query failed");
@@ -259,7 +267,9 @@ function getCustomer(customer_id) {
         var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, dbObj_js_1.db.select().from(schema.customer).where((0, drizzle_orm_1.eq)(schema.customer.customer_id, customer_id))];
+                case 0: return [4 /*yield*/, dbObj_js_1.db.select()
+                        .from(schema.customer)
+                        .where((0, drizzle_orm_1.eq)(schema.customer.customer_id, customer_id))];
                 case 1:
                     result = _a.sent();
                     //if there is an error return null
@@ -280,7 +290,9 @@ function getVendor(input_id) {
         var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, dbObj_js_1.db.select().from(schema.vendor).where((0, drizzle_orm_1.eq)(schema.vendor.vendor_id, input_id))];
+                case 0: return [4 /*yield*/, dbObj_js_1.db.select()
+                        .from(schema.vendor)
+                        .where((0, drizzle_orm_1.eq)(schema.vendor.vendor_id, input_id))];
                 case 1:
                     result = _a.sent();
                     //if there is an error return null
@@ -301,7 +313,9 @@ function getLoyaltyCard(loyalty_id) {
         var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, dbObj_js_1.db.select().from(schema.loyalty_card).where((0, drizzle_orm_1.eq)(schema.loyalty_card.loyalty_id, loyalty_id))];
+                case 0: return [4 /*yield*/, dbObj_js_1.db.select()
+                        .from(schema.loyalty_card)
+                        .where((0, drizzle_orm_1.eq)(schema.loyalty_card.loyalty_id, loyalty_id))];
                 case 1:
                     result = _a.sent();
                     //if there is an error return null
@@ -322,7 +336,9 @@ function getPointRedemptionHistory(loyalty_id) {
         var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, dbObj_js_1.db.select().from(schema.point_redemption_history).where((0, drizzle_orm_1.eq)(schema.point_redemption_history.loyalty_id, loyalty_id))];
+                case 0: return [4 /*yield*/, dbObj_js_1.db.select()
+                        .from(schema.point_redemption_history)
+                        .where((0, drizzle_orm_1.eq)(schema.point_redemption_history.loyalty_id, loyalty_id))];
                 case 1:
                     result = _a.sent();
                     //if there is an error return null
@@ -343,7 +359,9 @@ function getTransaction(transaction_id) {
         var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, dbObj_js_1.db.select().from(schema.transaction).where((0, drizzle_orm_1.eq)(schema.transaction.transaction_id, transaction_id))];
+                case 0: return [4 /*yield*/, dbObj_js_1.db.select()
+                        .from(schema.transaction)
+                        .where((0, drizzle_orm_1.eq)(schema.transaction.transaction_id, transaction_id))];
                 case 1:
                     result = _a.sent();
                     //if there is an error return null
@@ -364,7 +382,9 @@ function getReward(reward_id) {
         var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, dbObj_js_1.db.select().from(schema.reward).where((0, drizzle_orm_1.eq)(schema.reward.reward_id, reward_id))];
+                case 0: return [4 /*yield*/, dbObj_js_1.db.select()
+                        .from(schema.reward)
+                        .where((0, drizzle_orm_1.eq)(schema.reward.reward_id, reward_id))];
                 case 1:
                     result = _a.sent();
                     //if there is an error return null
@@ -385,7 +405,8 @@ function getAllVendors() {
         var results;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, dbObj_js_1.db.select().from(schema.vendor)];
+                case 0: return [4 /*yield*/, dbObj_js_1.db.select()
+                        .from(schema.vendor)];
                 case 1:
                     results = _a.sent();
                     //if there is an error return null
@@ -406,7 +427,9 @@ function getAllLoyaltyCardsOfCustomer(customer_id) {
         var results;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, dbObj_js_1.db.select().from(schema.loyalty_card).where((0, drizzle_orm_1.eq)(schema.loyalty_card.customer_id, customer_id))];
+                case 0: return [4 /*yield*/, dbObj_js_1.db.select()
+                        .from(schema.loyalty_card)
+                        .where((0, drizzle_orm_1.eq)(schema.loyalty_card.customer_id, customer_id))];
                 case 1:
                     results = _a.sent();
                     //if there is an error return null
@@ -427,7 +450,9 @@ function getAllPointRedemptionHistoryOfCard(loyalty_id) {
         var results;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, dbObj_js_1.db.select().from(schema.point_redemption_history).where((0, drizzle_orm_1.eq)(schema.point_redemption_history.loyalty_id, loyalty_id))];
+                case 0: return [4 /*yield*/, dbObj_js_1.db.select()
+                        .from(schema.point_redemption_history)
+                        .where((0, drizzle_orm_1.eq)(schema.point_redemption_history.loyalty_id, loyalty_id))];
                 case 1:
                     results = _a.sent();
                     //if there is an error return null
@@ -448,7 +473,9 @@ function getAllTransactionsOfCard(loyalty_id) {
         var results;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, dbObj_js_1.db.select().from(schema.transaction).where((0, drizzle_orm_1.eq)(schema.transaction.loyalty_id, loyalty_id))];
+                case 0: return [4 /*yield*/, dbObj_js_1.db.select()
+                        .from(schema.transaction)
+                        .where((0, drizzle_orm_1.eq)(schema.transaction.loyalty_id, loyalty_id))];
                 case 1:
                     results = _a.sent();
                     //if there is an error return null
@@ -469,7 +496,9 @@ function getAllRewardsOfVendor(vendor_id) {
         var results;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, dbObj_js_1.db.select().from(schema.reward).where((0, drizzle_orm_1.eq)(schema.reward.vendor_id, vendor_id))];
+                case 0: return [4 /*yield*/, dbObj_js_1.db.select()
+                        .from(schema.reward)
+                        .where((0, drizzle_orm_1.eq)(schema.reward.vendor_id, vendor_id))];
                 case 1:
                     results = _a.sent();
                     //if there is an error return null
@@ -483,3 +512,65 @@ function getAllRewardsOfVendor(vendor_id) {
     });
 }
 exports.getAllRewardsOfVendor = getAllRewardsOfVendor;
+// Gets a customer_id based on a clerk_id
+// Input: a clerk id as a string
+function getCustomerFromClerkID(clerk_id) {
+    return __awaiter(this, void 0, void 0, function () {
+        var result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, dbObj_js_1.db.select()
+                        .from(schema.customer)
+                        .where((0, drizzle_orm_1.eq)(schema.customer.clerk_id, clerk_id))];
+                case 1:
+                    result = _a.sent();
+                    //if there is an error return null
+                    if (Object.keys(result).length === 0) {
+                        console.log("Database query failed");
+                        return [2 /*return*/, null];
+                    }
+                    return [2 /*return*/, result];
+            }
+        });
+    });
+}
+exports.getCustomerFromClerkID = getCustomerFromClerkID;
+// Edits one attribute of a customer
+// Input: The customer_id, the attribute name, and the new attribute value
+// Returns 1 if successfull, or null if the query failed
+function editCustomer(customer_id, attribute, newValue) {
+    return __awaiter(this, void 0, void 0, function () {
+        var result;
+        var _a;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0: 
+                //update value
+                return [4 /*yield*/, dbObj_js_1.db.update(schema.customer)
+                        .set((_a = {}, _a[attribute] = [newValue], _a))
+                        .where((0, drizzle_orm_1.eq)(schema.customer.customer_id, customer_id))];
+                case 1:
+                    //update value
+                    _b.sent();
+                    return [4 /*yield*/, dbObj_js_1.db.select({
+                            r: schema.customer[attribute]
+                        })
+                            .from(schema.customer)
+                            .where((0, drizzle_orm_1.eq)(schema.customer.customer_id, customer_id))];
+                case 2:
+                    result = _b.sent();
+                    //return 1 if successfull, or null if failure
+                    if (result[0].r == newValue) {
+                        console.log("success!! match");
+                        return [2 /*return*/, 1];
+                    }
+                    else {
+                        console.log("L :(");
+                        return [2 /*return*/, null];
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.editCustomer = editCustomer;

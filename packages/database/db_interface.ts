@@ -417,10 +417,13 @@ async function getCustomerFromClerkID(clerk_id: string){
     return result;
 }
 
+// Edits one attribute of a customer
+// Input: The customer_id, the attribute name, and the new attribute value
+// Returns 1 if successfull, or null if the query failed
 async function editCustomer(
     customer_id,
-    attribute,
-    newValue
+    attribute: string,
+    newValue: string
     ){
         //update value
         await db.update(schema.customer)
@@ -428,7 +431,19 @@ async function editCustomer(
             .where(eq(schema.customer.customer_id, customer_id));
 
         //test to see if the query was successfull
-        //TODO
+        const result = await db.select({
+            r: schema.customer[attribute]
+            })
+            .from(schema.customer)
+            .where(eq(schema.customer.customer_id, customer_id));
+
+        //return 1 if successfull, or null if failure
+        if(result[0].r == newValue){
+            return 1
+        }else{
+            return null
+        }
+            
 }
 
 //TODO: functions to edit existing entities

@@ -40,7 +40,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 var interfac = require("./db_interface");
-var customer_id = 34783478; //hardcoded id
+var customer_id = 3; //hardcoded id
 function myFunction() {
     return __awaiter(this, void 0, void 0, function () {
         var result;
@@ -50,4 +50,13 @@ function myFunction() {
         });
     });
 }
+function func2() {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            interfac.editCustomer(3, "address", "696969");
+            return [2 /*return*/];
+        });
+    });
+}
 myFunction().then(function (data) { return console.log(data); });
+func2().then(function (data) { return console.log(data); });
