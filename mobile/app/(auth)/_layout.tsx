@@ -24,60 +24,6 @@ export const LogoutButton = () => {
 	);
 };
 
-// const SearchButton = () => {
-// 	return (
-// 		// TODO: Implement functionality of search button
-// 		<Pressable className="pr-4">
-// 			<Ionicons name="search" size={24} color={"#000"} />
-// 		</Pressable>
-// 	);
-// };
-
-// const PersonButton = () => {
-// 	return (
-// 		// TODO: Implement functionality of person button
-// 		<Pressable className="pl-4">
-// 			<Ionicons name="person-circle-outline" size={24} color={"#000"} />
-// 		</Pressable>
-// 	);
-// };
-
-const WalletHeader = () => {
-	const { user } = useUser();
-
-	return (
-		<View className="bg-[#9FBAFF] pt-16 pb-8 gap-8 items-center px-12">
-			<View className="flex flex-row w-full justify-between">
-				<Pressable>
-					<Ionicons name="person-outline" size={24} color={"#000"} />
-				</Pressable>
-				<Text className="text-[#EDEDFF] text-xl font-semibold">
-					Hello, {user?.firstName}
-				</Text>
-				<Pressable>
-					<Ionicons name="search" size={24} color={"#000"} />
-				</Pressable>
-			</View>
-		</View>
-	);
-};
-
-const BusinessCardHeader = () => {
-	const { currentPrimaryColor } = useWalletStore();
-
-	return (
-		<View
-			style={{ backgroundColor: currentPrimaryColor }}
-			className="pt-16 gap-8 items-center px-12"
-		>
-			<View className="flex flex-row w-full justify-between">
-				<Link href={"../wallet"}>
-					<Ionicons name="arrow-back" size={24} color={"#000"} />
-				</Link>
-			</View>
-		</View>
-	);
-};
 
 const TabsPage = () => {
 	const { isSignedIn } = useAuth();
@@ -91,26 +37,13 @@ const TabsPage = () => {
 				}}
 			>
 				<Tabs.Screen
-					name="wallet"
+					name="card"
 					options={{
-						// headerTitle: `Hello, ${user?.firstName}`,
-						// headerStyle: {
-						// 	backgroundColor: "#266055",
-						// },
-						// headerRight: () => <SearchButton />,
-						// headerLeft: () => <PersonButton />,
-						tabBarLabel: "Wallet",
+						tabBarLabel: "New Wallet",
 						tabBarIcon: ({ color, size }) => (
 							<Ionicons name="wallet" size={size} color={color} />
 						),
-						header: () => <WalletHeader />,
-						// headerStyle: {
-						// 	display: "flex",
-						// 	alignItems: "center",
-						// 	justifyContent: "center",
-						// }
 					}}
-					redirect={!isSignedIn}
 				/>
 				<Tabs.Screen
 					name="home"
@@ -138,15 +71,6 @@ const TabsPage = () => {
 				<Tabs.Screen
 					name="tutorial"
 					options={{ tabBarButton: () => null, headerShown: false }}
-				/>
-				<Tabs.Screen
-					name="card"
-					options={{
-						tabBarLabel: "New Wallet",
-						tabBarIcon: ({ color, size }) => (
-							<Ionicons name="wallet" size={size} color={color} />
-						),
-					}}
 				/>
 			</Tabs>
 		</>
