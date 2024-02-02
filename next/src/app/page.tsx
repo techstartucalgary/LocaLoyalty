@@ -1,28 +1,25 @@
 import Head from "next/head";
 import PublicNavbar from "@/components/PublicNavbar";
+import Image from "next/image";
 
 export default function Home() {
   return (
     <>
-      <PublicNavbar />
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-500 to-purple-500">
-        <Head>
-          <title>Hello Pages Router with Next.js & Clerk</title>
-          <meta
-            name="description"
-            content="A simple Hello World homepage using Next.js and Clerk"
-          />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
+      <div className="flex flex-col">
+        <PublicNavbar />
+        <div className="">
+          <div className="flex items-center justify-center h-40 bg-white-500">
+            <h1 className="text-2xl font-bold text-black">LocaLoyalty</h1>
+          </div>
 
-        <div className="flex flex-col items-center bg-white p-8 rounded-xl shadow-lg">
-          <div>
-            <h1 className="text-2xl font-bold mb-4 text-blue-500">
-              Landing page
-            </h1>
-            <p className="text-gray-600">
-              This is a simple landing page built with Next.js and Clerk
-            </p>
+          <div className="flex items-center justify-center h-screen bg-white">
+            <Image
+              src="/assets/17.png"
+              alt="LocaLoyalty Logo"
+              className="object-cover"
+              width={400}
+              height={400}
+            />
           </div>
         </div>
       </div>
