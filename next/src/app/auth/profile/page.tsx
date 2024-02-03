@@ -1,7 +1,5 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { fetchAPI } from "@/utils/generalAxios";
 import { useAuthStore } from "@/utils/store";
 import { useAuth } from "@clerk/nextjs";
@@ -17,7 +15,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import {
   LongTextInput,
@@ -29,28 +27,28 @@ export default function Profile() {
   //this is where the api call should be made
 
   interface ProfileData {
-    businessName: string;
+    name: string;
     address: string;
     city: string;
     province: string;
-    postalCode: string;
-    merchantID: string;
-    apiKey: string;
-    businessImage: File | null;
-    businessLogo: File | null;
+    postal_code: string;
+    merchant_id: string;
+    clover_api_key: string;
+    business_image: File | null;
+    business_logo: File | null;
     description: string;
   }
 
   const defaultProfileData: ProfileData = {
-    businessName: "",
+    name: "",
     address: "",
     city: "",
     province: "",
-    postalCode: "",
-    merchantID: "",
-    apiKey: "",
-    businessImage: null,
-    businessLogo: null,
+    postal_code: "",
+    merchant_id: "",
+    clover_api_key: "",
+    business_image: null,
+    business_logo: null,
     description: "",
   };
 
@@ -74,7 +72,7 @@ export default function Profile() {
     (Object.keys(savedProfileData) as Array<keyof ProfileData>).forEach(
       (key) => {
         const value = savedProfileData[key];
-        if (key === "businessImage" || key === "businessLogo") {
+        if (key === "business_image" || key === "business_logo") {
           // Only append if it's a file
           if (value instanceof File) {
             formData.append(key, value, value.name);
@@ -190,9 +188,9 @@ export default function Profile() {
                   title="Business Name"
                   disabled={!isEditing}
                   placeholder="Your business name"
-                  value={profileData.businessName}
+                  value={profileData.name}
                   onChange={(e) =>
-                    handleTextInputChange("businessName", e.target.value)
+                    handleTextInputChange("name", e.target.value)
                   }
                 />
 
@@ -234,9 +232,9 @@ export default function Profile() {
                   title="Postal Code"
                   disabled={!isEditing}
                   placeholder="A1B2C3"
-                  value={profileData.postalCode}
+                  value={profileData.postal_code}
                   onChange={(e) =>
-                    handleTextInputChange("postalCode", e.target.value)
+                    handleTextInputChange("postal_code", e.target.value)
                   }
                 />
               </div>
@@ -245,13 +243,13 @@ export default function Profile() {
                   id="businessImage"
                   title="Business Image"
                   disabled={!isEditing}
-                  onChange={(e) => handleImageInputChange(e, "businessImage")}
+                  onChange={(e) => handleImageInputChange(e, "business_image")}
                 />
                 <ProfileImageInput
                   id="businessLogo"
                   title="Business Logo"
                   disabled={!isEditing}
-                  onChange={(e) => handleImageInputChange(e, "businessLogo")}
+                  onChange={(e) => handleImageInputChange(e, "business_logo")}
                 />
                 <LongTextInput
                   id="description"
@@ -283,9 +281,9 @@ export default function Profile() {
                     title="Merchant ID"
                     disabled={!isEditing}
                     placeholder="123456789"
-                    value={profileData.merchantID}
+                    value={profileData.merchant_id}
                     onChange={(e) =>
-                      handleTextInputChange("merchantID", e.target.value)
+                      handleTextInputChange("merchant_id", e.target.value)
                     }
                   />
 
@@ -294,9 +292,9 @@ export default function Profile() {
                     title="API Key"
                     disabled={!isEditing}
                     placeholder=""
-                    value={profileData.apiKey}
+                    value={profileData.clover_api_key}
                     onChange={(e) =>
-                      handleTextInputChange("apiKey", e.target.value)
+                      handleTextInputChange("clover_api_key", e.target.value)
                     }
                   />
                 </div>

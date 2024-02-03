@@ -47,15 +47,10 @@ async function addVendor(
 ) {
   //insert info
   await db.insert(schema.vendor).values({
-    name: name,
+    name: name || "",
     email: email,
     phone: phone,
     clerk_id: clerk_id,
-    address: "",
-    description: "",
-    spending_per_point: "0.0",
-    max_points: 0,
-    color: "",
   });
 
   //get vendor id
@@ -270,6 +265,54 @@ async function getVendor(clerk_id: string) {
   return result[0];
 }
 
+async function editVendor(
+  clerk_id: string,
+  name: string,
+  address: string,
+  city: string,
+  province: string,
+  postal_code: string,
+  business_image: string,
+  business_logo: string,
+  description: string,
+  merchant_id: string,
+  clover_api_key: string,
+  
+) {
+  await db
+    .update(schema.vendor)
+    .set({
+      name: name,
+      address: address,
+      city: city,
+      province: province,
+      postal_code: postal_code,
+      description: description,
+      merchant_id: merchant_id,
+      clover_api_key: clover_api_key,
+    })
+    .where(eq(schema.vendor.clerk_id, clerk_id));
+
+    //if statements are needed to ensure that already existing images and logos are not overidden
+  if (business_image != "") {
+    await db
+      .update(schema.vendor)
+      .set({
+        business_image: business_image,
+      })
+      .where(eq(schema.vendor.clerk_id, clerk_id));
+  }
+
+  if (business_logo != "") {
+    await db
+      .update(schema.vendor)
+      .set({
+        business_logo: business_logo,
+      })
+      .where(eq(schema.vendor.clerk_id, clerk_id));
+  }
+}
+
 /*
 // Gets the loyalty card object
 // Input: the loyalty car ID
@@ -477,6 +520,7 @@ export {
   getCustomer,
   editCustomer,
   getVendor,
+  editVendor,
   /*
   addLoyaltyCard,
   addTransaction,
