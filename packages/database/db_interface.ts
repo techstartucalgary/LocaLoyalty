@@ -47,15 +47,10 @@ async function addVendor(
 ) {
   //insert info
   await db.insert(schema.vendor).values({
-    name: name,
+    name: name || "",
     email: email,
     phone: phone,
     clerk_id: clerk_id,
-    address: "",
-    description: "",
-    spending_per_point: "0.0",
-    max_points: 0,
-    color: "",
   });
 
   //get vendor id
@@ -270,6 +265,53 @@ async function getVendor(clerk_id: string) {
   return result[0];
 }
 
+async function editVendor(
+  clerk_id: string,
+  name: string,
+  address: string,
+  city: string,
+  province: string,
+  postal_code: string,
+  business_image: string,
+  business_logo: string,
+  description: string,
+  merchant_id: string,
+  clover_api_key: string
+) {
+  await db
+    .update(schema.vendor)
+    .set({
+      name: name,
+      address: address,
+      city: city,
+      province: province,
+      postal_code: postal_code,
+      description: description,
+      merchant_id: merchant_id,
+      clover_api_key: clover_api_key,
+    })
+    .where(eq(schema.vendor.clerk_id, clerk_id));
+
+  //if statements are needed to ensure that already existing images and logos are not overidden
+  if (business_image != "") {
+    await db
+      .update(schema.vendor)
+      .set({
+        business_image: business_image,
+      })
+      .where(eq(schema.vendor.clerk_id, clerk_id));
+  }
+
+  if (business_logo != "") {
+    await db
+      .update(schema.vendor)
+      .set({
+        business_logo: business_logo,
+      })
+      .where(eq(schema.vendor.clerk_id, clerk_id));
+  }
+}
+
 /*
 // Gets the loyalty card object
 // Input: the loyalty car ID
@@ -463,7 +505,7 @@ async function editCustomer(
     .set({ fname: first_name || "", lname: last_name || "" })
     .where(eq(schema.customer.clerk_id, clerk_id));
 
-        /*
+  /*
         //test to see if the query was successfull
         const result = await db.select({
             r: schema.customer[attribute]
@@ -480,33 +522,10 @@ async function editCustomer(
         */
 }
 
-// Edits one attribute of a vendor
-// Input: The vendor_id, the attribute name, and the new attribute value
-// Returns 1 if successfull, or null if the query failed
-async function editVendor(vendor_id, attribute, newValue) {
-    // Update value
-    await db.update(schema.vendor)
-        .set({ [attribute]: [newValue] })
-        .where(eq(schema.vendor.vendor_id, vendor_id));
-
-    // Test if the query was successful
-    const result = await db.select({
-        r: schema.vendor[attribute]
-    })
-        .from(schema.vendor)
-        .where(eq(schema.vendor.vendor_id, vendor_id));
-
-    // Return 1 if successful, or null if failure
-    if (result[0].r == newValue) {
-        return 1;
-    } else {
-        return null;
-    }
-}
-
 // Edits one attribute of a loyalty card
 // Input: The loyalty_id, the attribute name, and the new attribute value
 // Returns 1 if successfull, or null if the query failed
+/*
 async function editLoyaltyCard(loyalty_id, attribute, newValue) {
     // Update value
     await db.update(schema.loyalty_card)
@@ -527,10 +546,12 @@ async function editLoyaltyCard(loyalty_id, attribute, newValue) {
         return null;
     }
 }
+*/
 
 // Edits one attribute of a point redemption history
 // Input: The history_id, the attribute name, and the new attribute value
 // Returns 1 if successfull, or null if the query failed
+/*
 async function editPointRedemptionHistory(history_id, attribute, newValue) {
     // Update value
     await db.update(schema.point_redemption_history)
@@ -551,10 +572,12 @@ async function editPointRedemptionHistory(history_id, attribute, newValue) {
         return null;
     }
 }
+*/
 
 // Edits one attribute of a transaction
 // Input: The transaction_id, the attribute name, and the new attribute value
 // Returns 1 if successfull, or null if the query failed
+/*
 async function editTransaction(transaction_id, attribute, newValue) {
     // Update value
     await db.update(schema.transaction)
@@ -599,32 +622,29 @@ async function editReward(reward_id, attribute, newValue) {
         return null;
     }
 }
-
+*/
 
 export {
-    addCustomer,
-    addVendor,
-    addLoyaltyCard,
-    addTransaction,
-    addReward,
-    addPointRedemption,
-    getCustomer,
-    getVendor,
-    getLoyaltyCard,
-    getPointRedemptionHistory,
-    getTransaction,
-    getReward, 
-    getAllVendors,
-    getAllLoyaltyCardsOfCustomer,
-    getAllPointRedemptionHistoryOfCard,
-    getAllTransactionsOfCard,
-    getAllRewardsOfVendor,
-    getCustomerFromClerkID,
-    editCustomer,
-    editVendor,
-    editLoyaltyCard,
-    editPointRedemptionHistory,
-    editTransaction,
-    editReward
+  addCustomer,
+  addVendor,
+  getCustomerFromClerkID,
+  getAllLoyaltyCardsOfCustomer,
+  getCustomer,
+  editCustomer,
+  getVendor,
+  editVendor,
+  /*
+  addLoyaltyCard,
+  addTransaction,
+  addReward,
+  addPointRedemption,
+  getLoyaltyCard,
+  getPointRedemptionHistory,
+  getTransaction,
+  getReward,
+  getAllVendors,
+  getAllPointRedemptionHistoryOfCard,
+  getAllTransactionsOfCard,
+  getAllRewardsOfVendor,
+  */
 };
-

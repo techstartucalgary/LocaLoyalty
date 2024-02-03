@@ -40,6 +40,13 @@ export const vendor = mysqlTable("vendor", {
   spending_per_point: decimal("spending_per_point"),
   max_points: int("max_points"),
   clerk_id: varchar("clerk_id", { length: 32 }),
+  city: varchar("city", { length: 50 }),
+  province: varchar("province", { length: 30 }),
+  postal_code: varchar("postal_code", { length: 6 }),
+  business_image: text("business_image"),
+  business_logo: text("business_logo"),
+  merchant_id: varchar("merchant_id", { length: 13 }),
+  clover_api_key: varchar("clover_api_key", { length: 200 }),
 });
 
 // Loyalty Card
