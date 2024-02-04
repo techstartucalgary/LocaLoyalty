@@ -49,7 +49,7 @@ const Login = () => {
 
       <Image
         source={require("../../assets/images/illustration-5.png")}
-        className="h-72 w-72"
+        className="h-40 w-40"
       />
 
       <TextInput
