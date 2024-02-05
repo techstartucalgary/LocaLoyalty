@@ -169,14 +169,14 @@ export default function Profile() {
   };
 
   return (
-    <div className="flex items-center justify-center my-10">
+    <div className="flex items-center justify-center">
       {isLoading && (
         <div>
           <p>loading....</p>
         </div>
       )}
       {data && (
-        <div className="flex items-center justify-center w-5/6 border-4 flex-col rounded-md border-slate-500">
+        <div className="flex items-center justify-center w-5/6 border-4 flex-col rounded-md border-slate-500 my-20">
           <div className="flex justify-evenly items-center flex-col my-5">
             <p className="text-xl font-bold text-left w-full">
               Business Details

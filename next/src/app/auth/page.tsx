@@ -91,8 +91,8 @@ export default function AuthHome() {
   }, [setCompletionCards]);
 
   return (
-    <div className="flex items-center justify-center h-full flex-col gap-10 my-20">
-      <div className="flex justify-center flex-col items-center gap-10 w-2/3 border-4 rounded-md border-black p-10">
+    <div className="flex items-center justify-center h-full flex-col gap-10">
+      <div className="flex justify-center flex-col items-center gap-10 w-3/4 border-4 rounded-md border-black p-10 mt-20">
         <div className="flex justify-evenly items-center">
           <div className="flex flex-col text-left items-center justify-center">
             <p className="text-7xl font-extrabold text-left w-2/3">
@@ -170,7 +170,7 @@ export default function AuthHome() {
           at <span className="underline">localoyaltycalgary@gmail.com</span>
         </p>
       </div>
-      <div className="text-slate-500 flex gap-5">
+      <div className="text-slate-500 flex gap-5 mb-20">
         <p>Privacy Policy</p>
         <p>Cookie Policy</p>
         <p>Terms & Conditions</p>
