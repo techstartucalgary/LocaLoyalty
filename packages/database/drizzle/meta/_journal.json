@@ -5,15 +5,15 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1705460082370,
-      "tag": "0000_exotic_roland_deschain",
+      "when": 1707100236929,
+      "tag": "0001_sudden_madelyne_pryor",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "5",
-      "when": 1706732716114,
-      "tag": "0001_glamorous_weapon_omega",
+      "when": 1707100421305,
+      "tag": "0001_stiff_slipstream",
       "breakpoints": true
     }
   ]
