@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "121dd31f-74ed-42ae-936a-87df89855d18",
-  "prevId": "a29b1268-a829-47d9-a989-7b5ec455fec9",
+  "id": "a8f72931-0fda-42a4-8832-8996e6a920e9",
+  "prevId": "9337632d-62a2-49e5-9f33-323bb1cad71d",
   "tables": {
     "customer": {
       "name": "customer",
@@ -51,7 +51,7 @@
         },
         "clerk_id": {
           "name": "clerk_id",
-          "type": "varchar(16)",
+          "type": "varchar(32)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -62,9 +62,7 @@
       "compositePrimaryKeys": {
         "customer_customer_id": {
           "name": "customer_customer_id",
-          "columns": [
-            "customer_id"
-          ]
+          "columns": ["customer_id"]
         }
       },
       "uniqueConstraints": {}
@@ -86,8 +84,8 @@
           "notNull": false,
           "autoincrement": false
         },
-        "program_id": {
-          "name": "program_id",
+        "vendor_id": {
+          "name": "vendor_id",
           "type": "int",
           "primaryKey": false,
           "notNull": false,
@@ -113,9 +111,7 @@
       "compositePrimaryKeys": {
         "loyalty_card_loyalty_id": {
           "name": "loyalty_card_loyalty_id",
-          "columns": [
-            "loyalty_id"
-          ]
+          "columns": ["loyalty_id"]
         }
       },
       "uniqueConstraints": {}
@@ -157,9 +153,7 @@
       "compositePrimaryKeys": {
         "point_redemption_history_history_id": {
           "name": "point_redemption_history_history_id",
-          "columns": [
-            "history_id"
-          ]
+          "columns": ["history_id"]
         }
       },
       "uniqueConstraints": {}
@@ -174,8 +168,8 @@
           "notNull": true,
           "autoincrement": true
         },
-        "program_id": {
-          "name": "program_id",
+        "vendor_id": {
+          "name": "vendor_id",
           "type": "int",
           "primaryKey": false,
           "notNull": false,
@@ -208,53 +202,7 @@
       "compositePrimaryKeys": {
         "reward_reward_id": {
           "name": "reward_reward_id",
-          "columns": [
-            "reward_id"
-          ]
-        }
-      },
-      "uniqueConstraints": {}
-    },
-    "rewards_program": {
-      "name": "rewards_program",
-      "columns": {
-        "program_id": {
-          "name": "program_id",
-          "type": "serial",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": true
-        },
-        "vendor_id": {
-          "name": "vendor_id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "details": {
-          "name": "details",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "spending_per_point": {
-          "name": "spending_per_point",
-          "type": "decimal",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "rewards_program_program_id": {
-          "name": "rewards_program_program_id",
-          "columns": [
-            "program_id"
-          ]
+          "columns": ["reward_id"]
         }
       },
       "uniqueConstraints": {}
@@ -276,8 +224,8 @@
           "notNull": false,
           "autoincrement": false
         },
-        "program_id": {
-          "name": "program_id",
+        "vendor_id": {
+          "name": "vendor_id",
           "type": "int",
           "primaryKey": false,
           "notNull": false,
@@ -317,9 +265,7 @@
       "compositePrimaryKeys": {
         "transaction_transaction_id": {
           "name": "transaction_transaction_id",
-          "columns": [
-            "transaction_id"
-          ]
+          "columns": ["transaction_id"]
         }
       },
       "uniqueConstraints": {}
@@ -368,6 +314,90 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
+        },
+        "color": {
+          "name": "color",
+          "type": "varchar(16)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "reward_program_details": {
+          "name": "reward_program_details",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "spending_per_point": {
+          "name": "spending_per_point",
+          "type": "decimal",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "max_points": {
+          "name": "max_points",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "clerk_id": {
+          "name": "clerk_id",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "city": {
+          "name": "city",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "province": {
+          "name": "province",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "postal_code": {
+          "name": "postal_code",
+          "type": "varchar(6)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "business_image": {
+          "name": "business_image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "business_logo": {
+          "name": "business_logo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "merchant_id": {
+          "name": "merchant_id",
+          "type": "varchar(13)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "clover_api_key": {
+          "name": "clover_api_key",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         }
       },
       "indexes": {},
@@ -375,9 +405,7 @@
       "compositePrimaryKeys": {
         "vendor_vendor_id": {
           "name": "vendor_vendor_id",
-          "columns": [
-            "vendor_id"
-          ]
+          "columns": ["vendor_id"]
         }
       },
       "uniqueConstraints": {}
@@ -387,6 +415,8 @@
   "_meta": {
     "schemas": {},
     "tables": {},
-    "columns": {}
+    "columns": {
+      "\"loyalty_card\".\"vendor_id\"": "\"loyalty_card\".\"program_id\""
+    }
   }
 }
