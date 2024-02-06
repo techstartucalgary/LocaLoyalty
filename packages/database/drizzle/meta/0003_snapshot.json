@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "a8f72931-0fda-42a4-8832-8996e6a920e9",
-  "prevId": "9337632d-62a2-49e5-9f33-323bb1cad71d",
+  "id": "ea726a20-140a-4946-90a9-147f4ae4d127",
+  "prevId": "a8f72931-0fda-42a4-8832-8996e6a920e9",
   "tables": {
     "customer": {
       "name": "customer",
@@ -62,7 +62,9 @@
       "compositePrimaryKeys": {
         "customer_customer_id": {
           "name": "customer_customer_id",
-          "columns": ["customer_id"]
+          "columns": [
+            "customer_id"
+          ]
         }
       },
       "uniqueConstraints": {}
@@ -111,7 +113,9 @@
       "compositePrimaryKeys": {
         "loyalty_card_loyalty_id": {
           "name": "loyalty_card_loyalty_id",
-          "columns": ["loyalty_id"]
+          "columns": [
+            "loyalty_id"
+          ]
         }
       },
       "uniqueConstraints": {}
@@ -153,7 +157,9 @@
       "compositePrimaryKeys": {
         "point_redemption_history_history_id": {
           "name": "point_redemption_history_history_id",
-          "columns": ["history_id"]
+          "columns": [
+            "history_id"
+          ]
         }
       },
       "uniqueConstraints": {}
@@ -168,8 +174,8 @@
           "notNull": true,
           "autoincrement": true
         },
-        "program_id": {
-          "name": "program_id",
+        "vendor_id": {
+          "name": "vendor_id",
           "type": "int",
           "primaryKey": false,
           "notNull": false,
@@ -202,7 +208,9 @@
       "compositePrimaryKeys": {
         "reward_reward_id": {
           "name": "reward_reward_id",
-          "columns": ["reward_id"]
+          "columns": [
+            "reward_id"
+          ]
         }
       },
       "uniqueConstraints": {}
@@ -265,7 +273,9 @@
       "compositePrimaryKeys": {
         "transaction_transaction_id": {
           "name": "transaction_transaction_id",
-          "columns": ["transaction_id"]
+          "columns": [
+            "transaction_id"
+          ]
         }
       },
       "uniqueConstraints": {}
@@ -405,7 +415,9 @@
       "compositePrimaryKeys": {
         "vendor_vendor_id": {
           "name": "vendor_vendor_id",
-          "columns": ["vendor_id"]
+          "columns": [
+            "vendor_id"
+          ]
         }
       },
       "uniqueConstraints": {}
@@ -416,7 +428,7 @@
     "schemas": {},
     "tables": {},
     "columns": {
-      "\"loyalty_card\".\"vendor_id\"": "\"loyalty_card\".\"program_id\""
+      "\"reward\".\"program_id\"": "\"reward\".\"vendor_id\""
     }
   }
 }
