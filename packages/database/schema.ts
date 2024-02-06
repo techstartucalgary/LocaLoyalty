@@ -53,7 +53,7 @@ export const vendor = mysqlTable("vendor", {
 export const loyalty_card = mysqlTable("loyalty_card", {
   loyalty_id: serial("loyalty_id").primaryKey(),
   customer_id: int("customer_id"), //references customer.customer_id
-  vendor_id: int("vendor_id"), //references vendor.vendor_id
+  program_id: int("vendor_id"), //references vendor.vendor_id
   points_amt: int("points_amt").notNull(),
   carry_over_amt: decimal("carry_over_amt").notNull(), //dollars left over not in points
 });
