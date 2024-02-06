@@ -12,7 +12,7 @@ export default function Page() {
             height={80}
             alt="Picture of LocaLoyalty Logo"
           />
-          <p className="text-5xl">LocaLoyalty</p>
+          <p className="text-5xl font-semibold">LocaLoyalty</p>
         </div>
         <Image
           src="/assets/LHS2.png"
