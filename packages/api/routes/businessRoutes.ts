@@ -8,8 +8,7 @@ import {
 } from "@aws-sdk/client-s3";
 import crypto from "crypto";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { Webhook } from "svix";
-import { getVendor } from "../../database/db_interface";
+import { editVendor, getVendor } from "../../database/db_interface";
 
 const router = express.Router();
 
@@ -53,16 +52,6 @@ router.get("/test-s3-get", async (req: Request, res: Response) => {
 });
 
 router.get("/profile", async (req: Request, res: Response) => {
-  const dummyData = {
-    businessName: "Zhang's Bakery",
-    address: "123 real address NE",
-    city: "Calgary",
-    province: "Alberta",
-    postalCode: "A1B2C3",
-    merchantID: "123456789",
-    apiKey: "opqwieop12p3oiop",
-  };
-
   let profileData = await getVendor(req.auth.userId);
   res.send(profileData);
 });
@@ -71,19 +60,13 @@ router.get("/profile", async (req: Request, res: Response) => {
 router.post(
   "/profile",
   upload.fields([
-    { name: "businessImage", maxCount: 1 },
-    { name: "businessLogo", maxCount: 1 },
+    { name: "business_image", maxCount: 1 },
+    { name: "business_logo", maxCount: 1 },
   ]),
   async (req: Request, res: Response) => {
     const files = req.files as MulterFile; // Type assertion here
-
-    const businessImage = files.businessImage ? files.businessImage[0] : null;
-    const businessLogo = files.businessLogo ? files.businessLogo[0] : null;
-
-    console.log(req.auth.userId);
-    console.log(req.body);
-    console.log(businessImage);
-    console.log(businessLogo);
+    const businessImage = files.business_image ? files.business_image[0] : null;
+    const businessLogo = files.business_logo ? files.business_logo[0] : null;
 
     let imageName = "";
     let logoName = "";
@@ -114,8 +97,20 @@ router.post(
       );
     }
 
-    //to do connect to database
-    //we will need to store the imageName and logoName so that we can retrieve the file back later on subsequent calls
+    let body = req.body;
+    await editVendor(
+      req.auth.userId,
+      body.name,
+      body.address,
+      body.city,
+      body.province,
+      body.postal_code,
+      imageName,
+      logoName,
+      body.description,
+      body.merchant_id,
+      body.clover_api_key
+    );
 
     res.status(200).json({ message: "Profile updated successfully" });
   }

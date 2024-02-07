@@ -40,13 +40,20 @@ export const vendor = mysqlTable("vendor", {
   spending_per_point: decimal("spending_per_point"),
   max_points: int("max_points"),
   clerk_id: varchar("clerk_id", { length: 32 }),
+  city: varchar("city", { length: 50 }),
+  province: varchar("province", { length: 30 }),
+  postal_code: varchar("postal_code", { length: 6 }),
+  business_image: text("business_image"),
+  business_logo: text("business_logo"),
+  merchant_id: varchar("merchant_id", { length: 13 }),
+  clover_api_key: varchar("clover_api_key", { length: 200 }),
 });
 
 // Loyalty Card
 export const loyalty_card = mysqlTable("loyalty_card", {
   loyalty_id: serial("loyalty_id").primaryKey(),
   customer_id: int("customer_id"), //references customer.customer_id
-  vendor_id: int("vendor_id"), //references vendor.vendor_id
+  program_id: int("vendor_id"), //references vendor.vendor_id
   points_amt: int("points_amt").notNull(),
   carry_over_amt: decimal("carry_over_amt").notNull(), //dollars left over not in points
 });
