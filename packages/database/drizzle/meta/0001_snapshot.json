@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "eff823f2-1297-4338-928a-06e7db3e6b0a",
-  "prevId": "6528775c-5315-431a-80c7-b272a284ddc0",
+  "id": "9337632d-62a2-49e5-9f33-323bb1cad71d",
+  "prevId": "1df1fbb1-221a-4979-a28b-a9bc931f5eee",
   "tables": {
     "customer": {
       "name": "customer",
@@ -332,8 +332,8 @@
           "notNull": false,
           "autoincrement": false
         },
-        "details": {
-          "name": "details",
+        "reward_program_details": {
+          "name": "reward_program_details",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
@@ -343,19 +343,68 @@
           "name": "spending_per_point",
           "type": "decimal",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "max_points": {
           "name": "max_points",
           "type": "int",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "clerk_id": {
           "name": "clerk_id",
           "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "city": {
+          "name": "city",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "province": {
+          "name": "province",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "postal_code": {
+          "name": "postal_code",
+          "type": "varchar(6)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "business_image": {
+          "name": "business_image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "business_logo": {
+          "name": "business_logo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "merchant_id": {
+          "name": "merchant_id",
+          "type": "varchar(13)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "clover_api_key": {
+          "name": "clover_api_key",
+          "type": "varchar(200)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
