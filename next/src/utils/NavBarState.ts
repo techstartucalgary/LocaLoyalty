@@ -6,6 +6,6 @@ type NavBarStore = {
 };
 
 export const useNavBarStore = create<NavBarStore>((set) => ({
-  open: true,
+  open: false,
   setOpen: (value) => set({ open: value }),
 }));
