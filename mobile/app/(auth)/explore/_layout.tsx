@@ -35,6 +35,9 @@ export default function ExplorePage() {
                 name="details"
                 options={{
                     headerTitle: "",
+                    headerStyle: {
+                        backgroundColor: "red"
+                    },
                     headerTintColor: "#000"
                 }}
             />

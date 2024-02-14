@@ -429,6 +429,7 @@ async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
     business_logo: string | null;
     desc: string | null;
     points_amt: number;
+    carry_over_amt: number;
   }
 
   let vendorInfo: Vendor[] = []
@@ -449,6 +450,7 @@ async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
           phone: schema.vendor.phone,
           color: schema.vendor.color,
           max_points: schema.vendor.max_points,
+          spending_per_point: schema.vendor.spending_per_point,
           business_logo: schema.vendor.business_logo,
           desc: schema.vendor.description,
         }).from(schema.vendor).where(eq(schema.vendor.vendor_id, card.program_id))
@@ -459,7 +461,7 @@ async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
         return null;
       }
 
-      vendorInfo.push({ ...vendorResults[0], points_amt: card.points_amt, vendor_id: card.program_id })
+      vendorInfo.push({ ...vendorResults[0], points_amt: card.points_amt, carry_over_amt: card.carry_over_amt, vendor_id: card.program_id })
     }
   }
 

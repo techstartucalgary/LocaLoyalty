@@ -1,6 +1,5 @@
 import { View, Text, Image, FlatList, Pressable } from "react-native";
 import React, { useState } from "react";
-import { Link, Stack, useLocalSearchParams } from "expo-router";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import SmallStamp from "../../../assets/images/smallStamp";
 import SmallEmptyStamp from "../../../assets/images/smallEmptyStamp";

@@ -13,11 +13,14 @@ const ExploreCard = ({
     businessLogo,
 }: ExploreCard) => {
 
+    function handleExploreCardPress() {
+
+    }
 
     return (
         // <Link href={"./details"} className="h-full w-full" asChild>
         <View className="flex-1 px-4 py-4">
-            <Link href={"./details"} asChild>
+            <Link href={"./explore/details"} asChild>
                 <TouchableOpacity onPress={() => {
                     handleExploreCardPress()
                 }}>
