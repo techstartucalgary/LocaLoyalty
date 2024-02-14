@@ -9,6 +9,10 @@ info:
     url: http://www.example.com/support
     email: support@example.com
 
+servers:
+  - url:
+    description:
+
 tags:
   - name: business
     description: APIs for the website that small business owners will access
@@ -58,6 +62,50 @@ paths:
           description: Successful response
         500:
           description: Failure
+  /customer/vendors:
+    get:
+      tags:
+        - customer
+      summary: Get the list of all vendors
+      description: Display all of the registered vendors whether or not they are associated with this particular user
+      operationId: getAllVendors
+      responses:
+        200: 
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VendorList"
+        500:
+          description: Error fetching vendors
+  /customer/{userId}/loyalty-cards:
+    get:
+      tags: 
+        - customer
+      summary: Get the list of vendors associated with a particular user
+      description: Display all of the vendors associated with a particular user. UserID is taken from the auth field of header
+      operationId: getAllLoyaltyCards
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the current user
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VendorList"
+        401:
+          description: User not authenticated
+        404:
+          description: User not found or Loyalty cards not found
+        500:
+          description: Internal server error
 components:
   schemas:
     BusinessProfile:
@@ -93,3 +141,54 @@ components:
         description:
           type: string
           example: "this is a really cool store"
+    VendorList:
+      type: array
+      items: 
+        $ref: '#/components/schemas/Vendor'
+    Vendor:
+      type: object
+      required:
+        - vendor_id
+        - name
+        - email
+        - spending_per_point
+        - max_points
+      properties:
+        vendor_id:
+          type: integer
+          format: int32
+          description: The unique identifier for the vendor
+        name:
+          type: string
+          maxLength: 256
+          description: The name of the vendor
+        email:
+          type: string
+          maxLength: 256
+          description: The email address of the vendor
+        address:
+          type: string
+          maxLength: 256
+          description: The physical address of the vendor
+        phone:
+          type: string
+          maxLength: 16
+          description: The contact phone number for the vendor
+        description:
+          type: string
+          description: A description of the vendor
+        color:
+          type: string
+          maxLength: 16
+          description: A color theme associated with the vendor
+        reward_program_details:
+          type: string
+          description: Details about the vendor's reward program
+        spending_per_point:
+          type: number
+          format: double
+          description: The amount of spending required to earn a point
+        max_points:
+          type: integer
+          format: int32
+          description: The maximum number of points a customer can earn

@@ -1,34 +1,44 @@
 import { View, Text, Image, FlatList, Pressable } from "react-native";
 import React, { useEffect } from "react";
-import { useUser } from "@clerk/clerk-expo";
+import { useAuth, useUser } from "@clerk/clerk-expo";
 import { Link } from "expo-router";
-import { cardData } from "../../../content/temp-card-data";
+import { useQuery } from "@tanstack/react-query"
 import Stamp from "../../../assets/images/stamp";
 import EmptyStamp from "../../../assets/images/emptyStamp";
 import { AntDesign } from "@expo/vector-icons";
 import { useWalletStore } from "../../../utils/walletStore";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { fetchAPI } from "../../../utils/generalAxios";
 
 type Card = {
+	businessID: number;
 	businessName: string;
 	businessImage: any;
 	businessDesc: string;
+	businessEmail: string;
+	businessPhone: string;
 	completedStamps: number;
 	maxStamps: number;
 	primaryColor: string;
 };
 
 const Card = ({
+	businessID,
 	businessName,
 	businessImage,
+	businessEmail,
+	businessPhone,
 	businessDesc,
 	completedStamps,
 	maxStamps,
 	primaryColor,
 }: Card) => {
 	const {
+		setCurrentBusinessID,
 		setCurrentBusinessName,
 		setCurrentBusinessImage,
+		setCurrentBusinessEmail,
+		setCurrentBusinessPhone,
 		setCurrentBuisnessDescription,
 		setCurrentCompletedStamps,
 		setCurrentMaxStamps,
@@ -36,8 +46,11 @@ const Card = ({
 	} = useWalletStore();
 
 	function handleCardClick(cardPressed: Card) {
+		setCurrentBusinessID(cardPressed.businessID)
 		setCurrentBusinessName(cardPressed.businessName);
 		setCurrentBusinessImage(cardPressed.businessImage);
+		setCurrentBusinessEmail(cardPressed.businessEmail);
+		setCurrentBusinessPhone(cardPressed.businessPhone);
 		setCurrentBuisnessDescription(cardPressed.businessDesc);
 		setCurrentCompletedStamps(cardPressed.completedStamps);
 		setCurrentMaxStamps(cardPressed.maxStamps);
@@ -61,8 +74,11 @@ const Card = ({
 				<TouchableOpacity
 					onPress={() => {
 						handleCardClick({
+							businessID: businessID,
 							businessName: businessName,
 							businessImage: businessImage,
+							businessEmail: businessEmail,
+							businessPhone: businessPhone,
 							businessDesc: businessDesc,
 							completedStamps: completedStamps,
 							maxStamps: maxStamps,
@@ -100,13 +116,13 @@ const Card = ({
 								<View className="flex-row">
 									<AntDesign name="phone" size={16} color="black" />
 									<Text className="text-xs font-semibold pl-1">
-										000-000-0000
+										{businessPhone}
 									</Text>
 								</View>
 								<View className="flex-row">
 									<AntDesign name="mail" size={16} color="black" />
 									<Text className="text-xs font-semibold pl-1">
-										businessname@gmail.com
+										{businessEmail}
 									</Text>
 								</View>
 							</View>
@@ -118,12 +134,68 @@ const Card = ({
 	);
 };
 
+
+const CardList = () => {
+
+	const { getToken, isLoaded, isSignedIn } = useAuth()
+
+	const fetchLoyaltyCards = async () => {
+		return fetchAPI(
+			"https://2e04-136-159-213-128.ngrok-free.app/customer/loyalty-cards",
+			"GET",
+			await getToken(),
+			null,
+			{}
+		);
+	}
+
+
+	const { data, isLoading, isError } = useQuery({ queryKey: ["loyaltyCards"], queryFn: fetchLoyaltyCards })
+
+	if (!isLoading && !isError) {
+
+		const cardData: {
+			vendor_id: number;
+			name: string;
+			email: string;
+			address: string;
+			phone: string;
+			color: string;
+			points_amt: number;
+			max_points: number;
+			business_logo: string;
+			desc: string;
+		}[] = data
+
+
+		return (
+			<FlatList
+				className="h-full w-full px-6 pt-6"
+				data={cardData}
+				contentContainerStyle={{ paddingBottom: 32 }}
+				renderItem={({ item }) => {
+					return (
+						<Card
+							key={item.name}
+							businessID={item.vendor_id}
+							businessName={item.name}
+							businessEmail={item.email}
+							businessPhone={item.phone}
+							businessImage={item.business_logo}
+							businessDesc={item.desc}
+							completedStamps={item.points_amt} // Get the number of completed stamps for this user
+							maxStamps={item.max_points}
+							primaryColor={item.color}
+						/>
+					);
+				}}
+			/>
+
+		)
+	}
+};
+
 const Wallet = () => {
-
-	useEffect(() => {
-
-		
-	})
 
 	return (
 		<View className="h-full w-full bg-[#F7F8F8]">
@@ -132,25 +204,9 @@ const Wallet = () => {
 					Your Cards
 				</Text>
 			</View>
-			<FlatList
-				className="h-full w-full px-6 pt-6"
-				data={cardData}
-				renderItem={({ item }) => {
-					return (
-						<Card
-							key={item.businessName}
-							businessName={item.businessName}
-							businessImage={item.businessImage}
-							businessDesc={item.buisnessDesc}
-							completedStamps={4} // Get the number of completed stamps for this user
-							maxStamps={item.maxStampNumber}
-							primaryColor={item.primaryColor}
-						/>
-					);
-				}}
-			/>
+			<CardList />
 		</View>
 	);
-};
+}
 
 export default Wallet;

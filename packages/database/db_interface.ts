@@ -5,6 +5,7 @@ Author: Max Pagels
 January 18 2024
 */
 
+import { SocketAddress } from "net";
 import { db } from "./dbObj.js";
 import * as schema from "./schema.js";
 import { SQLWrapper, and, eq } from "drizzle-orm";
@@ -417,8 +418,54 @@ async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
     return null;
   }
 
-  return results;
+  type Vendor = {
+    vendor_id: number;
+    name: string;
+    email: string;
+    address: string | null;
+    phone: string | null;
+    color: string | null;
+    max_points: number | null;
+    business_logo: string | null;
+    desc: string | null;
+    points_amt: number;
+  }
+
+  let vendorInfo: Vendor[] = []
+
+
+  for (let i = 0; i < results.length; i++) {
+
+    const card = results[i]
+
+    if (card.program_id) {
+
+      // Get the vendor information from the vendor table based on the card for the user      
+      const vendorResults =
+        await db.select({
+          name: schema.vendor.name,
+          email: schema.vendor.email,
+          address: schema.vendor.address,
+          phone: schema.vendor.phone,
+          color: schema.vendor.color,
+          max_points: schema.vendor.max_points,
+          business_logo: schema.vendor.business_logo,
+          desc: schema.vendor.description,
+        }).from(schema.vendor).where(eq(schema.vendor.vendor_id, card.program_id))
+
+
+      if (Object.keys(vendorResults).length === 0) {
+        console.log("Database query failed");
+        return null;
+      }
+
+      vendorInfo.push({ ...vendorResults[0], points_amt: card.points_amt, vendor_id: card.program_id })
+    }
+  }
+
+  return vendorInfo;
 }
+
 
 // Gets all point redemption history for a given loyalty card
 // Input: the loyalty_id of the loyalty card
@@ -460,8 +507,7 @@ async function getAllTransactionsOfCard(loyalty_id) {
 
 // Gets all rewards in the program of a given vendor
 // Input: the vendor_id of the vendor
-/*
-async function getAllRewardsOfVendor(vendor_id) {
+async function getAllRewardsOfVendor(vendor_id: number) {
   const results = await db
     .select()
     .from(schema.reward)
@@ -475,7 +521,6 @@ async function getAllRewardsOfVendor(vendor_id) {
 
   return results;
 }
-*/
 
 // Gets a customer_id based on a clerk_id
 // Input: a clerk id as a string
@@ -633,6 +678,7 @@ export {
   editCustomer,
   getVendor,
   editVendor,
+  getAllRewardsOfVendor,
   /*
   addLoyaltyCard,
   addTransaction,
@@ -645,6 +691,5 @@ export {
   getAllVendors,
   getAllPointRedemptionHistoryOfCard,
   getAllTransactionsOfCard,
-  getAllRewardsOfVendor,
   */
 };

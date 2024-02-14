@@ -16,6 +16,8 @@
     "@clerk/clerk-expo": "^0.19.25",
     "@expo/vector-icons": "^13.0.0",
     "@react-navigation/native": "^6.0.2",
+    "@tanstack/react-query": "^5.18.1",
+    "@tanstack/react-query-devtools": "^5.18.1",
     "axios": "^1.6.7",
     "expo": "~49.0.18",
     "expo-auth-session": "~5.0.2",
@@ -38,6 +40,7 @@
     "react-native-screens": "~3.22.0",
     "react-native-svg": "13.9.0",
     "react-native-web": "~0.19.6",
+    "react-query": "^3.39.3",
     "tailwindcss": "^3.3.2",
     "zustand": "^4.4.7"
   },

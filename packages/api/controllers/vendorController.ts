@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
-import { addVendor } from "../../database/db_interface";
+import { getAllRewardsOfVendor } from "../../database/db_interface";
 import { vendorsList } from "../dummyData/dummyData";
+import { log } from "console";
 
 // export const addCard = async (req: Request, res: Response) => {
 //   try {
@@ -50,5 +51,30 @@ export const index = async (req: Request, res: Response) => {
     res.status(200).json(vendors);
   } catch (error) {
     res.status(500).json({ message: "Error fetching vendors", error });
+  }
+};
+
+// Method to get all rewards for a given vendor
+export const getRewards = async (req: Request, res: Response) => {
+  try {
+    // Retrieve Clerk user ID from the authentication information
+    const clerkId = req.auth.userId;
+
+    if (!clerkId) {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
+
+    // Use the helper function to get all rewards for a given vendor
+    const rewards = await getAllRewardsOfVendor(parseInt(req.params.vendorID));
+
+    if (!rewards) {
+      return res.status(404).json({ message: "Rewards not found" });
+    }
+
+    // Send the rewards back in the response
+    res.status(200).json(rewards);
+  } catch (error) {
+    console.error("Error fetching rewards:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };

@@ -3,8 +3,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { Pressable, Text, View } from "react-native";
 import { useAuth, useUser } from "@clerk/clerk-expo";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { cardData } from "../../content/temp-card-data";
-import { useWalletStore } from "../../utils/walletStore";
 
 export const LogoutButton = () => {
 	const { signOut } = useAuth();

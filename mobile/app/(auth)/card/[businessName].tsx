@@ -1,28 +1,87 @@
 import { View, Text, Image, FlatList, Pressable } from "react-native";
 import React, { useState } from "react";
 import { Link, Stack, useLocalSearchParams } from "expo-router";
-import { cardData } from "../../../content/temp-card-data";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
-import Stamp from "../../../assets/images/stamp";
-import EmptyStamp from "../../../assets/images/emptyStamp";
 import SmallStamp from "../../../assets/images/smallStamp";
 import SmallEmptyStamp from "../../../assets/images/smallEmptyStamp";
 import { useWalletStore } from "../../../utils/walletStore";
 import ExtraSmallStamp from "../../../assets/images/extraSmallStamp";
-import {
-	TouchableOpacity,
-	TouchableWithoutFeedback,
-} from "react-native-gesture-handler";
+import { useAuth } from "@clerk/clerk-expo";
+import { fetchAPI } from "../../../utils/generalAxios";
+import { useQuery } from "@tanstack/react-query";
 
-const BusinessCardPage = () => {
+const RewardsSection = () => {
+
+	const { getToken, isLoaded, isSignedIn } = useAuth()
+	const { currentBusinessID } = useWalletStore()
+
+	const fetchRewards = async () => {
+		return fetchAPI(
+			`https://2e04-136-159-213-128.ngrok-free.app/customer/rewards/${currentBusinessID}`,
+			"GET",
+			await getToken(),
+			null,
+			{}
+		);
+	}
+
+
+	const { data, isLoading, isError } = useQuery({ queryKey: ["rewards"], queryFn: fetchRewards })
+
+	if (!isLoading && !isError) {
+
+		const rewards: {
+			reward_id: number;
+			vendor_id: number | null;
+			name: string | null;
+			description: string | null;
+			points_cost: number;
+		}[] = data
+
+
+		rewards.sort((a, b) => a.points_cost - b.points_cost)
+
+		return (
+			<FlatList
+				className="h-full w-full px-12 py-4"
+				data={rewards}
+				renderItem={({ item }) => {
+					return (
+						<View className="bg-[#EBEBEB] p-3 shadow my-4 rounded-xl flex-row justify-between items-center">
+							<Text className="text-xl font-semibold">{item.name}</Text>
+							<View className="flex-row items-center">
+								<Text className="text-2xl font-medium">
+									{item.points_cost}
+								</Text>
+								<ExtraSmallStamp className="scale-150 px-4" />
+							</View>
+						</View>
+					);
+				}}
+			/>
+		)
+	} else {
+		return (
+			<View>
+				<Text>LOading</Text>
+			</View>
+		)
+	}
+
+}
+
+const LoyaltyCardPage = () => {
 	const {
 		currentBusinessName,
 		currentBusinessImage,
+		currentBusinessEmail,
+		currentBusinessPhone,
 		currentBusinessDescription,
 		currentCompletedStamps,
 		currentMaxStamps,
 		currentPrimaryColor,
 	} = useWalletStore();
+
 
 	const [isDetailsSelected, setDetailsSelected] = useState<boolean>(false);
 
@@ -42,28 +101,7 @@ const BusinessCardPage = () => {
 	// TODO: GET THE CURRENT PROGRESS AND THRESHOLD
 	const currentRewardProgress = 3.5;
 	const rewardThreshold = 5;
-	// TODO: GET THE LIST OF REWARDS (SHOULD BE PRESORTED)
-	type Reward = {
-		rewardName: string;
-		rewardStampCost: number;
-	};
-	const rewards: Reward[] = [
-		{
-			rewardName: "Free Pineapple Bun",
-			rewardStampCost: 3,
-		},
-		{
-			rewardName: "Free BBQ Pork Bun",
-			rewardStampCost: 3,
-		},
-		{
-			rewardName: "Free Roll Cake",
-			rewardStampCost: 10,
-		},
-	];
 
-	const fullStamps = [];
-	const emptyStamps = [];
 	const stampArray = []; // Boolean array representing if completed stamp or not
 
 	for (let i = 0; i < currentCompletedStamps; i++) {
@@ -108,13 +146,13 @@ const BusinessCardPage = () => {
 								<View className="flex-row">
 									<AntDesign name="phone" size={16} color="black" />
 									<Text className="text-xs font-semibold pl-1">
-										000-000-0000
+										{currentBusinessPhone}
 									</Text>
 								</View>
 								<View className="flex-row">
 									<AntDesign name="mail" size={16} color="black" />
 									<Text className="text-xs font-semibold pl-1">
-										businessname@gmail.com
+										{currentBusinessEmail}
 									</Text>
 								</View>
 							</View>
@@ -192,26 +230,10 @@ const BusinessCardPage = () => {
 					<Text>{currentBusinessDescription}</Text>
 				</View>
 			) : (
-				<FlatList
-					className="h-full w-full px-12 py-4"
-					data={rewards}
-					renderItem={({ item }) => {
-						return (
-							<View className="bg-[#EBEBEB] p-3 shadow my-4 rounded-xl flex-row justify-between items-center">
-								<Text className="text-xl font-semibold">{item.rewardName}</Text>
-								<View className="flex-row items-center">
-									<Text className="text-2xl font-medium">
-										{item.rewardStampCost}
-									</Text>
-									<ExtraSmallStamp className="scale-150 px-4" />
-								</View>
-							</View>
-						);
-					}}
-				/>
+				<RewardsSection />
 			)}
 		</View>
 	);
 };
 
-export default BusinessCardPage;
+export default LoyaltyCardPage;

@@ -3,6 +3,7 @@ import * as SecureStore from "expo-secure-store";
 import { useEffect } from "react";
 import { Slot, useRouter, useSegments } from "expo-router";
 import { useAuthStore, useRegisterStore } from "../utils/loginStores";
+import Providers from "./providers";
 
 const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
@@ -63,7 +64,9 @@ const RootLayoutNav = () => {
       publishableKey={CLERK_PUBLISHABLE_KEY!}
       tokenCache={tokenCache}
     >
-      <InitialLayout />
+      <Providers>
+        <InitialLayout />
+      </Providers>
     </ClerkProvider>
   );
 };
