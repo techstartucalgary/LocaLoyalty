@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { IconType } from 'react-icons';
-import { useNavBarStore } from '../utils/NavBarState';
-import { useNavBarOptionState } from '../utils/NavBarOptionState';
+import { useSideNavBarStore } from '../utils/SideNavBarState';
+import { useSideNavBarOptionState } from '../utils/SideNavBarOptionState';
 
 interface SideNavBarOptionProps {
     title: string;
@@ -12,9 +12,9 @@ interface SideNavBarOptionProps {
 
 const SideNavBarOptions = ({title, icon: Icon, link, id}: SideNavBarOptionProps) => {
 
-    const { open } = useNavBarStore();
+    const { open } = useSideNavBarStore();
 
-    const { activeButton, setActiveButton } = useNavBarOptionState();
+    const { activeButton, setActiveButton } = useSideNavBarOptionState();
 
     const handleClick = () => {
         if (activeButton !== id) {

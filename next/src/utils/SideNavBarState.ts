@@ -1,11 +1,11 @@
 import { create } from "zustand";
 
-type NavBarStore = {
+type SideNavBarStore = {
   open: boolean;
   setOpen: (value: boolean) => void;
 };
 
-export const useNavBarStore = create<NavBarStore>((set) => ({
+export const useSideNavBarStore = create<SideNavBarStore>((set) => ({
   open: false,
   setOpen: (value) => set({ open: value }),
 }));

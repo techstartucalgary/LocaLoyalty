@@ -4,7 +4,7 @@ import Image from "next/image";
 import SideNavBarOptions from "@/components/SideNavBarOptions";
 
 import { UserButton, SignedOut } from "@clerk/nextjs";
-import { useNavBarStore } from "../utils/NavBarState";
+import { useSideNavBarStore } from "../utils/SideNavBarState";
 
 import { FiMenu } from "react-icons/fi";
 import { TbLayoutDashboard, TbSpeakerphone } from "react-icons/tb";
@@ -14,7 +14,7 @@ import { LuSettings } from "react-icons/lu";
 import { useEffect, useState } from "react";
 
 const SideNavbar = () => {
-  const { open, setOpen } = useNavBarStore();
+  const { open, setOpen } = useSideNavBarStore();
 
   const [isClient, setIsClient] = useState(false);
 
@@ -36,7 +36,7 @@ const SideNavbar = () => {
           }`}
         >
           <Image
-            src="/assets/logo.png"
+            src="/assets/Logo.png"
             alt="LocaLoyalty Logo"
             className={`${!open && "hidden"}`}
             width={50}
@@ -55,7 +55,7 @@ const SideNavbar = () => {
         </div>
 
         {/* STORE */}
-        <div className={`${open ? "pt-10" : "pt-[78.5px]"}`}>
+        <div className={`${open ? "pt-10" : "pt-[77.1px]"}`}>
           <h2 className={`font-extrabold pl-4 ${!open && "hidden"}`}>STORE</h2>
           <div className="space-y-3 pt-3">
             <SideNavBarOptions

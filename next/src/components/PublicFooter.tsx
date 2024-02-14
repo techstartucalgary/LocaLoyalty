@@ -1,9 +1,9 @@
 "use client";
+import Link from "next/link"
+import Image from "next/image"
 import { IoMdHeart, IoIosArrowForward } from "react-icons/io";
 import { FaLinkedinIn, FaInstagram } from "react-icons/fa";
 import { RiTwitterXLine } from "react-icons/ri";
-import Image from 'next/image'
-import Link from 'next/link'
 
 const PublicFooter = () => {
   return (
