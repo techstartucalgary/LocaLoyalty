@@ -30,6 +30,8 @@ export const getAllCards = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Loyalty cards not found" });
     }
 
+    console.log(loyaltyCards);
+
     // Send the loyalty cards back in the response
     res.status(200).json(loyaltyCards);
   } catch (error) {

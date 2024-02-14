@@ -10,6 +10,8 @@ type WalletState = {
 	currentCompletedStamps: number;
 	currentMaxStamps: number;
 	currentPrimaryColor: string;
+	currentCarry_over_amt: number,
+	currentSpending_per_point: number,
 	setCurrentBusinessID: (id: number) => void;
 	setCurrentBusinessName: (name: string) => void;
 	setCurrentBusinessImage: (image: any) => void;
@@ -19,6 +21,8 @@ type WalletState = {
 	setCurrentCompletedStamps: (completedStampNumber: number) => void;
 	setCurrentMaxStamps: (maxStampNumber: number) => void;
 	setCurrentPrimaryColor: (color: string) => void;
+	setCurrentCarry_over_amt: (carry_over_amt: number) => void,
+	setCurrentSpending_per_point: (spending_per_point: number) => void,
 };
 
 export const useWalletStore = create<WalletState>((set) => ({
@@ -31,6 +35,8 @@ export const useWalletStore = create<WalletState>((set) => ({
 	currentCompletedStamps: 0,
 	currentMaxStamps: 6,
 	currentPrimaryColor: "",
+	currentCarry_over_amt: 0,
+	currentSpending_per_point: 0,
 	setCurrentBusinessID: (id) => {
 		set({ currentBusinessID: id });
 	},
@@ -57,6 +63,12 @@ export const useWalletStore = create<WalletState>((set) => ({
 	},
 	setCurrentPrimaryColor: (color) => {
 		set({ currentPrimaryColor: color });
+	},
+	setCurrentCarry_over_amt: (carry_over_amt: number) => {
+		set({ currentCarry_over_amt: carry_over_amt })
+	},
+	setCurrentSpending_per_point: (spending_per_point: number) => {
+		set({ currentSpending_per_point: spending_per_point })
 	},
 }));
 

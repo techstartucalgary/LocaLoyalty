@@ -20,6 +20,8 @@ type Card = {
 	completedStamps: number;
 	maxStamps: number;
 	primaryColor: string;
+	spending_per_point: string;
+	carry_over_amt: number;
 };
 
 const Card = ({
@@ -32,6 +34,8 @@ const Card = ({
 	completedStamps,
 	maxStamps,
 	primaryColor,
+	carry_over_amt,
+	spending_per_point,
 }: Card) => {
 	const {
 		setCurrentBusinessID,
@@ -43,6 +47,8 @@ const Card = ({
 		setCurrentCompletedStamps,
 		setCurrentMaxStamps,
 		setCurrentPrimaryColor,
+		setCurrentCarry_over_amt,
+		setCurrentSpending_per_point,
 	} = useWalletStore();
 
 	function handleCardClick(cardPressed: Card) {
@@ -55,6 +61,10 @@ const Card = ({
 		setCurrentCompletedStamps(cardPressed.completedStamps);
 		setCurrentMaxStamps(cardPressed.maxStamps);
 		setCurrentPrimaryColor(cardPressed.primaryColor);
+		setCurrentCarry_over_amt(cardPressed.carry_over_amt)
+		setCurrentSpending_per_point(parseFloat(cardPressed.spending_per_point))
+		console.log(parseFloat(cardPressed.spending_per_point));
+
 	}
 
 	const slug: string = `./card/${businessName}`;
@@ -83,6 +93,8 @@ const Card = ({
 							completedStamps: completedStamps,
 							maxStamps: maxStamps,
 							primaryColor: primaryColor,
+							carry_over_amt: carry_over_amt,
+							spending_per_point: spending_per_point,
 						});
 					}}
 				>
@@ -155,17 +167,22 @@ const CardList = () => {
 	if (!isLoading && !isError) {
 
 		const cardData: {
-			vendor_id: number;
 			name: string;
 			email: string;
 			address: string;
 			phone: string;
 			color: string;
-			points_amt: number;
 			max_points: number;
+			spending_per_point: string;
 			business_logo: string;
 			desc: string;
+
+			points_amt: number;
+			carry_over_amt: number;
+			vendor_id: number;
 		}[] = data
+
+		console.log(cardData[0]);
 
 
 		return (
@@ -186,6 +203,8 @@ const CardList = () => {
 							completedStamps={item.points_amt} // Get the number of completed stamps for this user
 							maxStamps={item.max_points}
 							primaryColor={item.color}
+							spending_per_point={item.spending_per_point}
+							carry_over_amt={item.carry_over_amt}
 						/>
 					);
 				}}

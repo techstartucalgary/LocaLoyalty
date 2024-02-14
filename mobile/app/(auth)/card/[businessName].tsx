@@ -79,6 +79,8 @@ const LoyaltyCardPage = () => {
 		currentCompletedStamps,
 		currentMaxStamps,
 		currentPrimaryColor,
+		currentCarry_over_amt,
+		currentSpending_per_point,
 	} = useWalletStore();
 
 
@@ -97,9 +99,6 @@ const LoyaltyCardPage = () => {
 		}
 		setDetailsSelected(false);
 	}
-	// TODO: GET THE CURRENT PROGRESS AND THRESHOLD
-	const currentRewardProgress = 3.5;
-	const rewardThreshold = 5;
 
 	const stampArray = []; // Boolean array representing if completed stamp or not
 
@@ -163,22 +162,22 @@ const LoyaltyCardPage = () => {
 			<View className="py-6">
 				<View className="flex-row justify-between w-full px-12">
 					<Text>Your Progress:</Text>
-					<Text className="text-[#7B7B7B]">{`$${currentRewardProgress} / $${rewardThreshold}`}</Text>
+					<Text className="text-[#7B7B7B]">{`$${currentCarry_over_amt} / $${currentSpending_per_point}`}</Text>
 				</View>
 				<View className="w-full px-12 py-1">
 					<View className="relative w-full h-3 border border-[#999999] rounded-full">
 						<View
 							style={{
 								backgroundColor: currentPrimaryColor,
-								width: `${(currentRewardProgress / rewardThreshold) * 100}%`,
+								width: `${(currentCarry_over_amt / currentSpending_per_point) * 100}%`,
 							}}
 							className="absolute h-full rounded-full"
 						></View>
 					</View>
 				</View>
 				<View className="flex-row justify-between w-full px-12">
-					<Text>{`$${currentRewardProgress}`}</Text>
-					<Text>{`$${rewardThreshold}`}</Text>
+					<Text>{`$${currentCarry_over_amt}`}</Text>
+					<Text>{`$${currentSpending_per_point}`}</Text>
 				</View>
 			</View>
 

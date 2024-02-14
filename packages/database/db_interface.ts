@@ -419,17 +419,19 @@ async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
   }
 
   type Vendor = {
-    vendor_id: number;
     name: string;
     email: string;
     address: string | null;
     phone: string | null;
     color: string | null;
     max_points: number | null;
+    spending_per_point: string | null;
     business_logo: string | null;
     desc: string | null;
+
     points_amt: number;
     carry_over_amt: number;
+    vendor_id: number;
   }
 
   let vendorInfo: Vendor[] = []
@@ -461,7 +463,12 @@ async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
         return null;
       }
 
-      vendorInfo.push({ ...vendorResults[0], points_amt: card.points_amt, carry_over_amt: card.carry_over_amt, vendor_id: card.program_id })
+      vendorInfo.push({
+        ...vendorResults[0],
+        points_amt: card.points_amt,
+        carry_over_amt: parseFloat(card.carry_over_amt),
+        vendor_id: card.program_id
+      })
     }
   }
 
