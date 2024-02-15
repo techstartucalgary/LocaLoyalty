@@ -1,57 +1,68 @@
 "use client";
 import Link from "next/link";
-import { useAuth } from "@clerk/nextjs";
 import Image from "next/image";
+import { useAuth } from "@clerk/nextjs";
+import PublicNavBarOptions from "./PublicNavBarOptions";
 
 const Navbar = () => {
+
   const { isSignedIn } = useAuth();
 
   return (
-    <nav className="bg-white h-[100px] text-black shadow-lg py-5 flex flex-row sticky top-0 justify-between items-center">
+    <nav className="bg-white flex flex-row justify-between items-center sticky top-0 h-[110px] px-6">
       {/* Website Logo */}
       <div className="flex items-center gap-10">
-        <div className="flex flex-col items-center">
+        <Link href="" className="flex flex-col items-center">
           <Image
-            src="/assets/logo.png"
-            width={40}
-            height={40}
+            src="/assets/Logo.png"
+            width={60}
+            height={60}
             alt="Picture of LocaLoyalty Logo"
           />
-          <Link href="/" className="text-xl">
-            <h1 className="font-extrabold text-xl pl-4">LOCALOYALTY</h1>
-          </Link>
-        </div>
+          <h1 className="font-extrabold text-xl">LOCALOYALTY</h1>
+        </Link>
 
-        {/* Primary Navbar items */}
-        <div className="space-x-4">
-          <a href="#" className="">
-            Home
-          </a>
-          <a href="#" className="">
-            About
-          </a>
-          <a href="#" className="">
-            Contact
-          </a>
-          <a href="#" className="">
-            Pricing
-          </a>
+        {/* Primary Navbar Items */}
+        <div className="flex gap-8 ml-6">
+          <PublicNavBarOptions 
+            title="Home"
+            link=""
+            id="1"
+          />
+
+          <PublicNavBarOptions 
+            title="About"
+            link=""
+            id="2"
+          />
+
+          <PublicNavBarOptions 
+            title="Contact"
+            link=""
+            id="3"
+          />
+
+          <PublicNavBarOptions 
+            title="Pricing"
+            link=""
+            id="4"
+          />
         </div>
       </div>
 
-      <div className="flex items-center bg-white gap-2 mr-5">
+      {/* Register + Login Buttons */}
+      <div className="flex items-center gap-6 text-center">
         <Link
           href="/sign-up"
-          className="bg-black w-24 text-white px-4 py-2 rounded-md mr-4"
+          className="bg-black w-[105px] text-white py-2 rounded-lg"
         >
-          Register
+          <h1 className="text-lg font-semibold">Register</h1>
         </Link>
-
         <Link
           href={isSignedIn ? "/auth" : "/sign-in"}
-          className="bg-white w-24 text-black px-4 py-2 rounded-md border-2 border-black text-center"
+          className="bg-white text-black w-[105px] py-2 rounded-lg outline outline-2"
         >
-          Login
+          <h1 className="text-lg font-semibold">Login</h1>
         </Link>
       </div>
     </nav>
