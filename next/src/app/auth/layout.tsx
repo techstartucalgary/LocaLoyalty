@@ -1,6 +1,7 @@
 import { Toaster } from "@/components/ui/toaster";
 import AuthNavbar from "../../components/AuthNavbar";
 import SideNavbar from "@/components/SideNavbar";
+import NotifAccount from "@/components/NotifAccount";
 
 export default function AuthLayout({
   children,
@@ -10,7 +11,12 @@ export default function AuthLayout({
   return (
     <>
       <SideNavbar />
-      <main className="ml-40">{children}</main>
+      <div className="flex flex-col">
+        <div className="ml-auto">
+          <NotifAccount />
+        </div>
+        <main className="ml-40">{children}</main>
+      </div>
       <Toaster />
     </>
   );
