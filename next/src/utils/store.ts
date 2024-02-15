@@ -42,3 +42,32 @@ export const useOnboardingStore = create<OnboardingState>((set) => ({
       return { completionCards: updatedCards };
     }),
 }));
+
+type LoyaltyProgramState = {
+  stampLife: number | null; //null for forever, number for month duration
+  stampCount: number;
+  scaleAmount: string;
+  //definedRewards: [];
+  setStampLife: (value: number | null) => void;
+  incrementStampCount: () => void;
+  decrementStampCount: () => void;
+  setScaleAmount: (value: string) => void;
+};
+
+export const useLoyaltyProgramStore = create<LoyaltyProgramState>((set) => ({
+  stampLife: null,
+  stampCount: 6,
+  scaleAmount: "5",
+  setStampLife: (value) => set({ stampLife: value }),
+  incrementStampCount: () =>
+    set((state) => ({
+      stampCount:
+        state.stampCount < 10 ? state.stampCount + 1 : state.stampCount,
+    })),
+  decrementStampCount: () =>
+    set((state) => ({
+      stampCount:
+        state.stampCount > 5 ? state.stampCount - 1 : state.stampCount,
+    })),
+  setScaleAmount: (value) => set({ scaleAmount: value }),
+}));
