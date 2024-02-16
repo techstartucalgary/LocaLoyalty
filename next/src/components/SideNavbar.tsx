@@ -109,11 +109,6 @@ const SideNavbar = () => {
             />
           </div>
         </div>
-
-        {/* SIGNOUT */}
-        <div className="pl-4">
-          <UserButton afterSignOutUrl="/" />
-        </div>
       </div>
     )
   );
