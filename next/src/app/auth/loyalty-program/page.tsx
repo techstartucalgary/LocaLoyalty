@@ -1,19 +1,28 @@
 "use client";
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useLoyaltyProgramStore } from "@/utils/store";
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 import { IoIosInformationCircleOutline } from "react-icons/io";
+import {
+  CreateRewardDialog,
+  DeleteRewardDialog,
+  EditRewardDialog,
+} from "./RewardDialogs";
 
-const OptionHeader = ({ title, info }: { title: string; info: string }) => {
+export const OptionHeader = ({
+  title,
+  info,
+}: {
+  title: string;
+  info: string;
+}) => {
   return (
     <div className="flex gap-3 items-center">
       <p className="text-xl font-semibold">{title}</p>
@@ -159,12 +168,10 @@ const DefineRewardSection = () => {
     setDefinedRewards([
       {
         title: "Free Pineapple Bun",
-        description: "placeholder text",
         requiredStamps: 3,
       },
       {
         title: "Free BBQ Pork Bun",
-        description: "placeholder text",
         requiredStamps: 3,
       },
     ]);
@@ -172,21 +179,34 @@ const DefineRewardSection = () => {
 
   return (
     <div className="border-b-2 border-slate-300 py-5">
-      <OptionHeader
-        title="Define reward"
-        info="Create rewards that your customers can cash their stamps out for!"
-      />
+      <div className="flex justify-between">
+        <OptionHeader
+          title="Define reward"
+          info="Create rewards that your customers can cash their stamps out for!"
+        />
+        <CreateRewardDialog />
+      </div>
 
-      {definedRewards.map((item) => {
-        return (
-          <div
-            key="item.title"
-            className="flex border-2 p-5 border-black rounded-md"
-          >
-            <p>{item.title}</p>
-          </div>
-        );
-      })}
+      <div className="flex flex-col gap-3 mt-3 ml-5">
+        {definedRewards.map((item) => {
+          return (
+            <div key="item.title" className="flex items-center gap-5">
+              <div className="flex items-center border-2 p-5 justify-between font-semibold text-lg border-black rounded-md w-2/3">
+                <p>{item.title}</p>
+                <p className="text-xl">{item.requiredStamps} stamps</p>
+              </div>
+              <EditRewardDialog
+                initialTitle={item.title}
+                initialRequiredStamps={item.requiredStamps}
+              />
+              <DeleteRewardDialog
+                title={item.title}
+                requiredStamps={item.requiredStamps}
+              />
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

@@ -45,7 +45,6 @@ export const useOnboardingStore = create<OnboardingState>((set) => ({
 
 interface Reward {
   title: string;
-  description: string;
   requiredStamps: number;
 }
 
@@ -60,8 +59,8 @@ type LoyaltyProgramState = {
   setScaleAmount: (value: string) => void;
   setDefinedRewards: (defined: Reward[]) => void;
   addReward: (toAdd: Reward) => void;
-  //deleteReward
-  //updateReward
+  deleteReward: (toDelete: Reward) => void;
+  updateReward: (initial: Reward, changed: Reward) => void;
 };
 
 export const useLoyaltyProgramStore = create<LoyaltyProgramState>((set) => ({
@@ -86,4 +85,25 @@ export const useLoyaltyProgramStore = create<LoyaltyProgramState>((set) => ({
     set((state) => ({
       definedRewards: [...state.definedRewards, toAdd],
     })),
+  deleteReward: (toDelete) => {
+    set((state) => ({
+      definedRewards: state.definedRewards.filter(
+        (reward) =>
+          !(
+            reward.title === toDelete.title &&
+            reward.requiredStamps === toDelete.requiredStamps
+          )
+      ),
+    }));
+  },
+  updateReward: (initial, changed) => {
+    set((state) => ({
+      definedRewards: state.definedRewards.map((reward) =>
+        reward.title === initial.title &&
+        reward.requiredStamps === initial.requiredStamps
+          ? { ...reward, ...changed }
+          : reward
+      ),
+    }));
+  },
 }));
