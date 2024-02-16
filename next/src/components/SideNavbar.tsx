@@ -25,7 +25,7 @@ const SideNavbar = () => {
   return (
     isClient && (
       <div
-        className={`z-50 fixed text-black h-screen flex flex-col px-3 pt-10 shadow-[5.0px_0px_15px_rgba(0,0,0,5%)] duration-300 ${
+        className={`z-50 bg-white fixed text-black h-screen flex flex-col px-3 pt-10 shadow-[5.0px_0px_15px_rgba(0,0,0,5%)] duration-300 ${
           open ? "w-[280px]" : "w-[80px]"
         }`}
       >
