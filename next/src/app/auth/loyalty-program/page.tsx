@@ -10,7 +10,8 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useLoyaltyProgramStore } from "@/utils/store";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { IoIosInformationCircleOutline } from "react-icons/io";
 
 const OptionHeader = ({ title, info }: { title: string; info: string }) => {
   return (
@@ -18,7 +19,7 @@ const OptionHeader = ({ title, info }: { title: string; info: string }) => {
       <p className="text-xl font-semibold">{title}</p>
       <Popover>
         <PopoverTrigger>
-          <Image src="/assets/info-icon.png" alt="" width={25} height={25} />
+          <IoIosInformationCircleOutline size={25} />
         </PopoverTrigger>
         <PopoverContent
           side="right"
@@ -152,12 +153,40 @@ const ScaleRewardSection = () => {
 };
 
 const DefineRewardSection = () => {
+  const { definedRewards, setDefinedRewards } = useLoyaltyProgramStore();
+
+  useEffect(() => {
+    setDefinedRewards([
+      {
+        title: "Free Pineapple Bun",
+        description: "placeholder text",
+        requiredStamps: 3,
+      },
+      {
+        title: "Free BBQ Pork Bun",
+        description: "placeholder text",
+        requiredStamps: 3,
+      },
+    ]);
+  }, [setDefinedRewards]);
+
   return (
     <div className="border-b-2 border-slate-300 py-5">
       <OptionHeader
         title="Define reward"
         info="Create rewards that your customers can cash their stamps out for!"
       />
+
+      {definedRewards.map((item) => {
+        return (
+          <div
+            key="item.title"
+            className="flex border-2 p-5 border-black rounded-md"
+          >
+            <p>{item.title}</p>
+          </div>
+        );
+      })}
     </div>
   );
 };
