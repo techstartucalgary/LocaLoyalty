@@ -53,6 +53,7 @@ type LoyaltyProgramState = {
   stampCount: number;
   scaleAmount: string;
   definedRewards: Reward[];
+  isEditing: boolean;
   setStampLife: (value: number | null) => void;
   incrementStampCount: () => void;
   decrementStampCount: () => void;
@@ -61,6 +62,7 @@ type LoyaltyProgramState = {
   addReward: (toAdd: Reward) => void;
   deleteReward: (toDelete: Reward) => void;
   updateReward: (initial: Reward, changed: Reward) => void;
+  setIsEditing: () => void;
 };
 
 export const useLoyaltyProgramStore = create<LoyaltyProgramState>((set) => ({
@@ -68,6 +70,7 @@ export const useLoyaltyProgramStore = create<LoyaltyProgramState>((set) => ({
   stampCount: 6,
   scaleAmount: "5",
   definedRewards: [],
+  isEditing: false,
   setStampLife: (value) => set({ stampLife: value }),
   incrementStampCount: () =>
     set((state) => ({
@@ -104,6 +107,11 @@ export const useLoyaltyProgramStore = create<LoyaltyProgramState>((set) => ({
           ? { ...reward, ...changed }
           : reward
       ),
+    }));
+  },
+  setIsEditing: () => {
+    set((state) => ({
+      isEditing: !state.isEditing,
     }));
   },
 }));

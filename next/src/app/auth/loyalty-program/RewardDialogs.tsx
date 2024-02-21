@@ -16,7 +16,7 @@ import { OptionHeader } from "./page";
 import { FaPencilAlt, FaRegTrashAlt } from "react-icons/fa";
 
 export const CreateRewardDialog = () => {
-  const { stampCount, addReward } = useLoyaltyProgramStore();
+  const { stampCount, addReward, isEditing } = useLoyaltyProgramStore();
   const [isClient, setIsClient] = useState(false);
   const [rewardTitle, setRewardTitle] = useState("");
   const [requiredStamps, setRequiredStamps] = useState(1);
@@ -28,7 +28,7 @@ export const CreateRewardDialog = () => {
   return (
     isClient && (
       <Dialog>
-        <DialogTrigger>
+        <DialogTrigger disabled={!isEditing}>
           <Button size="sm" className="h-7 w-7 font-semibold text-lg">
             +
           </Button>
@@ -125,7 +125,7 @@ export const EditRewardDialog = ({
   initialTitle: string;
   initialRequiredStamps: number;
 }) => {
-  const { stampCount, updateReward } = useLoyaltyProgramStore();
+  const { stampCount, updateReward, isEditing } = useLoyaltyProgramStore();
   const [isClient, setIsClient] = useState(false);
   const [rewardTitle, setRewardTitle] = useState(initialTitle);
   const [requiredStamps, setRequiredStamps] = useState(initialRequiredStamps);
@@ -137,7 +137,7 @@ export const EditRewardDialog = ({
   return (
     isClient && (
       <Dialog>
-        <DialogTrigger>
+        <DialogTrigger disabled={!isEditing}>
           <div className="bg-black p-2 rounded-md">
             <FaPencilAlt size={15} color="white" />
           </div>
@@ -237,7 +237,7 @@ export const DeleteRewardDialog = ({
   requiredStamps: number;
 }) => {
   const [isClient, setIsClient] = useState(false);
-  const { deleteReward } = useLoyaltyProgramStore();
+  const { deleteReward, isEditing } = useLoyaltyProgramStore();
 
   useEffect(() => {
     setIsClient(true);
@@ -246,7 +246,7 @@ export const DeleteRewardDialog = ({
   return (
     isClient && (
       <Dialog>
-        <DialogTrigger>
+        <DialogTrigger disabled={!isEditing}>
           <div className="bg-white border-2 border-black p-2 rounded-md">
             <FaRegTrashAlt size={15} />
           </div>
