@@ -57,6 +57,7 @@ type LoyaltyProgramState = {
   setStampLife: (value: number | null) => void;
   incrementStampCount: () => void;
   decrementStampCount: () => void;
+  setStampCount: (value: number) => void;
   setScaleAmount: (value: string) => void;
   setDefinedRewards: (defined: Reward[]) => void;
   addReward: (toAdd: Reward) => void;
@@ -82,6 +83,7 @@ export const useLoyaltyProgramStore = create<LoyaltyProgramState>((set) => ({
       stampCount:
         state.stampCount > 5 ? state.stampCount - 1 : state.stampCount,
     })),
+  setStampCount: (value) => set({ stampCount: value }),
   setScaleAmount: (value) => set({ scaleAmount: value }),
   setDefinedRewards: (defined) => set({ definedRewards: defined }),
   addReward: (toAdd) =>

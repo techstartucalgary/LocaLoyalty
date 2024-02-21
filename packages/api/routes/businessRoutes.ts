@@ -116,4 +116,9 @@ router.post(
   }
 );
 
+router.get("/loyalty-program", async (req: Request, res: Response) => {
+  let profileData = await getVendor(req.auth.userId);
+  res.send(profileData);
+});
+
 export default router;

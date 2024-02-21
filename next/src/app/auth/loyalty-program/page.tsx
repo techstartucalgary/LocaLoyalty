@@ -1,3 +1,4 @@
+"use client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Popover,
@@ -12,6 +13,11 @@ import {
   StampCountSection,
   StampLifeSection,
 } from "./SettingsSections";
+import { fetchAPI } from "@/utils/generalAxios";
+import { useAuthStore, useLoyaltyProgramStore } from "@/utils/store";
+import { useAuth } from "@clerk/nextjs";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 export const OptionHeader = ({
   title,
@@ -41,6 +47,45 @@ export const OptionHeader = ({
 };
 
 export default function LoyaltyProgram() {
+  const { getToken } = useAuth();
+  const { token, setToken } = useAuthStore();
+  const { setStampLife, setStampCount, setScaleAmount, setDefinedRewards } =
+    useLoyaltyProgramStore();
+
+  const fetchLoyaltyProgramData = async () => {
+    return fetchAPI(
+      "http://localhost:5001/business/profile",
+      "GET",
+      token,
+      null,
+      {}
+    );
+  };
+
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["loyaltyProgramData"],
+    queryFn: fetchLoyaltyProgramData,
+    enabled: !!token,
+  });
+
+  useEffect(() => {
+    if (data) {
+      setStampLife(data.stampLife);
+      setStampCount(data.stampCount);
+      setScaleAmount(data.scaleAmount);
+      setDefinedRewards(data.definedRewards);
+    }
+  }, [data, setDefinedRewards, setScaleAmount, setStampCount, setStampLife]);
+
+  useEffect(() => {
+    async function fetchToken() {
+      const toFetch = await getToken();
+      setToken(toFetch);
+    }
+
+    fetchToken();
+  }, [getToken, setToken]);
+
   return (
     <>
       <p className="text-2xl font-semibold pt-10 pb-5">
