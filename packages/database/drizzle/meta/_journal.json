@@ -36,6 +36,13 @@
       "when": 1708550801075,
       "tag": "0004_dashing_eddie_brock",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1708563510346,
+      "tag": "0005_slim_swordsman",
+      "breakpoints": true
     }
   ]
 }

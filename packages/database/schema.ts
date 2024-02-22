@@ -48,6 +48,7 @@ export const vendor = mysqlTable("vendor", {
   business_logo: text("business_logo"),
   merchant_id: varchar("merchant_id", { length: 13 }),
   clover_api_key: varchar("clover_api_key", { length: 200 }),
+  stamp_life: int("stamp_life"),
 });
 
 // Loyalty Card
