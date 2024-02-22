@@ -1,8 +1,8 @@
 "use client";
 import { IoMdHeart } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
-import Image from 'next/image'
-import Link from 'next/link'
+import Image from "next/image"
+import Link from "next/link"
 
 const PublicFooter = () => {
   return (
