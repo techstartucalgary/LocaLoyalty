@@ -15,7 +15,7 @@ export interface CompletionCardProps {
   id: number;
   icon: string;
   title: string;
-  order: number;
+  priority: number;
   isCompleted: boolean;
   directory: string;
   buttonText: string;
