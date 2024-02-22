@@ -54,7 +54,7 @@ export default function LoyaltyProgram() {
 
   const fetchLoyaltyProgramData = async () => {
     return fetchAPI(
-      "http://localhost:5001/business/profile",
+      "http://localhost:5001/business/loyalty-program",
       "GET",
       token,
       null,
@@ -92,28 +92,32 @@ export default function LoyaltyProgram() {
         Loyalty Program Builder
       </p>
 
-      <div className="flex justify-start gap-40">
-        <div className="flex flex-col w-1/2">
-          <Tabs defaultValue="settings" className="">
-            <TabsList>
-              <TabsTrigger value="settings">Settings</TabsTrigger>
-              <TabsTrigger value="design">Design</TabsTrigger>
-            </TabsList>
-            <TabsContent value="settings">
-              <div className="ml-10">
-                <StampLifeSection />
-                <StampCountSection />
-                <ScaleRewardSection />
-                <DefineRewardSection />
-              </div>
-            </TabsContent>
-            <TabsContent value="design">Change your password here.</TabsContent>
-          </Tabs>
+      {!isLoading && (
+        <div className="flex justify-start gap-40">
+          <div className="flex flex-col w-1/2">
+            <Tabs defaultValue="settings" className="">
+              <TabsList>
+                <TabsTrigger value="settings">Settings</TabsTrigger>
+                <TabsTrigger value="design">Design</TabsTrigger>
+              </TabsList>
+              <TabsContent value="settings">
+                <div className="ml-10">
+                  <StampLifeSection />
+                  <StampCountSection />
+                  <ScaleRewardSection />
+                  <DefineRewardSection />
+                </div>
+              </TabsContent>
+              <TabsContent value="design">
+                Change your password here.
+              </TabsContent>
+            </Tabs>
 
-          <EditSection />
+            <EditSection />
+          </div>
+          <p className="bg-pink-500 w-1/3">live preview will go here</p>
         </div>
-        <p className="bg-pink-500 w-1/3">live preview will go here</p>
-      </div>
+      )}
     </>
   );
 }

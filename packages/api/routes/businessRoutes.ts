@@ -8,7 +8,13 @@ import {
 } from "@aws-sdk/client-s3";
 import crypto from "crypto";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { editVendor, getVendor } from "../../database/db_interface";
+import {
+  editVendor,
+  getVendor,
+  getAllRewardsOfVendor,
+  getVendorFromClerkID,
+  getVendorLoyaltyProgramSettings,
+} from "../../database/db_interface";
 
 const router = express.Router();
 
@@ -117,8 +123,22 @@ router.post(
 );
 
 router.get("/loyalty-program", async (req: Request, res: Response) => {
-  let profileData = await getVendor(req.auth.userId);
-  res.send(profileData);
+  try {
+    const vendor = await getVendorFromClerkID(req.auth.userId);
+    const vendor_id = vendor![0].vendor_id;
+    const loyaltyInfo = await getVendorLoyaltyProgramSettings(vendor_id);
+    const rewards = await getAllRewardsOfVendor(vendor_id);
+
+    res.status(200).json({
+      vendor_id: vendor_id,
+      stampLife: loyaltyInfo![0].stampLife,
+      stampCount: loyaltyInfo![0].stampCount,
+      scaleAmount: loyaltyInfo![0].scaleAmount,
+      definedRewards: rewards,
+    });
+  } catch (error: unknown) {
+    res.status(500).json({ message: "User does not exist" });
+  }
 });
 
 export default router;
