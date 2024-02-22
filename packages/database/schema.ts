@@ -14,6 +14,7 @@ import {
   varchar,
   timestamp,
   decimal,
+  boolean,
 } from "drizzle-orm/mysql-core";
 
 // Customer
@@ -84,4 +85,22 @@ export const reward = mysqlTable("reward", {
   name: varchar("name", { length: 256 }),
   description: text("description"),
   points_cost: int("points_cost").notNull(),
+});
+
+// Onboarding Completion Cards
+export const onboarding = mysqlTable("onboarding", {
+  id: serial("onboarding_id").primaryKey(),
+  icon: varchar("icon", { length: 255 }).notNull(),
+  title: varchar("title", { length: 256 }).notNull(),
+  priority: int("priority").notNull(),
+  directory: varchar("directory", { length: 256 }).notNull(),
+  buttonText: varchar("buttonText", { length: 32 }).notNull(),
+});
+
+// onboarding_vendor
+export const onboarding_vendor = mysqlTable("onboarding_vendor", {
+  id: serial("onboarding_vendor").primaryKey(),
+  onboarding_id: int("onboarding_id").notNull(),
+  vendor_id: int("vendor_id").notNull(),
+  isCompleted: boolean("isCompleted").notNull(),
 });
