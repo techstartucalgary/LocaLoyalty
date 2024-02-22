@@ -16,7 +16,7 @@ import {
 import { fetchAPI } from "@/utils/generalAxios";
 import { useAuthStore, useLoyaltyProgramStore } from "@/utils/store";
 import { useAuth } from "@clerk/nextjs";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 
 export const OptionHeader = ({
@@ -49,8 +49,13 @@ export const OptionHeader = ({
 export default function LoyaltyProgram() {
   const { getToken } = useAuth();
   const { token, setToken } = useAuthStore();
-  const { setStampLife, setStampCount, setScaleAmount, setDefinedRewards } =
-    useLoyaltyProgramStore();
+  const {
+    isEditing,
+    setStampLife,
+    setStampCount,
+    setScaleAmount,
+    setDefinedRewards,
+  } = useLoyaltyProgramStore();
 
   const fetchLoyaltyProgramData = async () => {
     return fetchAPI(
@@ -62,20 +67,27 @@ export default function LoyaltyProgram() {
     );
   };
 
-  const { data, error, isLoading } = useQuery({
+  const { data, error, isLoading, refetch } = useQuery({
     queryKey: ["loyaltyProgramData"],
     queryFn: fetchLoyaltyProgramData,
     enabled: !!token,
   });
 
   useEffect(() => {
-    if (data) {
+    if (data && !isEditing) {
       setStampLife(data.stampLife);
       setStampCount(data.stampCount);
       setScaleAmount(data.scaleAmount);
       setDefinedRewards(data.definedRewards);
     }
-  }, [data, setDefinedRewards, setScaleAmount, setStampCount, setStampLife]);
+  }, [
+    data,
+    isEditing,
+    setDefinedRewards,
+    setScaleAmount,
+    setStampCount,
+    setStampLife,
+  ]);
 
   useEffect(() => {
     async function fetchToken() {
@@ -113,7 +125,7 @@ export default function LoyaltyProgram() {
               </TabsContent>
             </Tabs>
 
-            <EditSection />
+            <EditSection refetch={refetch} />
           </div>
           <p className="bg-pink-500 w-1/3">live preview will go here</p>
         </div>

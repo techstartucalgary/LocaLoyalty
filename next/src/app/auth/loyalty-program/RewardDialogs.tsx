@@ -29,9 +29,9 @@ export const CreateRewardDialog = () => {
     isClient && (
       <Dialog>
         <DialogTrigger disabled={!isEditing}>
-          <Button size="sm" className="h-7 w-7 font-semibold text-lg">
+          <p className="h-7 w-7 bg-black rounded-md text-white font-semibold text-lg">
             +
-          </Button>
+          </p>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
@@ -103,6 +103,7 @@ export const CreateRewardDialog = () => {
                 className="w-1/6"
                 onClick={() => {
                   addReward({
+                    reward_id: null,
                     title: rewardTitle,
                     requiredStamps: requiredStamps,
                   });
@@ -119,9 +120,11 @@ export const CreateRewardDialog = () => {
 };
 
 export const EditRewardDialog = ({
+  initial_id,
   initialTitle,
   initialRequiredStamps,
 }: {
+  initial_id: number | null;
   initialTitle: string;
   initialRequiredStamps: number;
 }) => {
@@ -209,10 +212,12 @@ export const EditRewardDialog = ({
                 onClick={() => {
                   updateReward(
                     {
+                      reward_id: initial_id,
                       title: initialTitle,
                       requiredStamps: initialRequiredStamps,
                     },
                     {
+                      reward_id: initial_id,
                       title: rewardTitle,
                       requiredStamps: requiredStamps,
                     }
@@ -230,9 +235,11 @@ export const EditRewardDialog = ({
 };
 
 export const DeleteRewardDialog = ({
+  id,
   title,
   requiredStamps,
 }: {
+  id: number | null;
   title: string;
   requiredStamps: number;
 }) => {
@@ -262,20 +269,21 @@ export const DeleteRewardDialog = ({
 
           <DialogClose className="w-full">
             <div className="flex justify-end gap-5 mt-3">
-              <Button className="border-2 border-black w-1/6 text-black hover:bg-white bg-white">
+              <p className="border-2 border-black w-1/6 text-black hover:bg-white bg-white">
                 Cancel
-              </Button>
-              <Button
+              </p>
+              <p
                 className="w-1/6"
                 onClick={() => {
                   deleteReward({
+                    reward_id: id,
                     title: title,
                     requiredStamps: requiredStamps,
                   });
                 }}
               >
                 Confirm
-              </Button>
+              </p>
             </div>
           </DialogClose>
         </DialogContent>

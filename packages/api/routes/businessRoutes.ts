@@ -141,4 +141,15 @@ router.get("/loyalty-program", async (req: Request, res: Response) => {
   }
 });
 
+router.post("/loyalty-program", async (req: Request, res: Response) => {
+  try {
+    let body = req.body;
+    console.log(body);
+
+    res.status(200).json({ message: "Profile updated successfully" });
+  } catch (Error: unknown) {
+    res.status(500).json({ message: "Something went wrong..." });
+  }
+});
+
 export default router;

@@ -44,6 +44,7 @@ export const useOnboardingStore = create<OnboardingState>((set) => ({
 }));
 
 interface Reward {
+  reward_id: number | null;
   title: string;
   requiredStamps: number;
 }

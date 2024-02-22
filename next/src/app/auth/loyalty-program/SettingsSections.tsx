@@ -1,8 +1,8 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { useLoyaltyProgramStore } from "@/utils/store";
+import { useAuthStore, useLoyaltyProgramStore } from "@/utils/store";
 import { Input } from "@/components/ui/input";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   CreateRewardDialog,
   DeleteRewardDialog,
@@ -20,6 +20,13 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { OptionHeader } from "./page";
+import { fetchAPI } from "@/utils/generalAxios";
+import {
+  QueryObserverResult,
+  RefetchOptions,
+  useMutation,
+} from "@tanstack/react-query";
+import { toast } from "@/components/ui/use-toast";
 
 export const StampLifeSection = () => {
   const { stampLife, setStampLife, isEditing } = useLoyaltyProgramStore();
@@ -145,20 +152,7 @@ export const ScaleRewardSection = () => {
 };
 
 export const DefineRewardSection = () => {
-  const { definedRewards, setDefinedRewards } = useLoyaltyProgramStore();
-
-  useEffect(() => {
-    setDefinedRewards([
-      {
-        title: "Free Pineapple Bun",
-        requiredStamps: 3,
-      },
-      {
-        title: "Free BBQ Pork Bun",
-        requiredStamps: 3,
-      },
-    ]);
-  }, [setDefinedRewards]);
+  const { definedRewards } = useLoyaltyProgramStore();
 
   return (
     <div className="border-b-2 border-slate-300 py-5">
@@ -173,16 +167,18 @@ export const DefineRewardSection = () => {
       <div className="flex flex-col gap-3 mt-3 ml-5">
         {definedRewards.map((item) => {
           return (
-            <div key="item.title" className="flex items-center gap-5">
+            <div key={item.title} className="flex items-center gap-5">
               <div className="flex items-center border-2 p-5 justify-between font-semibold text-lg border-black rounded-md w-2/3">
                 <p>{item.title}</p>
                 <p className="text-xl">{item.requiredStamps} stamps</p>
               </div>
               <EditRewardDialog
+                initial_id={item.reward_id}
                 initialTitle={item.title}
                 initialRequiredStamps={item.requiredStamps}
               />
               <DeleteRewardDialog
+                id={item.reward_id}
                 title={item.title}
                 requiredStamps={item.requiredStamps}
               />
@@ -194,8 +190,59 @@ export const DefineRewardSection = () => {
   );
 };
 
-export const EditSection = () => {
-  const { isEditing, setIsEditing } = useLoyaltyProgramStore();
+export const EditSection = ({
+  refetch,
+}: {
+  refetch: (
+    options?: RefetchOptions | undefined
+  ) => Promise<QueryObserverResult<any, Error>>;
+}) => {
+  const {
+    isEditing,
+    setIsEditing,
+    stampLife,
+    stampCount,
+    scaleAmount,
+    definedRewards,
+  } = useLoyaltyProgramStore();
+  const { token } = useAuthStore();
+  const sendModifiedLoyaltyProgramData = async () => {
+    // Make the API call with formData
+    return fetchAPI(
+      "http://localhost:5001/business/loyalty-program",
+      "POST",
+      token,
+      {
+        stampLife: stampLife,
+        stampCount: stampCount,
+        scaleAmount: scaleAmount,
+        definedRewards: definedRewards,
+      },
+      {
+        /* headers (if necessary) */
+      }
+    );
+  };
+
+  const mutation = useMutation({
+    mutationFn: sendModifiedLoyaltyProgramData,
+    onSuccess: () => {
+      toast({
+        title: "👌 Success!",
+        description:
+          "Your loyalty program information has been updated successfully!",
+        duration: 3000,
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Hmmm.....",
+        description:
+          "Something went wrong.. Double check your values you put in",
+        duration: 3000,
+      });
+    },
+  });
 
   return (
     <div className="w-full flex justify-end my-5">
@@ -223,7 +270,7 @@ export const EditSection = () => {
                   className="w-20 bg-black hover:bg-white hover:border-2 hover:text-black border-black"
                   onClick={() => {
                     setIsEditing();
-                    //setProfileData(savedProfileData);
+                    refetch();
                   }}
                 >
                   Continue
@@ -235,8 +282,7 @@ export const EditSection = () => {
             className="w-20 bg-black hover:bg-white hover:border-2 hover:text-black border-black"
             onClick={() => {
               setIsEditing();
-              //setSavedProfileData(profileData);
-              //mutation.mutate();
+              mutation.mutate();
             }}
           >
             Save

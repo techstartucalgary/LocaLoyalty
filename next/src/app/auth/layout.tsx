@@ -1,5 +1,4 @@
 import { Toaster } from "@/components/ui/toaster";
-import AuthNavbar from "../../components/AuthNavbar";
 import SideNavbar from "@/components/SideNavbar";
 import NotifAccount from "@/components/NotifAccount";
 
