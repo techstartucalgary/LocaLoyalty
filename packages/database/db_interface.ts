@@ -17,7 +17,11 @@ import {
 } from "@aws-sdk/client-s3";
 
 // Adds a new customer to the database, returns the generated customer_id
-async function addCustomer(email: string, phone: string, clerk_id: string) {
+export async function addCustomer(
+  email: string,
+  phone: string,
+  clerk_id: string
+) {
   //insert info
   await db.insert(schema.customer).values({
     fname: "",
@@ -46,7 +50,7 @@ async function addCustomer(email: string, phone: string, clerk_id: string) {
 
 // Adds a new vendor to the database, returns the generated vendor_id
 // NOTE: must input decimal spending_per_point as a string because Drizzle is weird
-async function addVendor(
+export async function addVendor(
   name: string,
   email: string,
   phone: string,
@@ -239,7 +243,7 @@ async function addReward(
 */
 // Gets the customer object
 // Input: the customer ID
-async function getCustomer(customer_id: number) {
+export async function getCustomer(customer_id: number) {
   const result = await db
     .select()
     .from(schema.customer)
@@ -256,8 +260,7 @@ async function getCustomer(customer_id: number) {
 
 // Gets the vendor object
 //Input: the vendor ID
-
-async function getVendor(clerk_id: string) {
+export async function getVendor(clerk_id: string) {
   const result = await db
     .select()
     .from(schema.vendor)
@@ -272,7 +275,11 @@ async function getVendor(clerk_id: string) {
   return result[0];
 }
 
-async function editVendor(
+export async function deleteVendorReward(reward_id: number) {
+  await db.delete(schema.reward).where(eq(schema.reward.reward_id, reward_id));
+}
+
+export async function editVendor(
   clerk_id: string,
   name: string,
   address: string,
@@ -317,6 +324,48 @@ async function editVendor(
       })
       .where(eq(schema.vendor.clerk_id, clerk_id));
   }
+}
+
+export async function editVendorLoyaltyProgram(
+  vendor_id: number,
+  stampLife: number | null,
+  stampCount: number,
+  scaleAmount: string
+) {
+  await db
+    .update(schema.vendor)
+    .set({
+      stamp_life: stampLife,
+      max_points: stampCount,
+      spending_per_point: scaleAmount,
+    })
+    .where(eq(schema.vendor.vendor_id, vendor_id));
+}
+
+export async function editVendorReward(
+  reward_id: number,
+  title: string,
+  requiredStamps: number
+) {
+  await db
+    .update(schema.reward)
+    .set({
+      name: title,
+      points_cost: requiredStamps,
+    })
+    .where(eq(schema.reward.reward_id, reward_id));
+}
+
+export async function addVendorReward(
+  vendor_id: number,
+  title: string,
+  requiredStamps: number
+) {
+  await db.insert(schema.reward).values({
+    vendor_id: vendor_id,
+    name: title,
+    points_cost: requiredStamps,
+  });
 }
 
 /*
@@ -396,7 +445,7 @@ async function getReward(reward_id) {
 // Get all customers has no use case for now...
 
 // Gets all vendors in the database
-async function getAllVendors() {
+export async function getAllVendors() {
   const results = await db.select({
     vendor_id: schema.vendor.vendor_id,
     name: schema.vendor.name,
@@ -454,7 +503,7 @@ async function getAllVendors() {
 
 // Gets all loyalty cards for a given customer
 // Input: the customers customer_id
-async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
+export async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
   const results = await db
     .select()
     .from(schema.loyalty_card)
@@ -588,11 +637,34 @@ async function getAllTransactionsOfCard(loyalty_id) {
 }
 */
 
+export async function getVendorLoyaltyProgramSettings(vendor_id: number) {
+  const results = await db
+    .select({
+      stampLife: schema.vendor.stamp_life,
+      stampCount: schema.vendor.max_points,
+      scaleAmount: schema.vendor.spending_per_point,
+    })
+    .from(schema.vendor)
+    .where(eq(schema.vendor.vendor_id, vendor_id));
+
+  //if there is an error return null
+  if (Object.keys(results).length === 0) {
+    console.log("Database query failed");
+    return null;
+  }
+
+  return results;
+}
+
 // Gets all rewards in the program of a given vendor
 // Input: the vendor_id of the vendor
-async function getAllRewardsOfVendor(vendor_id: number) {
+export async function getAllRewardsOfVendor(vendor_id: number) {
   const results = await db
-    .select()
+    .select({
+      reward_id: schema.reward.reward_id,
+      title: schema.reward.name,
+      requiredStamps: schema.reward.points_cost,
+    })
     .from(schema.reward)
     .where(eq(schema.reward.vendor_id, vendor_id));
 
@@ -607,7 +679,7 @@ async function getAllRewardsOfVendor(vendor_id: number) {
 
 // Gets a customer_id based on a clerk_id
 // Input: a clerk id as a string
-async function getCustomerFromClerkID(clerk_id: string) {
+export async function getCustomerFromClerkID(clerk_id: string) {
   const result = await db
     .select()
     .from(schema.customer)
@@ -622,7 +694,24 @@ async function getCustomerFromClerkID(clerk_id: string) {
   return result;
 }
 
-async function editCustomer(
+// Gets a customer_id based on a clerk_id
+// Input: a clerk id as a string
+export async function getVendorFromClerkID(clerk_id: string) {
+  const result = await db
+    .select()
+    .from(schema.vendor)
+    .where(eq(schema.vendor.clerk_id, clerk_id));
+
+  //if there is an error return null
+  if (Object.keys(result).length === 0) {
+    console.log("Database query failed");
+    return null;
+  }
+
+  return result;
+}
+
+export async function editCustomer(
   clerk_id: string,
   first_name: string,
   last_name: string
@@ -751,28 +840,3 @@ async function editReward(reward_id, attribute, newValue) {
     }
 }
 */
-
-export {
-  addCustomer,
-  addVendor,
-  getCustomerFromClerkID,
-  getAllLoyaltyCardsOfCustomer,
-  getCustomer,
-  editCustomer,
-  getVendor,
-  editVendor,
-  getAllRewardsOfVendor,
-  getAllVendors,
-  /*
-  addLoyaltyCard,
-  addTransaction,
-  addReward,
-  addPointRedemption,
-  getLoyaltyCard,
-  getPointRedemptionHistory,
-  getTransaction,
-  getReward,
-  getAllPointRedemptionHistoryOfCard,
-  getAllTransactionsOfCard,
-  */
-};

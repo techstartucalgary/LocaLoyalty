@@ -1,4 +1,5 @@
 "use client";
+
 import Link from "next/link"
 import Image from "next/image"
 import { IoMdHeart, IoIosArrowForward } from "react-icons/io";

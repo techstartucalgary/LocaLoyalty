@@ -93,19 +93,22 @@ paths:
           schema:
             type: integer
             format: int64
+  /business/loyalty-program:
+    get:
+      tags:
+        - business
+      summary: Get the current loyalty program data of the user
+      description: Queries user profile and loyalty program table in DB for data and sends it back to the front-end. No params required because the header includes the clerk ID already
+      operationId: getBusinessLoyaltyProgram
       responses:
         200:
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/VendorList"
-        401:
-          description: User not authenticated
-        404:
-          description: User not found or Loyalty cards not found
+                $ref: "#/components/schemas/BusinessLoyaltyProgram"
         500:
-          description: Internal server error
+          description: User Does not exist in DB
 components:
   schemas:
     BusinessProfile:
@@ -192,3 +195,28 @@ components:
           type: integer
           format: int32
           description: The maximum number of points a customer can earn
+    BusinessLoyaltyProgram:
+      type: object
+      properties:
+        stampLife:
+          type: number
+          example: null
+        stampCount:
+          type: number
+          example: 6
+        scaleAmount:
+          type: string
+          example: "5"
+        definedRewards:
+          type: array
+          items:
+            $ref: "#/components/schemas/Reward"
+    Reward:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Free Pineapple Bun"
+        requiredStamps:
+          type: number
+          example: 3
