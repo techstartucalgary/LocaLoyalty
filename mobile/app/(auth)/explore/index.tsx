@@ -6,6 +6,7 @@ import { useExploreStore } from "../../../utils/exploreStore";
 import { fetchAPI } from "../../../utils/generalAxios";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@clerk/clerk-expo";
+import { useEffect, useState } from "react";
 
 type ExploreCard = {
     businessID: number,
@@ -52,6 +53,8 @@ const ExploreCardList = () => {
 
     const { getToken } = useAuth()
 
+    const { setRefetchFunc } = useExploreStore();
+
     const fetchVendors = async () => {
         return fetchAPI(
             "https://79e0-184-64-97-78.ngrok-free.app/customer/vendors",
@@ -65,7 +68,17 @@ const ExploreCardList = () => {
 
     const { data, isLoading, isError, refetch, isRefetching } = useQuery({ queryKey: ["vendors"], queryFn: fetchVendors })
 
+    useEffect(() => {
+        setRefetchFunc(refetch)
+    }, [])
 
+    const [refreshing, setRefreshing] = useState(false)
+
+    async function handleRefresh() {
+        setRefreshing(true)
+        await refetch()
+        setRefreshing(false)
+    }
 
     const vendorData: {
         vendor_id: number;
@@ -77,13 +90,13 @@ const ExploreCardList = () => {
     return (
         <View className="items-center h-full w-full">
             {isError && <Text>Failed to load...</Text>}
-            {isLoading ? (<ActivityIndicator className="pt-16" />) :
+            {isLoading || isRefetching ? (<ActivityIndicator className="pt-16" />) :
                 (<FlatList
                     className="h-full w-full px-4 pt-6"
                     data={vendorData}
                     numColumns={2}
-                    refreshing={isRefetching}
-                    onRefresh={refetch}
+                    refreshing={refreshing}
+                    onRefresh={handleRefresh}
                     contentContainerStyle={{ paddingBottom: 32 }}
                     renderItem={({ item }) => {
                         return (

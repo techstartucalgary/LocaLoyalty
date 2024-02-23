@@ -8,7 +8,7 @@ import { useAuth } from "@clerk/clerk-expo";
 
 const ExploreDetails = () => {
 
-    const { currentExploreVendorID, currentExploreImage, currentExploreDescription } = useExploreStore();
+    const { refetchFunc, currentExploreVendorID, currentExploreImage, currentExploreDescription } = useExploreStore();
 
     const { getToken } = useAuth()
 
@@ -28,7 +28,10 @@ const ExploreDetails = () => {
 
 
     const addCardMutation = useMutation({
-        mutationFn: addLoyaltyCard
+        mutationFn: addLoyaltyCard,
+        onSuccess: () => {
+            refetchFunc()
+        }
     })
 
 
@@ -41,7 +44,9 @@ const ExploreDetails = () => {
                 <View className="w-full flex-1 items-center p-6">
                     <Text className="text-center text-[#464646] text-lg pt-2">Store Description</Text>
                     <Text className="text-center text-[#7E7E7E] pt-4">{currentExploreDescription}</Text>
-                    <TouchableOpacity className="pt-8" onPress={() => addCardMutation.mutate()}>
+                    <TouchableOpacity className="pt-8" onPress={() => {
+                        addCardMutation.mutate()
+                    }}>
                         <Text className="text-[#433C99] text-lg">+ Add to your Wallet</Text>
                     </TouchableOpacity>
                 </View>
