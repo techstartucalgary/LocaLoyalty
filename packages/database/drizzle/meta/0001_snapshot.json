@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "a29b1268-a829-47d9-a989-7b5ec455fec9",
-  "prevId": "31131922-28e6-494c-ab1f-e0e26089be98",
+  "id": "9337632d-62a2-49e5-9f33-323bb1cad71d",
+  "prevId": "1df1fbb1-221a-4979-a28b-a9bc931f5eee",
   "tables": {
     "customer": {
       "name": "customer",
@@ -48,6 +48,13 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
+        },
+        "clerk_id": {
+          "name": "clerk_id",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         }
       },
       "indexes": {},
@@ -79,8 +86,8 @@
           "notNull": false,
           "autoincrement": false
         },
-        "program_id": {
-          "name": "program_id",
+        "vendor_id": {
+          "name": "vendor_id",
           "type": "int",
           "primaryKey": false,
           "notNull": false,
@@ -89,6 +96,13 @@
         "points_amt": {
           "name": "points_amt",
           "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "carry_over_amt": {
+          "name": "carry_over_amt",
+          "type": "decimal",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -150,11 +164,11 @@
       },
       "uniqueConstraints": {}
     },
-    "rewards_program": {
-      "name": "rewards_program",
+    "reward": {
+      "name": "reward",
       "columns": {
-        "program_id": {
-          "name": "program_id",
+        "reward_id": {
+          "name": "reward_id",
           "type": "serial",
           "primaryKey": false,
           "notNull": true,
@@ -167,21 +181,35 @@
           "notNull": false,
           "autoincrement": false
         },
-        "details": {
-          "name": "details",
+        "name": {
+          "name": "name",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "description": {
+          "name": "description",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
+          "autoincrement": false
+        },
+        "points_cost": {
+          "name": "points_cost",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
           "autoincrement": false
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {
-        "rewards_program_program_id": {
-          "name": "rewards_program_program_id",
+        "reward_reward_id": {
+          "name": "reward_reward_id",
           "columns": [
-            "program_id"
+            "reward_id"
           ]
         }
       },
@@ -204,8 +232,8 @@
           "notNull": false,
           "autoincrement": false
         },
-        "program_id": {
-          "name": "program_id",
+        "vendor_id": {
+          "name": "vendor_id",
           "type": "int",
           "primaryKey": false,
           "notNull": false,
@@ -213,7 +241,7 @@
         },
         "purchase_amt": {
           "name": "purchase_amt",
-          "type": "int",
+          "type": "decimal",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -234,7 +262,7 @@
         },
         "payment_type": {
           "name": "payment_type",
-          "type": "varchar(16)",
+          "type": "varchar(256)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -286,6 +314,97 @@
         "phone": {
           "name": "phone",
           "type": "varchar(16)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "color": {
+          "name": "color",
+          "type": "varchar(16)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "reward_program_details": {
+          "name": "reward_program_details",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "spending_per_point": {
+          "name": "spending_per_point",
+          "type": "decimal",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "max_points": {
+          "name": "max_points",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "clerk_id": {
+          "name": "clerk_id",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "city": {
+          "name": "city",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "province": {
+          "name": "province",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "postal_code": {
+          "name": "postal_code",
+          "type": "varchar(6)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "business_image": {
+          "name": "business_image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "business_logo": {
+          "name": "business_logo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "merchant_id": {
+          "name": "merchant_id",
+          "type": "varchar(13)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "clover_api_key": {
+          "name": "clover_api_key",
+          "type": "varchar(200)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false

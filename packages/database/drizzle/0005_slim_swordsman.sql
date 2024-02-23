@@ -1,0 +1,1 @@
+ALTER TABLE `vendor` ADD `stamp_life` int;

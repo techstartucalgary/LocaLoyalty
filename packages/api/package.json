@@ -6,13 +6,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx tsc",
-    "start": "node dist/index.js",
-    "dev": "npx tsc --watch & nodemon dist/index.js"
+    "start": "node dist/api/index.js",
+    "dev": "npx tsc --watch & nodemon dist/api/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.502.0",
+    "@aws-sdk/s3-request-presigner": "^3.502.0",
     "@clerk/clerk-js": "^4.68.3",
     "@clerk/clerk-sdk-node": "^4.13.5",
     "@trpc/server": "^10.43.1",
@@ -20,6 +22,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "multer": "^1.4.5-lts.1",
     "svix": "^1.15.0",
     "swagger-ui-express": "^5.0.0",
     "yamljs": "^0.3.0",
@@ -29,6 +32,7 @@
     "@planetscale/database": "^1.13.0",
     "@types/cors": "^2.8.16",
     "@types/express": "^4.17.21",
+    "@types/multer": "^1.4.11",
     "@types/node": "^20.9.0",
     "@types/swagger-ui-express": "^4.1.6",
     "@types/yamljs": "^0.2.34",

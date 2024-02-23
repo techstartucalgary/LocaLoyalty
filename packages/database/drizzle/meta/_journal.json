@@ -5,15 +5,43 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1703971585081,
-      "tag": "0000_panoramic_lily_hollister",
+      "when": 1707100236929,
+      "tag": "0001_sudden_madelyne_pryor",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "5",
-      "when": 1703971942706,
-      "tag": "0001_mixed_doctor_octopus",
+      "when": 1707100421305,
+      "tag": "0001_stiff_slipstream",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1707196153758,
+      "tag": "0002_jazzy_the_fallen",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1707197279435,
+      "tag": "0003_robust_luminals",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1708550801075,
+      "tag": "0004_dashing_eddie_brock",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1708563510346,
+      "tag": "0005_slim_swordsman",
       "breakpoints": true
     }
   ]
