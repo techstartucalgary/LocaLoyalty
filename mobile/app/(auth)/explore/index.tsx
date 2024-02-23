@@ -2,6 +2,7 @@ import { View, Text, Image, FlatList, Pressable } from "react-native";
 import { cardData } from "../../../content/temp-card-data";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Link } from "expo-router";
+import { useExploreStore } from "../../../utils/exploreStore";
 
 type ExploreCard = {
     businessName: string,
@@ -13,12 +14,14 @@ const ExploreCard = ({
     businessLogo,
 }: ExploreCard) => {
 
-    function handleExploreCardPress() {
+    const { setCurrentExploreName, setCurrentExploreImage } = useExploreStore();
 
+    function handleExploreCardPress() {
+        setCurrentExploreName(businessName)
+        setCurrentExploreImage(businessLogo)
     }
 
     return (
-        // <Link href={"./details"} className="h-full w-full" asChild>
         <View className="flex-1 px-4 py-4">
             <Link href={"./explore/details"} asChild>
                 <TouchableOpacity onPress={() => {
@@ -33,7 +36,6 @@ const ExploreCard = ({
                 </TouchableOpacity>
             </Link>
         </View>
-        // </Link>
     )
 }
 

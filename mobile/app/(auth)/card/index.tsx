@@ -153,7 +153,7 @@ const CardList = () => {
 
 	const fetchLoyaltyCards = async () => {
 		return fetchAPI(
-			"https://2e04-136-159-213-128.ngrok-free.app/customer/loyalty-cards",
+			"https://79e0-184-64-97-78.ngrok-free.app/customer/loyalty-cards",
 			"GET",
 			await getToken(),
 			null,

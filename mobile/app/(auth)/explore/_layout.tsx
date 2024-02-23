@@ -1,6 +1,7 @@
 import { Link, Stack, Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, Text, View } from "react-native";
+import { useExploreStore } from "../../../utils/exploreStore";
 
 const ExploreHeader = () => {
 
@@ -21,6 +22,8 @@ const ExploreHeader = () => {
 
 export default function ExplorePage() {
 
+    const { currentExploreName } = useExploreStore();
+
     return (
         <Stack screenOptions={{
             headerTransparent: true
@@ -34,9 +37,9 @@ export default function ExplorePage() {
             <Stack.Screen
                 name="details"
                 options={{
-                    headerTitle: "",
+                    headerTitle: currentExploreName,
                     headerStyle: {
-                        backgroundColor: "red"
+                        backgroundColor: "white"
                     },
                     headerTintColor: "#000"
                 }}
