@@ -74,6 +74,22 @@ paths:
                 $ref: "#/components/schemas/BusinessLoyaltyProgram"
         500:
           description: User Does not exist in DB
+    post:
+      tags:
+        - business
+      summary: Update business owner's loyalty program and rewards info
+      description: Updates the user loyalty program and rewards if valid. UserID is taken from header. A reward_id of null indicates that the reward is a new one and requires a DB insertion
+      operationId: updateBusinessLoyaltyProgram
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BusinessLoyaltyProgram"
+      responses:
+        200:
+          description: Successful response
+        500:
+          description: Failure
 components:
   schemas:
     BusinessProfile:
@@ -128,6 +144,9 @@ components:
     Reward:
       type: object
       properties:
+        reward_id:
+          type: number
+          example: 8
         title:
           type: string
           example: "Free Pineapple Bun"
