@@ -13,7 +13,7 @@ import { fetchAPI } from "../../../utils/generalAxios";
 type Card = {
 	businessID: number;
 	businessName: string;
-	businessImage: any;
+	businessLogo: string;
 	businessDesc: string;
 	businessEmail: string;
 	businessPhone: string;
@@ -27,7 +27,7 @@ type Card = {
 const Card = ({
 	businessID,
 	businessName,
-	businessImage,
+	businessLogo,
 	businessEmail,
 	businessPhone,
 	businessDesc,
@@ -40,7 +40,7 @@ const Card = ({
 	const {
 		setCurrentBusinessID,
 		setCurrentBusinessName,
-		setCurrentBusinessImage,
+		setCurrentBusinessLogo,
 		setCurrentBusinessEmail,
 		setCurrentBusinessPhone,
 		setCurrentBuisnessDescription,
@@ -54,7 +54,7 @@ const Card = ({
 	function handleCardClick(cardPressed: Card) {
 		setCurrentBusinessID(cardPressed.businessID)
 		setCurrentBusinessName(cardPressed.businessName);
-		setCurrentBusinessImage(cardPressed.businessImage);
+		setCurrentBusinessLogo(cardPressed.businessLogo);
 		setCurrentBusinessEmail(cardPressed.businessEmail);
 		setCurrentBusinessPhone(cardPressed.businessPhone);
 		setCurrentBuisnessDescription(cardPressed.businessDesc);
@@ -63,8 +63,6 @@ const Card = ({
 		setCurrentPrimaryColor(cardPressed.primaryColor);
 		setCurrentCarry_over_amt(cardPressed.carry_over_amt)
 		setCurrentSpending_per_point(parseFloat(cardPressed.spending_per_point))
-		console.log(parseFloat(cardPressed.spending_per_point));
-
 	}
 
 	const slug: string = `./card/${businessName}`;
@@ -86,7 +84,7 @@ const Card = ({
 						handleCardClick({
 							businessID: businessID,
 							businessName: businessName,
-							businessImage: businessImage,
+							businessLogo: businessLogo,
 							businessEmail: businessEmail,
 							businessPhone: businessPhone,
 							businessDesc: businessDesc,
@@ -105,7 +103,7 @@ const Card = ({
 						<View className="flex-1 items-center px-4 bg-[#F7F8F8]">
 							<View className="flex-row px-4 py-6 w-full items-center">
 								<Image
-									source={businessImage}
+									source={{ uri: businessLogo }}
 									className="rounded-lg w-[60px] h-[60px]"
 								/>
 								<Text className=" text-3xl font-bold text-center flex-1">
@@ -198,7 +196,7 @@ const CardList = () => {
 							businessName={item.name}
 							businessEmail={item.email}
 							businessPhone={item.phone}
-							businessImage={item.business_logo}
+							businessLogo={item.business_logo}
 							businessDesc={item.desc}
 							completedStamps={item.points_amt} // Get the number of completed stamps for this user
 							maxStamps={item.max_points}

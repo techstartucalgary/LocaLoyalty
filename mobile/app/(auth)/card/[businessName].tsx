@@ -72,7 +72,7 @@ const RewardsSection = () => {
 const LoyaltyCardPage = () => {
 	const {
 		currentBusinessName,
-		currentBusinessImage,
+		currentBusinessLogo,
 		currentBusinessEmail,
 		currentBusinessPhone,
 		currentBusinessDescription,
@@ -121,7 +121,7 @@ const LoyaltyCardPage = () => {
 						<View className="items-center px-6 bg-[#F7F8F8] rounded-xl">
 							<View className="flex-row pt-5 w-full items-center">
 								<Image
-									source={currentBusinessImage}
+									source={{ uri: currentBusinessLogo }}
 									className="rounded-lg w-[60px] h-[60px]"
 								/>
 								<Text className="flex-1 text-2xl font-bold text-center">

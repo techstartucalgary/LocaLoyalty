@@ -9,6 +9,12 @@ import { SocketAddress } from "net";
 import { db } from "./dbObj.js";
 import * as schema from "./schema.js";
 import { SQLWrapper, and, eq } from "drizzle-orm";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+} from "@aws-sdk/client-s3";
 
 // Adds a new customer to the database, returns the generated customer_id
 async function addCustomer(email: string, phone: string, clerk_id: string) {
@@ -457,14 +463,40 @@ async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
           desc: schema.vendor.description,
         }).from(schema.vendor).where(eq(schema.vendor.vendor_id, card.program_id))
 
-
+      // Check for db query fail
       if (Object.keys(vendorResults).length === 0) {
         console.log("Database query failed");
         return null;
       }
 
+      // Gather all vendor info into an object and push to array
+
+      // Get s3 image url based on the key stored in the db
+      const { business_logo, ...remainder } = vendorResults[0]
+
+      // Make s3 connection
+      const s3 = new S3Client({
+        region: process.env.BUCKET_REGION || "",
+        credentials: {
+          accessKeyId: process.env.BUCKET_LOCAL_ACCESS_KEY || "",
+          secretAccessKey: process.env.BUCKET_LOCAL_SECRET_ACCESS_KEY || "",
+        },
+      });
+
+      // Get the url for s3 image
+      const url = await getSignedUrl(
+        s3,
+        new GetObjectCommand({
+          Bucket: process.env.BUCKET_NAME,
+          Key: business_logo || "", //this is the imageName that will be stored into the database, ideally have a default image if the business doesn't have one set
+        }),
+        { expiresIn: 3600 }
+      );
+
+
       vendorInfo.push({
-        ...vendorResults[0],
+        ...remainder,
+        business_logo: url,
         points_amt: card.points_amt,
         carry_over_amt: parseFloat(card.carry_over_amt),
         vendor_id: card.program_id

@@ -3,7 +3,7 @@ import { create } from "zustand";
 type WalletState = {
 	currentBusinessID: number;
 	currentBusinessName: string;
-	currentBusinessImage: any;
+	currentBusinessLogo: string;
 	currentBusinessEmail: string;
 	currentBusinessPhone: string;
 	currentBusinessDescription: string;
@@ -14,7 +14,7 @@ type WalletState = {
 	currentSpending_per_point: number,
 	setCurrentBusinessID: (id: number) => void;
 	setCurrentBusinessName: (name: string) => void;
-	setCurrentBusinessImage: (image: any) => void;
+	setCurrentBusinessLogo: (image: string) => void;
 	setCurrentBusinessEmail: (email: string) => void;
 	setCurrentBusinessPhone: (phone: string) => void;
 	setCurrentBuisnessDescription: (desc: string) => void;
@@ -28,7 +28,7 @@ type WalletState = {
 export const useWalletStore = create<WalletState>((set) => ({
 	currentBusinessID: 0,
 	currentBusinessName: "",
-	currentBusinessImage: "",
+	currentBusinessLogo: "",
 	currentBusinessEmail: "",
 	currentBusinessPhone: "",
 	currentBusinessDescription: "",
@@ -49,8 +49,8 @@ export const useWalletStore = create<WalletState>((set) => ({
 	setCurrentBusinessPhone: (phone) => {
 		set({ currentBusinessPhone: phone })
 	},
-	setCurrentBusinessImage: (image) => {
-		set({ currentBusinessImage: image });
+	setCurrentBusinessLogo: (image) => {
+		set({ currentBusinessLogo: image });
 	},
 	setCurrentBuisnessDescription: (desc: string) => {
 		set({ currentBusinessDescription: desc });
