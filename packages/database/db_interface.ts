@@ -396,9 +396,13 @@ async function getReward(reward_id) {
 // Get all customers has no use case for now...
 
 // Gets all vendors in the database
-/*
 async function getAllVendors() {
-  const results = await db.select().from(schema.vendor);
+  const results = await db.select({
+    vendor_id: schema.vendor.vendor_id,
+    name: schema.vendor.name,
+    business_image: schema.vendor.business_image,
+    description: schema.vendor.description,
+  }).from(schema.vendor);
 
   //if there is an error return null
   if (Object.keys(results).length === 0) {
@@ -406,9 +410,47 @@ async function getAllVendors() {
     return null;
   }
 
-  return results;
+  type Vendor = {
+    vendor_id: number;
+    name: string;
+    business_image: string | null;
+    description: string | null;
+  }
+
+  const vendorList: Vendor[] = []
+
+  for (let i = 0; i < results.length; i++) {
+    // Get s3 image url based on the key stored in the db
+    const { business_image, ...remainder } = results[i]
+
+    // Make s3 connection
+    const s3 = new S3Client({
+      region: process.env.BUCKET_REGION || "",
+      credentials: {
+        accessKeyId: process.env.BUCKET_LOCAL_ACCESS_KEY || "",
+        secretAccessKey: process.env.BUCKET_LOCAL_SECRET_ACCESS_KEY || "",
+      },
+    });
+
+    // Get the url for s3 image
+    const url = await getSignedUrl(
+      s3,
+      new GetObjectCommand({
+        Bucket: process.env.BUCKET_NAME,
+        Key: business_image || "", //this is the imageName that will be stored into the database, ideally have a default image if the business doesn't have one set
+      }),
+      { expiresIn: 3600 }
+    );
+
+    vendorList.push({
+      business_image: url,
+      ...remainder,
+    })
+
+  }
+
+  return vendorList;
 }
-*/
 
 // Gets all loyalty cards for a given customer
 // Input: the customers customer_id
@@ -720,6 +762,7 @@ export {
   getVendor,
   editVendor,
   getAllRewardsOfVendor,
+  getAllVendors,
   /*
   addLoyaltyCard,
   addTransaction,
@@ -729,7 +772,6 @@ export {
   getPointRedemptionHistory,
   getTransaction,
   getReward,
-  getAllVendors,
   getAllPointRedemptionHistoryOfCard,
   getAllTransactionsOfCard,
   */

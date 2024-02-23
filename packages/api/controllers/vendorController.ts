@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getAllRewardsOfVendor } from "../../database/db_interface";
+import { getAllRewardsOfVendor, getAllVendors } from "../../database/db_interface";
 import { vendorsList } from "../dummyData/dummyData";
 import { log } from "console";
 
@@ -47,7 +47,20 @@ import { log } from "console";
 // Method to list all vendors
 export const index = async (req: Request, res: Response) => {
   try {
-    const vendors = vendorsList; // Retrieve all dummy list of vendors from the database
+    // Retrieve Clerk user ID from the authentication information
+    const clerkId = req.auth.userId;
+
+    if (!clerkId) {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
+
+    const vendors = await getAllVendors(); // Retrieve all list of vendors from the database
+
+    if (!vendors) {
+      return res.status(404).json({ message: "Vendors not found" });
+    }
+
+    // Send the vendors back in the response
     res.status(200).json(vendors);
   } catch (error) {
     res.status(500).json({ message: "Error fetching vendors", error });

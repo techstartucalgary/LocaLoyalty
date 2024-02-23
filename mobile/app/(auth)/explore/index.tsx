@@ -3,22 +3,28 @@ import { cardData } from "../../../content/temp-card-data";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Link } from "expo-router";
 import { useExploreStore } from "../../../utils/exploreStore";
+import { fetchAPI } from "../../../utils/generalAxios";
+import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "@clerk/clerk-expo";
 
 type ExploreCard = {
     businessName: string,
-    businessLogo: any,
+    businessImage: string,
+    businessDesc: string,
 }
 
 const ExploreCard = ({
     businessName,
-    businessLogo,
+    businessImage,
+    businessDesc,
 }: ExploreCard) => {
 
-    const { setCurrentExploreName, setCurrentExploreImage } = useExploreStore();
+    const { setCurrentExploreName, setCurrentExploreImage, setCurrentExploreDescription } = useExploreStore();
 
     function handleExploreCardPress() {
         setCurrentExploreName(businessName)
-        setCurrentExploreImage(businessLogo)
+        setCurrentExploreImage(businessImage)
+        setCurrentExploreDescription(businessDesc)
     }
 
     return (
@@ -28,7 +34,7 @@ const ExploreCard = ({
                     handleExploreCardPress()
                 }}>
                     <View className="h-32">
-                        <Image source={businessLogo} className="w-full h-full rounded-md" style={{ resizeMode: "cover" }} />
+                        <Image source={{ uri: businessImage }} className="w-full h-full rounded-md" style={{ resizeMode: "cover" }} />
                     </View>
                     <View className="pt-2">
                         <Text>{businessName}</Text>
@@ -41,23 +47,50 @@ const ExploreCard = ({
 
 const ExploreCardList = () => {
 
-    return (
-        <FlatList
-            className="h-full w-full px-4 pt-6"
-            data={cardData}
-            numColumns={2}
-            contentContainerStyle={{ paddingBottom: 32 }}
-            renderItem={({ item }) => {
-                return (
-                    <ExploreCard
-                        key={item.businessName}
-                        businessName={item.businessName}
-                        businessLogo={item.businessImage}
-                    />
-                );
-            }}
-        />
-    )
+    const { getToken } = useAuth()
+
+    const fetchVendors = async () => {
+        return fetchAPI(
+            "https://79e0-184-64-97-78.ngrok-free.app/customer/vendors",
+            "GET",
+            await getToken(),
+            null,
+            {}
+        );
+    }
+
+
+    const { data, isLoading, isError } = useQuery({ queryKey: ["vendors"], queryFn: fetchVendors })
+
+
+    if (!isLoading && !isError) {
+
+        const vendorData: {
+            vendor_id: number;
+            name: string;
+            business_image: string;
+            description: string;
+        }[] = data
+
+        return (
+            <FlatList
+                className="h-full w-full px-4 pt-6"
+                data={vendorData}
+                numColumns={2}
+                contentContainerStyle={{ paddingBottom: 32 }}
+                renderItem={({ item }) => {
+                    return (
+                        <ExploreCard
+                            key={item.vendor_id}
+                            businessName={item.name}
+                            businessImage={item.business_image}
+                            businessDesc={item.description}
+                        />
+                    );
+                }}
+            />
+        )
+    }
 }
 
 const Explore = () => {

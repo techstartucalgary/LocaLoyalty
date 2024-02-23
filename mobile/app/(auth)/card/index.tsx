@@ -180,7 +180,6 @@ const CardList = () => {
 			vendor_id: number;
 		}[] = data
 
-		console.log(cardData[0]);
 
 
 		return (
