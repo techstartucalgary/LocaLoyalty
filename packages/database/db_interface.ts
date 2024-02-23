@@ -8,7 +8,7 @@ January 18 2024
 import { SocketAddress } from "net";
 import { db } from "./dbObj.js";
 import * as schema from "./schema.js";
-import { SQLWrapper, and, eq } from "drizzle-orm";
+import { SQLWrapper, and, eq, notInArray } from "drizzle-orm";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import {
   S3Client,
@@ -82,19 +82,18 @@ export async function addVendor(
 }
 
 // Adds a new loyalty card to the customer
-/*
-async function addLoyaltyCard(
-  customer_id, //TODO: enforce types
-  vendor_id,
-  points_amt,
-  carry_over_amt
+export async function addLoyaltyCard(
+  customer_id: number, //TODO: enforce types
+  vendor_id: number,
+  points_amt: number,
+  carry_over_amt: number,
 ) {
   // Insert loyalty card information
   await db.insert(schema.loyalty_card).values({
     customer_id: customer_id,
-    vendor_id: vendor_id,
+    program_id: vendor_id,
     points_amt: points_amt,
-    carry_over_amt: carry_over_amt,
+    carry_over_amt: carry_over_amt.toString(),
   });
 
   // Get loyalty card id
@@ -106,7 +105,7 @@ async function addLoyaltyCard(
     .where(
       and(
         eq(schema.loyalty_card.customer_id, customer_id),
-        eq(schema.loyalty_card.vendor_id, vendor_id)
+        eq(schema.loyalty_card.program_id, vendor_id)
       )
     );
 
@@ -118,7 +117,6 @@ async function addLoyaltyCard(
 
   return result[0].id;
 }
-*/
 
 // Adds a new point redemption
 // Timestamp auto generated
@@ -445,13 +443,31 @@ async function getReward(reward_id) {
 // Get all customers has no use case for now...
 
 // Gets all vendors in the database
-export async function getAllVendors() {
-  const results = await db.select({
-    vendor_id: schema.vendor.vendor_id,
-    name: schema.vendor.name,
-    business_image: schema.vendor.business_image,
-    description: schema.vendor.description,
-  }).from(schema.vendor);
+export async function getAllVendorsExceptWallet(customer_id: number) {
+
+  const vendorsAlreadyInWallet = await db.select({
+    vendor_id: schema.loyalty_card.program_id,
+  }).from(schema.loyalty_card).where(eq(schema.loyalty_card.customer_id, customer_id))
+
+  let results = []
+  // if the customer has no vendors in wallet then just get all vendors to display
+  if (vendorsAlreadyInWallet.length === 0) {
+    results = await db.select({
+      vendor_id: schema.vendor.vendor_id,
+      name: schema.vendor.name,
+      business_image: schema.vendor.business_image,
+      description: schema.vendor.description,
+    }).from(schema.vendor);
+  } else {
+    const vendor_idAlreadyInWallet = vendorsAlreadyInWallet.map(vendor => vendor.vendor_id!)
+
+    results = await db.select({
+      vendor_id: schema.vendor.vendor_id,
+      name: schema.vendor.name,
+      business_image: schema.vendor.business_image,
+      description: schema.vendor.description,
+    }).from(schema.vendor).where(notInArray(schema.vendor.vendor_id, vendor_idAlreadyInWallet))
+  }
 
   //if there is an error return null
   if (Object.keys(results).length === 0) {
@@ -666,7 +682,8 @@ export async function getAllRewardsOfVendor(vendor_id: number) {
       requiredStamps: schema.reward.points_cost,
     })
     .from(schema.reward)
-    .where(eq(schema.reward.vendor_id, vendor_id));
+    .where(eq(schema.reward.vendor_id, vendor_id))
+    .orderBy(schema.reward.points_cost)
 
   //if there is an error return null
   if (Object.keys(results).length === 0) {

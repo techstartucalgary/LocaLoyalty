@@ -1,4 +1,4 @@
-import { View, Text, Image, FlatList, Pressable } from "react-native";
+import { View, Text, Image, FlatList, Pressable, ActivityIndicator } from "react-native";
 import React, { useEffect } from "react";
 import { useAuth, useUser } from "@clerk/clerk-expo";
 import { Link } from "expo-router";
@@ -160,55 +160,58 @@ const CardList = () => {
 	}
 
 
-	const { data, isLoading, isError } = useQuery({ queryKey: ["loyaltyCards"], queryFn: fetchLoyaltyCards })
-
-	if (!isLoading && !isError) {
-
-		const cardData: {
-			name: string;
-			email: string;
-			address: string;
-			phone: string;
-			color: string;
-			max_points: number;
-			spending_per_point: string;
-			business_logo: string;
-			desc: string;
-
-			points_amt: number;
-			carry_over_amt: number;
-			vendor_id: number;
-		}[] = data
+	const { data, isLoading, isError, refetch, isRefetching } = useQuery({ queryKey: ["loyaltyCards"], queryFn: fetchLoyaltyCards })
 
 
+	const cardData: {
+		name: string;
+		email: string;
+		address: string;
+		phone: string;
+		color: string;
+		max_points: number;
+		spending_per_point: string;
+		business_logo: string;
+		desc: string;
 
-		return (
-			<FlatList
-				className="h-full w-full px-6 pt-6"
-				data={cardData}
-				contentContainerStyle={{ paddingBottom: 32 }}
-				renderItem={({ item }) => {
-					return (
-						<Card
-							key={item.name}
-							businessID={item.vendor_id}
-							businessName={item.name}
-							businessEmail={item.email}
-							businessPhone={item.phone}
-							businessLogo={item.business_logo}
-							businessDesc={item.desc}
-							completedStamps={item.points_amt} // Get the number of completed stamps for this user
-							maxStamps={item.max_points}
-							primaryColor={item.color}
-							spending_per_point={item.spending_per_point}
-							carry_over_amt={item.carry_over_amt}
-						/>
-					);
-				}}
-			/>
+		points_amt: number;
+		carry_over_amt: number;
+		vendor_id: number;
+	}[] = data
 
-		)
-	}
+
+
+	return (
+		<View className="items-center h-full w-full">
+			{isError && <Text>Failed to load...</Text>}
+			{isLoading ? (<ActivityIndicator className="pt-16" />) :
+				(<FlatList
+					className="h-full w-full px-6 pt-6"
+					data={cardData}
+					contentContainerStyle={{ paddingBottom: 32 }}
+					refreshing={isRefetching}
+					onRefresh={refetch}
+					renderItem={({ item }) => {
+						return (
+							<Card
+								key={item.name}
+								businessID={item.vendor_id}
+								businessName={item.name}
+								businessEmail={item.email}
+								businessPhone={item.phone}
+								businessLogo={item.business_logo}
+								businessDesc={item.desc}
+								completedStamps={item.points_amt} // Get the number of completed stamps for this user
+								maxStamps={item.max_points}
+								primaryColor={item.color}
+								spending_per_point={item.spending_per_point}
+								carry_over_amt={item.carry_over_amt}
+							/>
+						);
+					}}
+				/>)}
+		</View>
+	)
 };
 
 const Wallet = () => {

@@ -1,5 +1,5 @@
-import { View, Text, Image, FlatList, Pressable } from "react-native";
-import React, { useState } from "react";
+import { View, Text, Image, FlatList, Pressable, ActivityIndicator } from "react-native";
+import React, { useEffect, useState } from "react";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import SmallStamp from "../../../assets/images/smallStamp";
 import SmallEmptyStamp from "../../../assets/images/smallEmptyStamp";
@@ -27,45 +27,39 @@ const RewardsSection = () => {
 
 	const { data, isLoading, isError } = useQuery({ queryKey: ["rewards"], queryFn: fetchRewards })
 
-	if (!isLoading && !isError) {
 
-		const rewards: {
-			reward_id: number;
-			vendor_id: number | null;
-			name: string | null;
-			description: string | null;
-			points_cost: number;
-		}[] = data
+	const rewards: {
+		reward_id: number;
+		title: string;
+		requiredStamps: number;
+	}[] = data
 
 
-		rewards.sort((a, b) => a.points_cost - b.points_cost)
 
-		return (
-			<FlatList
-				className="h-full w-full px-12 py-4"
-				data={rewards}
-				renderItem={({ item }) => {
-					return (
-						<View className="bg-[#EBEBEB] p-3 shadow my-4 rounded-xl flex-row justify-between items-center">
-							<Text className="text-xl font-semibold">{item.name}</Text>
-							<View className="flex-row items-center">
-								<Text className="text-2xl font-medium">
-									{item.points_cost}
-								</Text>
-								<ExtraSmallStamp className="scale-150 px-4" />
+
+	return (
+		<View className="h-full w-full items-center">
+			{isError && <Text>Failed to load...</Text>}
+			{isLoading ? (<ActivityIndicator className="pt-16" />) :
+				(<FlatList
+					className="h-full w-full px-12 py-4"
+					data={rewards}
+					renderItem={({ item }) => {
+						return (
+							<View className="bg-[#EBEBEB] p-3 shadow my-4 rounded-xl flex-row justify-between items-center" key={item.reward_id}>
+								<Text className="text-xl font-semibold">{item.title}</Text>
+								<View className="flex-row items-center">
+									<Text className="text-2xl font-medium">
+										{item.requiredStamps}
+									</Text>
+									<ExtraSmallStamp className="scale-150 px-4" />
+								</View>
 							</View>
-						</View>
-					);
-				}}
-			/>
-		)
-	} else {
-		return (
-			<View>
-				<Text>LOading</Text>
-			</View>
-		)
-	}
+						);
+					}}
+				/>)}
+		</View>
+	)
 
 }
 

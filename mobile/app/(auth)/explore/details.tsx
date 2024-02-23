@@ -1,12 +1,35 @@
 import { View, Text, Image, FlatList, Pressable, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { useExploreStore } from "../../../utils/exploreStore";
+import { useMutation } from "@tanstack/react-query";
+import { fetchAPI } from "../../../utils/generalAxios";
+import { useAuth } from "@clerk/clerk-expo";
 
 
 const ExploreDetails = () => {
 
-    const { currentExploreImage, currentExploreDescription } = useExploreStore();
+    const { currentExploreVendorID, currentExploreImage, currentExploreDescription } = useExploreStore();
 
+    const { getToken } = useAuth()
+
+    const addLoyaltyCard = async () => {
+        return fetchAPI(
+            "https://79e0-184-64-97-78.ngrok-free.app/customer/add-loyalty-card",
+            "POST",
+            await getToken(),
+            {
+                vendor_id: currentExploreVendorID,
+            },
+            {
+                /* headers (if necessary) */
+            }
+        );
+    }
+
+
+    const addCardMutation = useMutation({
+        mutationFn: addLoyaltyCard
+    })
 
 
     return (
@@ -18,7 +41,7 @@ const ExploreDetails = () => {
                 <View className="w-full flex-1 items-center p-6">
                     <Text className="text-center text-[#464646] text-lg pt-2">Store Description</Text>
                     <Text className="text-center text-[#7E7E7E] pt-4">{currentExploreDescription}</Text>
-                    <TouchableOpacity className="pt-8">
+                    <TouchableOpacity className="pt-8" onPress={() => addCardMutation.mutate()}>
                         <Text className="text-[#433C99] text-lg">+ Add to your Wallet</Text>
                     </TouchableOpacity>
                 </View>

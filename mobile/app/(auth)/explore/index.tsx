@@ -1,4 +1,4 @@
-import { View, Text, Image, FlatList, Pressable } from "react-native";
+import { View, Text, Image, FlatList, Pressable, ActivityIndicator } from "react-native";
 import { cardData } from "../../../content/temp-card-data";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Link } from "expo-router";
@@ -8,20 +8,23 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@clerk/clerk-expo";
 
 type ExploreCard = {
+    businessID: number,
     businessName: string,
     businessImage: string,
     businessDesc: string,
 }
 
 const ExploreCard = ({
+    businessID,
     businessName,
     businessImage,
     businessDesc,
 }: ExploreCard) => {
 
-    const { setCurrentExploreName, setCurrentExploreImage, setCurrentExploreDescription } = useExploreStore();
+    const { setCurrentExploreVendorID, setCurrentExploreName, setCurrentExploreImage, setCurrentExploreDescription } = useExploreStore();
 
     function handleExploreCardPress() {
+        setCurrentExploreVendorID(businessID)
         setCurrentExploreName(businessName)
         setCurrentExploreImage(businessImage)
         setCurrentExploreDescription(businessDesc)
@@ -60,37 +63,42 @@ const ExploreCardList = () => {
     }
 
 
-    const { data, isLoading, isError } = useQuery({ queryKey: ["vendors"], queryFn: fetchVendors })
+    const { data, isLoading, isError, refetch, isRefetching } = useQuery({ queryKey: ["vendors"], queryFn: fetchVendors })
 
 
-    if (!isLoading && !isError) {
 
-        const vendorData: {
-            vendor_id: number;
-            name: string;
-            business_image: string;
-            description: string;
-        }[] = data
+    const vendorData: {
+        vendor_id: number;
+        name: string;
+        business_image: string;
+        description: string;
+    }[] = data
 
-        return (
-            <FlatList
-                className="h-full w-full px-4 pt-6"
-                data={vendorData}
-                numColumns={2}
-                contentContainerStyle={{ paddingBottom: 32 }}
-                renderItem={({ item }) => {
-                    return (
-                        <ExploreCard
-                            key={item.vendor_id}
-                            businessName={item.name}
-                            businessImage={item.business_image}
-                            businessDesc={item.description}
-                        />
-                    );
-                }}
-            />
-        )
-    }
+    return (
+        <View className="items-center h-full w-full">
+            {isError && <Text>Failed to load...</Text>}
+            {isLoading ? (<ActivityIndicator className="pt-16" />) :
+                (<FlatList
+                    className="h-full w-full px-4 pt-6"
+                    data={vendorData}
+                    numColumns={2}
+                    refreshing={isRefetching}
+                    onRefresh={refetch}
+                    contentContainerStyle={{ paddingBottom: 32 }}
+                    renderItem={({ item }) => {
+                        return (
+                            <ExploreCard
+                                key={item.vendor_id}
+                                businessID={item.vendor_id}
+                                businessName={item.name}
+                                businessImage={item.business_image}
+                                businessDesc={item.description}
+                            />
+                        );
+                    }}
+                />)}
+        </View>
+    )
 }
 
 const Explore = () => {

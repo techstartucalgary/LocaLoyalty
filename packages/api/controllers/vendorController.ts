@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getAllRewardsOfVendor, getAllVendors } from "../../database/db_interface";
+import { getAllRewardsOfVendor, getAllVendorsExceptWallet, getCustomerFromClerkID } from "../../database/db_interface";
 import { vendorsList } from "../dummyData/dummyData";
 import { log } from "console";
 
@@ -54,7 +54,17 @@ export const index = async (req: Request, res: Response) => {
       return res.status(401).json({ message: "User not authenticated" });
     }
 
-    const vendors = await getAllVendors(); // Retrieve all list of vendors from the database
+    // Use the helper function to get the customer ID based on Clerk ID
+    const customer = await getCustomerFromClerkID(clerkId);
+
+    if (!customer) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+
+    // Assuming the customer object contains a customer_id field
+    const customer_id = customer[0].customer_id;
+
+    const vendors = await getAllVendorsExceptWallet(customer_id); // Retrieve all list of vendors from the database
 
     if (!vendors) {
       return res.status(404).json({ message: "Vendors not found" });
