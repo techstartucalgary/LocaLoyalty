@@ -4,7 +4,7 @@ import Image from "next/image";
 import SideNavBarOptions from "@/components/SideNavBarOptions";
 
 import { UserButton, SignedOut } from "@clerk/nextjs";
-import { useNavBarStore } from "../utils/NavBarState";
+import { useSideNavBarStore } from "../utils/SideNavBarState";
 
 import { FiMenu } from "react-icons/fi";
 import { TbLayoutDashboard, TbSpeakerphone } from "react-icons/tb";
@@ -14,7 +14,7 @@ import { LuSettings } from "react-icons/lu";
 import { useEffect, useState } from "react";
 
 const SideNavbar = () => {
-  const { open, setOpen } = useNavBarStore();
+  const { open, setOpen } = useSideNavBarStore();
 
   const [isClient, setIsClient] = useState(false);
 
@@ -25,7 +25,7 @@ const SideNavbar = () => {
   return (
     isClient && (
       <div
-        className={`z-50 fixed text-black h-screen flex flex-col px-3 pt-10 shadow-[5.0px_0px_15px_rgba(0,0,0,5%)] duration-300 ${
+        className={`z-50 bg-white fixed text-black h-screen flex flex-col px-3 pt-10 shadow-[5.0px_0px_15px_rgba(0,0,0,5%)] duration-300 ${
           open ? "w-[280px]" : "w-[80px]"
         }`}
       >
@@ -36,7 +36,7 @@ const SideNavbar = () => {
           }`}
         >
           <Image
-            src="/assets/logo.png"
+            src="/assets/Logo.png"
             alt="LocaLoyalty Logo"
             className={`${!open && "hidden"}`}
             width={50}
@@ -55,7 +55,7 @@ const SideNavbar = () => {
         </div>
 
         {/* STORE */}
-        <div className={`${open ? "pt-10" : "pt-[78.5px]"}`}>
+        <div className={`${open ? "pt-10" : "pt-[77.1px]"}`}>
           <h2 className={`font-extrabold pl-4 ${!open && "hidden"}`}>STORE</h2>
           <div className="space-y-3 pt-3">
             <SideNavBarOptions
@@ -108,11 +108,6 @@ const SideNavbar = () => {
               id="6"
             />
           </div>
-        </div>
-
-        {/* SIGNOUT */}
-        <div className="pl-4">
-          <UserButton afterSignOutUrl="/" />
         </div>
       </div>
     )

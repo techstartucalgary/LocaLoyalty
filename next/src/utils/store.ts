@@ -15,7 +15,7 @@ export interface CompletionCardProps {
   id: number;
   icon: string;
   title: string;
-  order: number;
+  priority: number;
   isCompleted: boolean;
   directory: string;
   buttonText: string;
@@ -41,4 +41,49 @@ export const useOnboardingStore = create<OnboardingState>((set) => ({
 
       return { completionCards: updatedCards };
     }),
+}));
+
+interface Reward {
+  title: string;
+  description: string;
+  requiredStamps: number;
+}
+
+type LoyaltyProgramState = {
+  stampLife: number | null; //null for forever, number for month duration
+  stampCount: number;
+  scaleAmount: string;
+  definedRewards: Reward[];
+  setStampLife: (value: number | null) => void;
+  incrementStampCount: () => void;
+  decrementStampCount: () => void;
+  setScaleAmount: (value: string) => void;
+  setDefinedRewards: (defined: Reward[]) => void;
+  addReward: (toAdd: Reward) => void;
+  //deleteReward
+  //updateReward
+};
+
+export const useLoyaltyProgramStore = create<LoyaltyProgramState>((set) => ({
+  stampLife: null,
+  stampCount: 6,
+  scaleAmount: "5",
+  definedRewards: [],
+  setStampLife: (value) => set({ stampLife: value }),
+  incrementStampCount: () =>
+    set((state) => ({
+      stampCount:
+        state.stampCount < 10 ? state.stampCount + 1 : state.stampCount,
+    })),
+  decrementStampCount: () =>
+    set((state) => ({
+      stampCount:
+        state.stampCount > 5 ? state.stampCount - 1 : state.stampCount,
+    })),
+  setScaleAmount: (value) => set({ scaleAmount: value }),
+  setDefinedRewards: (defined) => set({ definedRewards: defined }),
+  addReward: (toAdd) =>
+    set((state) => ({
+      definedRewards: [...state.definedRewards, toAdd],
+    })),
 }));
