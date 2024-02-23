@@ -204,6 +204,7 @@ export const EditSection = ({
     stampCount,
     scaleAmount,
     definedRewards,
+    incrementRefetch,
   } = useLoyaltyProgramStore();
   const { token } = useAuthStore();
   const sendModifiedLoyaltyProgramData = async () => {
@@ -270,6 +271,7 @@ export const EditSection = ({
                   className="w-20 bg-black hover:bg-white hover:border-2 hover:text-black border-black"
                   onClick={() => {
                     setIsEditing();
+                    incrementRefetch();
                     refetch();
                   }}
                 >

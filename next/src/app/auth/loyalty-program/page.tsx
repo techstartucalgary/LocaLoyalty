@@ -50,14 +50,14 @@ export default function LoyaltyProgram() {
   const { getToken } = useAuth();
   const { token, setToken } = useAuthStore();
   const {
-    isEditing,
+    refetchIndicator,
     setStampLife,
     setStampCount,
     setScaleAmount,
     setDefinedRewards,
   } = useLoyaltyProgramStore();
 
-  const fetchLoyaltyProgramData = async () => {
+  const fetchLoyaltyProgramData = async (): Promise<any> => {
     return fetchAPI(
       "http://localhost:5001/business/loyalty-program",
       "GET",
@@ -74,7 +74,7 @@ export default function LoyaltyProgram() {
   });
 
   useEffect(() => {
-    if (data && !isEditing) {
+    if (data) {
       setStampLife(data.stampLife);
       setStampCount(data.stampCount);
       setScaleAmount(data.scaleAmount);
@@ -82,7 +82,7 @@ export default function LoyaltyProgram() {
     }
   }, [
     data,
-    isEditing,
+    refetchIndicator,
     setDefinedRewards,
     setScaleAmount,
     setStampCount,

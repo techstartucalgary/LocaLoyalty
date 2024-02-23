@@ -253,7 +253,6 @@ export async function getCustomer(customer_id: number) {
 
 // Gets the vendor object
 //Input: the vendor ID
-
 export async function getVendor(clerk_id: string) {
   const result = await db
     .select()
@@ -267,6 +266,10 @@ export async function getVendor(clerk_id: string) {
   }
 
   return result[0];
+}
+
+export async function deleteVendorReward(reward_id: number) {
+  await db.delete(schema.reward).where(eq(schema.reward.reward_id, reward_id));
 }
 
 export async function editVendor(
@@ -314,6 +317,48 @@ export async function editVendor(
       })
       .where(eq(schema.vendor.clerk_id, clerk_id));
   }
+}
+
+export async function editVendorLoyaltyProgram(
+  vendor_id: number,
+  stampLife: number | null,
+  stampCount: number,
+  scaleAmount: string
+) {
+  await db
+    .update(schema.vendor)
+    .set({
+      stamp_life: stampLife,
+      max_points: stampCount,
+      spending_per_point: scaleAmount,
+    })
+    .where(eq(schema.vendor.vendor_id, vendor_id));
+}
+
+export async function editVendorReward(
+  reward_id: number,
+  title: string,
+  requiredStamps: number
+) {
+  await db
+    .update(schema.reward)
+    .set({
+      name: title,
+      points_cost: requiredStamps,
+    })
+    .where(eq(schema.reward.reward_id, reward_id));
+}
+
+export async function addVendorReward(
+  vendor_id: number,
+  title: string,
+  requiredStamps: number
+) {
+  await db.insert(schema.reward).values({
+    vendor_id: vendor_id,
+    name: title,
+    points_cost: requiredStamps,
+  });
 }
 
 /*

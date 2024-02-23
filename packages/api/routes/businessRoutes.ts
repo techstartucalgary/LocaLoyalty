@@ -14,6 +14,10 @@ import {
   getAllRewardsOfVendor,
   getVendorFromClerkID,
   getVendorLoyaltyProgramSettings,
+  editVendorLoyaltyProgram,
+  editVendorReward,
+  addVendorReward,
+  deleteVendorReward,
 } from "../../database/db_interface";
 
 const router = express.Router();
@@ -144,7 +148,48 @@ router.get("/loyalty-program", async (req: Request, res: Response) => {
 router.post("/loyalty-program", async (req: Request, res: Response) => {
   try {
     let body = req.body;
-    console.log(body);
+
+    //get the initial vendor id
+    const vendor = await getVendorFromClerkID(req.auth.userId);
+    const vendor_id = vendor![0].vendor_id;
+
+    //update basic values like stampLife, stampCount, scaleAmount
+    await editVendorLoyaltyProgram(
+      vendor_id,
+      body.stampLife,
+      body.stampCount,
+      body.scaleAmount
+    );
+
+    //loop through defined rewards dealing with new rewards and updated rewards
+    body.definedRewards.map(
+      ({
+        reward_id,
+        title,
+        requiredStamps,
+      }: {
+        reward_id: number | null;
+        title: string;
+        requiredStamps: number;
+      }) => {
+        reward_id
+          ? editVendorReward(reward_id, title, requiredStamps)
+          : addVendorReward(vendor_id, title, requiredStamps);
+      }
+    );
+
+    let currentRewards = await getAllRewardsOfVendor(vendor_id);
+    const rewardsToDelete = currentRewards!.filter(
+      (currentReward) =>
+        !body.definedRewards.some(
+          (definedReward: { reward_id: number }) =>
+            definedReward.reward_id === currentReward.reward_id
+        )
+    );
+
+    rewardsToDelete.map((item) => {
+      deleteVendorReward(item.reward_id);
+    });
 
     res.status(200).json({ message: "Profile updated successfully" });
   } catch (Error: unknown) {

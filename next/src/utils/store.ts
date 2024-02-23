@@ -50,6 +50,7 @@ interface Reward {
 }
 
 type LoyaltyProgramState = {
+  refetchIndicator: number;
   stampLife: number | null; //null for forever, number for month duration
   stampCount: number;
   scaleAmount: string;
@@ -65,9 +66,11 @@ type LoyaltyProgramState = {
   deleteReward: (toDelete: Reward) => void;
   updateReward: (initial: Reward, changed: Reward) => void;
   setIsEditing: () => void;
+  incrementRefetch: () => void;
 };
 
 export const useLoyaltyProgramStore = create<LoyaltyProgramState>((set) => ({
+  refetchIndicator: 0,
   stampLife: null,
   stampCount: 6,
   scaleAmount: "5",
@@ -115,6 +118,11 @@ export const useLoyaltyProgramStore = create<LoyaltyProgramState>((set) => ({
   setIsEditing: () => {
     set((state) => ({
       isEditing: !state.isEditing,
+    }));
+  },
+  incrementRefetch: () => {
+    set((state) => ({
+      refetchIndicator: state.refetchIndicator + 1,
     }));
   },
 }));

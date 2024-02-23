@@ -268,12 +268,12 @@ export const DeleteRewardDialog = ({
           </DialogHeader>
 
           <DialogClose className="w-full">
-            <div className="flex justify-end gap-5 mt-3">
-              <p className="border-2 border-black w-1/6 text-black hover:bg-white bg-white">
+            <div className="flex justify-end items-center gap-5 mt-3">
+              <p className="rounded-md border-2 border-black w-1/6 p-2 text-black bg-white">
                 Cancel
               </p>
               <p
-                className="w-1/6"
+                className="w-1/6 bg-black p-2.5 rounded-md text-white"
                 onClick={() => {
                   deleteReward({
                     reward_id: id,
