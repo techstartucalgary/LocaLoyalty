@@ -1,5 +1,5 @@
 import { View, Text, Image, FlatList, Pressable, ActivityIndicator } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth, useUser } from "@clerk/clerk-expo";
 import { Link } from "expo-router";
 import { useQuery } from "@tanstack/react-query"
@@ -77,8 +77,8 @@ const Card = ({
 	}
 
 	return (
-		<View className="flex-1 py-2">
-			<Link href={slug} className="h-full w-full rounded-xl" asChild>
+		<View className="py-2">
+			<Link href={slug} className="w-full rounded-xl" asChild>
 				<TouchableOpacity
 					onPress={() => {
 						handleCardClick({
@@ -147,7 +147,7 @@ const Card = ({
 
 const CardList = () => {
 
-	const { getToken, isLoaded, isSignedIn } = useAuth()
+	const { getToken } = useAuth()
 
 	const fetchLoyaltyCards = async () => {
 		return fetchAPI(
@@ -161,6 +161,14 @@ const CardList = () => {
 
 
 	const { data, isLoading, isError, refetch, isRefetching } = useQuery({ queryKey: ["loyaltyCards"], queryFn: fetchLoyaltyCards })
+
+	const [refreshing, setRefreshing] = useState(false)
+
+	async function handleRefresh() {
+		setRefreshing(true)
+		await refetch()
+		setRefreshing(false)
+	}
 
 
 	const cardData: {
@@ -184,13 +192,13 @@ const CardList = () => {
 	return (
 		<View className="items-center h-full w-full">
 			{isError && <Text>Failed to load...</Text>}
-			{isLoading ? (<ActivityIndicator className="pt-16" />) :
+			{isLoading || isRefetching ? (<ActivityIndicator className="pt-16" />) :
 				(<FlatList
-					className="h-full w-full px-6 pt-6"
+					className="w-full px-6 pt-6 mb-16"
 					data={cardData}
-					contentContainerStyle={{ paddingBottom: 32 }}
-					refreshing={isRefetching}
-					onRefresh={refetch}
+					contentContainerStyle={{ paddingBottom: 200 }}
+					refreshing={refreshing}
+					onRefresh={handleRefresh}
 					renderItem={({ item }) => {
 						return (
 							<Card
@@ -209,7 +217,8 @@ const CardList = () => {
 							/>
 						);
 					}}
-				/>)}
+				/>
+				)}
 		</View>
 	)
 };
