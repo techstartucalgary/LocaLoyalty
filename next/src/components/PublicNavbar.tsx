@@ -9,7 +9,7 @@ const Navbar = () => {
   const { isSignedIn } = useAuth();
 
   return (
-    <nav className="bg-white flex flex-row justify-between items-center sticky top-0 h-[110px] px-6">
+    <nav className="bg-white flex flex-row justify-between items-center sticky top-0 h-[110px] px-6 z-50">
       {/* Website Logo */}
       <div className="flex items-center gap-10">
         <Link href="" className="flex flex-col items-center">
@@ -54,13 +54,13 @@ const Navbar = () => {
       <div className="flex items-center gap-6 text-center">
         <Link
           href="/sign-up"
-          className="bg-black w-[105px] text-white py-2 rounded-lg"
+          className="bg-black text-white w-[105px] py-2 rounded-lg outline outline-2 outline-black"
         >
           <h1 className="text-lg font-semibold">Register</h1>
         </Link>
         <Link
           href={isSignedIn ? "/auth" : "/sign-in"}
-          className="bg-white text-black w-[105px] py-2 rounded-lg outline outline-2"
+          className="bg-white text-black w-[105px] py-2 rounded-lg outline outline-2 outline-black"
         >
           <h1 className="text-lg font-semibold">Login</h1>
         </Link>

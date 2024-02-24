@@ -30,25 +30,30 @@ const PublicLanding = () => {
           </h2>
         </div>
 
-        <button className="bg-black hover:bg-blue-900 text-white text-2xl font-bold py-5 px-8 rounded-3xl">
+        <button className="bg-black text-white text-2xl font-bold py-5 px-8 rounded-lg outline outline-2 outline-black transition duration-300 hover:bg-white hover:text-black">
           Get Started
         </button>
 
-        <div className="flex justify-center items-center pt-4">
-          <div className="flex flex-col justify-center items-center">
-            <h1 className="font-bold text-4xl ">
-              Loyalty Programs Re-Invented
-            </h1>
-            <p className="font-normal text-3xl pt-5 w-2/3">
-              LocaLoyalty is <span className="font-bold">THE</span> rewards app for all of your customer’s small business rewards.
-              No more physical stamp cards and white-label apps that they have to juggle.
-            </p>
+        <div className="flex justify-center items-center pt-10 mx-24">
+          <div className="flex">
+            <div className="text-left">
+              <h1 className="font-bold text-4xl">
+                Loyalty Programs
+              </h1>
+              <h1 className="font-bold text-4xl">
+                Re-Invented
+              </h1>
+              <p className="font-normal text-3xl pt-5 pr-32">
+                LocaLoyalty is <span className="font-bold">THE</span> rewards app for all of your customer's small business rewards.
+                No more physical stamp cards and white-label apps that they have to juggle.
+              </p>
+            </div>
           </div>
           <div>
             <Image
               src="/assets/Image2.png"
-              width={1300}
-              height={1300}
+              width={1574}
+              height={1482}
               alt="Image 2"
             />
           </div>
@@ -162,13 +167,11 @@ const PublicLanding = () => {
             <h1 className="font-bold text-4xl">
               Improve Your Customer Retention Today!
             </h1>
-            <button className="bg-black hover:bg-blue-900 text-white text-2xl font-bold py-5 px-8 rounded-3xl">
+            <button className="bg-black text-white text-2xl font-bold py-5 px-8 rounded-lg outline outline-2 outline-black transition duration-300 hover:bg-white hover:text-black">
               Get Started
             </button>
           </div>
         </div>
-
-
       </div>
     </div>
   );
