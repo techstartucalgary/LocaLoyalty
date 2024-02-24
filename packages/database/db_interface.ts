@@ -531,7 +531,7 @@ export async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
     return null;
   }
 
-  type Vendor = {
+  type LoyaltyCard = {
     name: string;
     email: string;
     address: string | null;
@@ -547,7 +547,7 @@ export async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
     vendor_id: number;
   }
 
-  let vendorInfo: Vendor[] = []
+  let loyaltyCardInfo: LoyaltyCard[] = []
 
 
   for (let i = 0; i < results.length; i++) {
@@ -601,7 +601,7 @@ export async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
       );
 
 
-      vendorInfo.push({
+      loyaltyCardInfo.push({
         ...remainder,
         business_logo: url,
         points_amt: card.points_amt,
@@ -611,7 +611,7 @@ export async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
     }
   }
 
-  return vendorInfo;
+  return loyaltyCardInfo;
 }
 
 

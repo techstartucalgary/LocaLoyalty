@@ -37,7 +37,7 @@ export const getAllCards = async (req: Request, res: Response) => {
     res.status(200).json(loyaltyCards);
   } catch (error) {
     console.error("Error fetching loyalty cards:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error. Error fetching loyalty cards" });
   }
 };
 
@@ -68,6 +68,6 @@ export const addCard = async (req: Request, res: Response) => {
     res.status(200).json(loyalty_id);
   } catch (error) {
     console.error("Error adding new card to wallet: ", error)
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error. Error adding new card to wallet: " });
   }
 }

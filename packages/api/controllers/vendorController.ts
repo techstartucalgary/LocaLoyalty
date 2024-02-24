@@ -98,6 +98,6 @@ export const getRewards = async (req: Request, res: Response) => {
     res.status(200).json(rewards);
   } catch (error) {
     console.error("Error fetching rewards:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error. Error fetching rewards." });
   }
 };
