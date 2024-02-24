@@ -26,11 +26,15 @@ const ExploreDetails = () => {
         );
     }
 
+    const [disableButton, setDisableButton] = useState(false)
 
     const addCardMutation = useMutation({
         mutationFn: addLoyaltyCard,
         onSuccess: () => {
             refetchFunc()
+        },
+        onError: () => {
+            setDisableButton(false)
         }
     })
 
@@ -44,7 +48,8 @@ const ExploreDetails = () => {
                 <View className="w-full flex-1 items-center p-6">
                     <Text className="text-center text-[#464646] text-lg pt-2">Store Description</Text>
                     <Text className="text-center text-[#7E7E7E] pt-4">{currentExploreDescription}</Text>
-                    <TouchableOpacity className="pt-8" onPress={() => {
+                    <TouchableOpacity disabled={disableButton} className="pt-8" onPress={() => {
+                        setDisableButton(true)
                         addCardMutation.mutate()
                     }}>
                         <Text className="text-[#433C99] text-lg">+ Add to your Wallet</Text>

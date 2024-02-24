@@ -66,9 +66,6 @@ export const index = async (req: Request, res: Response) => {
 
     const vendors = await getAllVendorsExceptWallet(customer_id); // Retrieve all list of vendors from the database
 
-    if (!vendors) {
-      return res.status(404).json({ message: "Vendors not found" });
-    }
 
     // Send the vendors back in the response
     res.status(200).json(vendors);

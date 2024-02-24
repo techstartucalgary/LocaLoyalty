@@ -469,11 +469,6 @@ export async function getAllVendorsExceptWallet(customer_id: number) {
     }).from(schema.vendor).where(notInArray(schema.vendor.vendor_id, vendor_idAlreadyInWallet))
   }
 
-  //if there is an error return null
-  if (Object.keys(results).length === 0) {
-    console.log("Database query failed");
-    return null;
-  }
 
   type Vendor = {
     vendor_id: number;
