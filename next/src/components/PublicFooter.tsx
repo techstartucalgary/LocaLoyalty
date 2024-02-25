@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link"
-import Image from "next/image"
+import Link from "next/link";
+import Image from "next/image";
 import { IoMdHeart, IoIosArrowForward } from "react-icons/io";
 import { FaLinkedinIn, FaInstagram } from "react-icons/fa";
 import { RiTwitterXLine } from "react-icons/ri";
@@ -20,7 +20,7 @@ const PublicFooter = () => {
             />
             <h1 className="font-extrabold text-2xl">LOCALOYALTY</h1>
             <p className="flex items-center font-medium text-lg justify-center mt-6">
-              Designed by <IoMdHeart className="mx-1" size={20} /> in 2024.
+              Designed with <IoMdHeart className="mx-1" size={20} /> in 2024.
             </p>
             <p className="text-center text-lg font-medium">
               All rights reserved.
@@ -29,24 +29,28 @@ const PublicFooter = () => {
 
           <div className="flex gap-24 pl-10">
             <div className="lg:col-span-2 md:col-span-5 col-span-12">
-              <h1 className="font-semibold text-xl">
-                Company
-              </h1>
+              <h1 className="font-semibold text-xl">Company</h1>
               <ul className="list-none mt-3.5 space-y-2">
                 <li>
                   <Link href="" className="flex items-center text-lg">
-                    <IoIosArrowForward /> 
+                    <IoIosArrowForward />
                     <h1 className="font-medium">About</h1>
                   </Link>
                 </li>
                 <li>
-                  <Link href="" className="flex items-center font-medium text-lg">
+                  <Link
+                    href=""
+                    className="flex items-center font-medium text-lg"
+                  >
                     <IoIosArrowForward />
                     <h1 className="font-medium">Contact</h1>
                   </Link>
                 </li>
                 <li>
-                  <Link href="" className="flex items-center font-medium text-lg">
+                  <Link
+                    href=""
+                    className="flex items-center font-medium text-lg"
+                  >
                     <IoIosArrowForward />
                     <h1 className="font-medium">Pricing</h1>
                   </Link>
@@ -55,9 +59,7 @@ const PublicFooter = () => {
             </div>
 
             <div className="lg:col-span-2 md:col-span-5 col-span-12">
-              <h1 className="font-semibold text-xl">
-                Support
-              </h1>
+              <h1 className="font-semibold text-xl">Support</h1>
               <ul className="list-none mt-3.5 space-y-2">
                 <li>
                   <Link href="" className="flex items-center text-lg">
@@ -69,9 +71,7 @@ const PublicFooter = () => {
             </div>
 
             <div className="lg:col-span-2 md:col-span-5 col-span-12">
-              <h1 className="font-semibold text-xl">
-                Get In Touch
-              </h1>
+              <h1 className="font-semibold text-xl">Get In Touch</h1>
               <ul className="list-none mt-3.5 space-y-2">
                 <li>
                   <h1 className="font-medium text-lg">Calgary, AB, Canada</h1>
@@ -79,7 +79,9 @@ const PublicFooter = () => {
               </ul>
               <ul className="list-none mt-3.5 space-y-2">
                 <li>
-                  <h1 className="font-medium text-lg">localoyaltycalgary@gmail.com</h1>
+                  <h1 className="font-medium text-lg">
+                    localoyaltycalgary@gmail.com
+                  </h1>
                 </li>
               </ul>
             </div>
@@ -90,33 +92,39 @@ const PublicFooter = () => {
       <div className="flex mx-24 mb-6 justify-between">
         <div className="flex gap-12">
           <Link href="">
-            <h1 className="font-semibold text-lg hover:underline">Privacy Policy</h1>
+            <h1 className="font-semibold text-lg hover:underline">
+              Privacy Policy
+            </h1>
           </Link>
 
           <Link href="">
-            <h1 className="font-semibold text-lg hover:underline">Cookie Policy</h1>
+            <h1 className="font-semibold text-lg hover:underline">
+              Cookie Policy
+            </h1>
           </Link>
 
           <Link href="">
-            <h1 className="font-semibold text-lg hover:underline">Terms & Conditions</h1>
+            <h1 className="font-semibold text-lg hover:underline">
+              Terms & Conditions
+            </h1>
           </Link>
         </div>
 
         <div className="flex gap-5">
           <Link href="">
-            <FaLinkedinIn size={24}/>
+            <FaLinkedinIn size={24} />
           </Link>
 
           <Link href="">
-            <RiTwitterXLine size={24}/>
+            <RiTwitterXLine size={24} />
           </Link>
 
           <Link href="">
-            <FaInstagram size={24}/>
+            <FaInstagram size={24} />
           </Link>
         </div>
       </div>
-    </footer >
+    </footer>
   );
 };
 
