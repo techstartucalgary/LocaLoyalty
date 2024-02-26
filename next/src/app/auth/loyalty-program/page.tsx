@@ -18,6 +18,11 @@ import { useAuthStore, useLoyaltyProgramStore } from "@/utils/store";
 import { useAuth } from "@clerk/nextjs";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
+import {
+  LoyaltyProgress,
+  RewardsPreview,
+  Variant1,
+} from "./LoyaltyCardVariations";
 
 export const OptionHeader = ({
   title,
@@ -51,6 +56,7 @@ export default function LoyaltyProgram() {
   const { token, setToken } = useAuthStore();
   const {
     refetchIndicator,
+    stampCount,
     setStampLife,
     setStampCount,
     setScaleAmount,
@@ -127,7 +133,16 @@ export default function LoyaltyProgram() {
 
             <EditSection refetch={refetch} />
           </div>
-          <p className="bg-pink-500 w-1/3">live preview will go here</p>
+          <div className="w-1/3">
+            <p className="border-b-2 border-black text-lg font-semibold mb-5 pb-4">
+              Loyalty Program Preview
+            </p>
+            <div className="w-11/12 mx-auto flex flex-col gap-5">
+              <Variant1 />
+              <LoyaltyProgress />
+              <RewardsPreview />
+            </div>
+          </div>
         </div>
       )}
     </>
