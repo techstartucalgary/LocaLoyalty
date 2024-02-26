@@ -105,6 +105,7 @@ const Card = ({
 								<Image
 									source={{ uri: businessLogo }}
 									className="rounded-lg w-[60px] h-[60px]"
+									style={{ backgroundColor: "#e1e4e8" }}
 								/>
 								<Text className=" text-3xl font-bold text-center flex-1">
 									{businessName}

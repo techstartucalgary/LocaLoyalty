@@ -38,7 +38,7 @@ const ExploreCard = ({
                     handleExploreCardPress()
                 }}>
                     <View className="h-32">
-                        <Image source={{ uri: businessImage }} className="w-full h-full rounded-md" style={{ resizeMode: "cover" }} />
+                        <Image source={{ uri: businessImage }} className="w-full h-full rounded-md" style={{ resizeMode: "cover", backgroundColor: "#e1e4e8" }} />
                     </View>
                     <View className="pt-2">
                         <Text>{businessName}</Text>
