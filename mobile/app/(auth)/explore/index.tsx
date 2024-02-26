@@ -97,7 +97,7 @@ const ExploreCardList = () => {
                     numColumns={2}
                     refreshing={refreshing}
                     onRefresh={handleRefresh}
-                    contentContainerStyle={{ paddingBottom: 32 }}
+                    contentContainerStyle={{ paddingBottom: 250 }}
                     renderItem={({ item }) => {
                         return (
                             <ExploreCard

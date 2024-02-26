@@ -1,4 +1,4 @@
-import { View, Text, Image, FlatList, Pressable, ActivityIndicator } from "react-native";
+import { View, Text, Image, FlatList, Pressable, ActivityIndicator, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import SmallStamp from "../../../assets/images/smallStamp";
@@ -8,6 +8,8 @@ import ExtraSmallStamp from "../../../assets/images/extraSmallStamp";
 import { useAuth } from "@clerk/clerk-expo";
 import { fetchAPI } from "../../../utils/generalAxios";
 import { useQuery } from "@tanstack/react-query";
+import MapView from 'react-native-maps';
+
 
 const RewardsSection = () => {
 
@@ -215,12 +217,13 @@ const LoyaltyCardPage = () => {
 			</View>
 
 			{isDetailsSelected ? (
-				<View className="px-12 py-8">
+				<ScrollView className="h-full px-12 pt-4">
 					<Text className="text-lg font-semibold pb-2">
 						About {currentBusinessName}
 					</Text>
-					<Text>{currentBusinessDescription}</Text>
-				</View>
+					<Text className="pb-8">{currentBusinessDescription}</Text>
+					<MapView className="w-full h-full" />
+				</ScrollView>
 			) : (
 				<RewardsSection />
 			)}

@@ -75,7 +75,7 @@ const ExploreDetails = () => {
                         addCardMutation.mutate()
                     }}>
                         {addCardMutation.isPending ?
-                            <Text className="text-gray-400 text-lg">+ Add to your Wallet</Text> :
+                            <Text className="text-gray-500 text-lg">+ Add to your Wallet</Text> :
                             <Text className="text-[#433C99] text-lg">+ Add to your Wallet</Text>
                         }
                     </TouchableOpacity>
