@@ -4,6 +4,8 @@ import { useExploreStore } from "../../../utils/exploreStore";
 import { useMutation } from "@tanstack/react-query";
 import { fetchAPI } from "../../../utils/generalAxios";
 import { useAuth } from "@clerk/clerk-expo";
+import Toast from 'react-native-root-toast';
+
 
 
 const ExploreDetails = () => {
@@ -32,9 +34,29 @@ const ExploreDetails = () => {
         mutationFn: addLoyaltyCard,
         onSuccess: () => {
             refetchFunc()
+            Toast.show('Added to Wallet ✅', {
+                duration: Toast.durations.LONG,
+                position: Toast.positions.TOP,
+                shadow: true,
+                animation: true,
+                hideOnPress: true,
+                opacity: 1,
+                backgroundColor: "white",
+                textColor: "black"
+            })
         },
         onError: () => {
             setDisableButton(false)
+            Toast.show('Unable to add to Wallet ❌', {
+                duration: Toast.durations.LONG,
+                position: Toast.positions.TOP,
+                shadow: true,
+                animation: true,
+                hideOnPress: true,
+                opacity: 1,
+                backgroundColor: "white",
+                textColor: "black"
+            })
         }
     })
 
@@ -52,7 +74,10 @@ const ExploreDetails = () => {
                         setDisableButton(true)
                         addCardMutation.mutate()
                     }}>
-                        <Text className="text-[#433C99] text-lg">+ Add to your Wallet</Text>
+                        {addCardMutation.isPending ?
+                            <Text className="text-gray-400 text-lg">+ Add to your Wallet</Text> :
+                            <Text className="text-[#433C99] text-lg">+ Add to your Wallet</Text>
+                        }
                     </TouchableOpacity>
                 </View>
             </View>
