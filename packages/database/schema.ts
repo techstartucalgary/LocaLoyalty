@@ -35,6 +35,7 @@ export const vendor = mysqlTable("vendor", {
   email: varchar("email", { length: 256 }).notNull(),
   address: varchar("address", { length: 256 }),
   phone: varchar("phone", { length: 16 }),
+  business_phone: varchar("business_phone", { length: 16 }),
   description: text("description"),
   color: varchar("color", { length: 16 }),
   reward_program_details: text("reward_program_details"),

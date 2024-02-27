@@ -43,6 +43,13 @@
       "when": 1708563510346,
       "tag": "0005_slim_swordsman",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1709016496192,
+      "tag": "0006_ambiguous_oracle",
+      "breakpoints": true
     }
   ]
 }
