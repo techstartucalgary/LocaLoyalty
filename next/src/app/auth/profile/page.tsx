@@ -28,6 +28,7 @@ export default function Profile() {
 
   interface ProfileData {
     name: string;
+    business_phone: string;
     address: string;
     city: string;
     province: string;
@@ -41,6 +42,7 @@ export default function Profile() {
 
   const defaultProfileData: ProfileData = {
     name: "",
+    business_phone: "",
     address: "",
     city: "",
     province: "",
@@ -191,6 +193,17 @@ export default function Profile() {
                   value={profileData.name}
                   onChange={(e) =>
                     handleTextInputChange("name", e.target.value)
+                  }
+                />
+
+<ProfileTextInput
+                  id="businessPhone"
+                  title="Business Phone"
+                  disabled={!isEditing}
+                  placeholder="sdads"
+                  value={profileData.business_phone}
+                  onChange={(e) =>
+                    handleTextInputChange("business_phone", e.target.value)
                   }
                 />
 

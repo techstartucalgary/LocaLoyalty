@@ -275,6 +275,7 @@ export async function deleteVendorReward(reward_id: number) {
 export async function editVendor(
   clerk_id: string,
   name: string,
+  phone: string,
   address: string,
   city: string,
   province: string,
@@ -289,6 +290,7 @@ export async function editVendor(
     .update(schema.vendor)
     .set({
       name: name,
+      business_phone: phone,
       address: address,
       city: city,
       province: province,
@@ -512,7 +514,7 @@ export async function getVendorLoyaltyProgramInfo(vendor_id: number) {
     .select({
       businessName: schema.vendor.name,
       businessLogo: schema.vendor.business_logo,
-      businessPhone: schema.vendor.phone,
+      businessPhone: schema.vendor.business_phone,
       businessEmail: schema.vendor.email,
       stampLife: schema.vendor.stamp_life,
       stampCount: schema.vendor.max_points,

@@ -111,6 +111,7 @@ router.post(
     await editVendor(
       req.auth.userId,
       body.name,
+      body.business_phone,
       body.address,
       body.city,
       body.province,
