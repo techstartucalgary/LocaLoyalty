@@ -275,6 +275,8 @@ export async function deleteVendorReward(reward_id: number) {
 export async function editVendor(
   clerk_id: string,
   name: string,
+  business_email: string,
+  phone: string,
   address: string,
   city: string,
   province: string,
@@ -289,6 +291,8 @@ export async function editVendor(
     .update(schema.vendor)
     .set({
       name: name,
+      business_email: business_email,
+      business_phone: phone,
       address: address,
       city: city,
       province: province,
@@ -507,9 +511,13 @@ async function getAllTransactionsOfCard(loyalty_id) {
 }
 */
 
-export async function getVendorLoyaltyProgramSettings(vendor_id: number) {
+export async function getVendorLoyaltyProgramInfo(vendor_id: number) {
   const results = await db
     .select({
+      businessName: schema.vendor.name,
+      businessLogo: schema.vendor.business_logo,
+      businessPhone: schema.vendor.business_phone,
+      businessEmail: schema.vendor.business_email,
       stampLife: schema.vendor.stamp_life,
       stampCount: schema.vendor.max_points,
       scaleAmount: schema.vendor.spending_per_point,

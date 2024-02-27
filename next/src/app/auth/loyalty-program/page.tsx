@@ -18,6 +18,11 @@ import { useAuthStore, useLoyaltyProgramStore } from "@/utils/store";
 import { useAuth } from "@clerk/nextjs";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
+import {
+  LoyaltyProgress,
+  RewardsPreview,
+  Variant1,
+} from "./LoyaltyCardVariations";
 
 export const OptionHeader = ({
   title,
@@ -51,6 +56,8 @@ export default function LoyaltyProgram() {
   const { token, setToken } = useAuthStore();
   const {
     refetchIndicator,
+    stampCount,
+    setBusinessInfo,
     setStampLife,
     setStampCount,
     setScaleAmount,
@@ -75,6 +82,12 @@ export default function LoyaltyProgram() {
 
   useEffect(() => {
     if (data) {
+      setBusinessInfo(
+        data.businessName,
+        data.businessLogo,
+        data.businessPhone,
+        data.businessEmail
+      );
       setStampLife(data.stampLife);
       setStampCount(data.stampCount);
       setScaleAmount(data.scaleAmount);
@@ -83,6 +96,7 @@ export default function LoyaltyProgram() {
   }, [
     data,
     refetchIndicator,
+    setBusinessInfo,
     setDefinedRewards,
     setScaleAmount,
     setStampCount,
@@ -105,8 +119,8 @@ export default function LoyaltyProgram() {
       </p>
 
       {!isLoading && (
-        <div className="flex justify-start gap-40">
-          <div className="flex flex-col w-1/2">
+        <div className="flex justify-start gap-20">
+          <div className="flex flex-col w-3/5">
             <Tabs defaultValue="settings" className="">
               <TabsList>
                 <TabsTrigger value="settings">Settings</TabsTrigger>
@@ -127,7 +141,16 @@ export default function LoyaltyProgram() {
 
             <EditSection refetch={refetch} />
           </div>
-          <p className="bg-pink-500 w-1/3">live preview will go here</p>
+          <div className="w-3/5">
+            <p className="border-b-2 border-black text-lg font-semibold mb-5 pb-4">
+              Loyalty Program Preview
+            </p>
+            <div className="mx-auto flex flex-col gap-5 w-5/6">
+              <Variant1 />
+              <LoyaltyProgress />
+              <RewardsPreview />
+            </div>
+          </div>
         </div>
       )}
     </>
