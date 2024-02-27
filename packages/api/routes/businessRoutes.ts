@@ -13,11 +13,11 @@ import {
   getVendor,
   getAllRewardsOfVendor,
   getVendorFromClerkID,
-  getVendorLoyaltyProgramSettings,
   editVendorLoyaltyProgram,
   editVendorReward,
   addVendorReward,
   deleteVendorReward,
+  getVendorLoyaltyProgramInfo,
 } from "../../database/db_interface";
 
 const router = express.Router();
@@ -130,11 +130,29 @@ router.get("/loyalty-program", async (req: Request, res: Response) => {
   try {
     const vendor = await getVendorFromClerkID(req.auth.userId);
     const vendor_id = vendor![0].vendor_id;
-    const loyaltyInfo = await getVendorLoyaltyProgramSettings(vendor_id);
+    const loyaltyInfo = await getVendorLoyaltyProgramInfo(vendor_id);
     const rewards = await getAllRewardsOfVendor(vendor_id);
+
+    if (loyaltyInfo![0]?.businessLogo == null) {
+      // Checks for both undefined and null
+      throw new Error("businessLogo is null or undefined");
+    }
+
+    const url = await getSignedUrl(
+      s3,
+      new GetObjectCommand({
+        Bucket: process.env.BUCKET_NAME,
+        Key: loyaltyInfo![0].businessLogo, //this is the imageName that will be stored into the database
+      }),
+      { expiresIn: 3600 }
+    );
 
     res.status(200).json({
       vendor_id: vendor_id,
+      businessName: loyaltyInfo![0].businessName,
+      businessLogo: url,
+      businessPhone: loyaltyInfo![0].businessPhone,
+      businessEmail: loyaltyInfo![0].businessEmail,
       stampLife: loyaltyInfo![0].stampLife,
       stampCount: loyaltyInfo![0].stampCount,
       scaleAmount: loyaltyInfo![0].scaleAmount,

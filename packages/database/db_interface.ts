@@ -507,9 +507,13 @@ async function getAllTransactionsOfCard(loyalty_id) {
 }
 */
 
-export async function getVendorLoyaltyProgramSettings(vendor_id: number) {
+export async function getVendorLoyaltyProgramInfo(vendor_id: number) {
   const results = await db
     .select({
+      businessName: schema.vendor.name,
+      businessLogo: schema.vendor.business_logo,
+      businessPhone: schema.vendor.phone,
+      businessEmail: schema.vendor.email,
       stampLife: schema.vendor.stamp_life,
       stampCount: schema.vendor.max_points,
       scaleAmount: schema.vendor.spending_per_point,

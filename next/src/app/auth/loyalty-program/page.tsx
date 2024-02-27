@@ -57,6 +57,7 @@ export default function LoyaltyProgram() {
   const {
     refetchIndicator,
     stampCount,
+    setBusinessInfo,
     setStampLife,
     setStampCount,
     setScaleAmount,
@@ -81,6 +82,12 @@ export default function LoyaltyProgram() {
 
   useEffect(() => {
     if (data) {
+      setBusinessInfo(
+        data.businessName,
+        data.businessLogo,
+        data.businessPhone,
+        data.businessEmail
+      );
       setStampLife(data.stampLife);
       setStampCount(data.stampCount);
       setScaleAmount(data.scaleAmount);
@@ -89,6 +96,7 @@ export default function LoyaltyProgram() {
   }, [
     data,
     refetchIndicator,
+    setBusinessInfo,
     setDefinedRewards,
     setScaleAmount,
     setStampCount,

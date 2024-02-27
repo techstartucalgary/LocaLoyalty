@@ -26,15 +26,17 @@ const CurrentStamps = () => {
 };
 
 const Contact = () => {
+  const { businessPhone, businessEmail } = useLoyaltyProgramStore();
+
   return (
     <div className="flex justify-evenly">
       <div className="flex gap-2 items-center">
         <FaPhoneAlt />
-        <p>000-000-0000</p>
+        <p>{businessPhone}</p>
       </div>
       <div className="flex gap-2 items-center">
         <IoMdMail />
-        <p>businessname@gmail.com</p>
+        <p>{businessEmail}</p>
       </div>
     </div>
   );
@@ -86,11 +88,13 @@ export const RewardsPreview = () => {
 };
 
 export const Variant1 = () => {
+  const { businessName, businessLogo } = useLoyaltyProgramStore();
+
   return (
     <div className="border-black border-4 rounded-lg p-5 flex flex-col gap-7">
       <div className="flex items-center justify-center gap-10">
-        <div className="bg-blue-500 w-20 h-20"></div>
-        <p className="text-4xl font-semibold">Business Name</p>
+        <Image alt="" src={businessLogo} width={100} height={100} />
+        <p className="text-4xl font-semibold">{businessName}</p>
       </div>
 
       <CurrentStamps />

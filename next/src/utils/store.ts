@@ -51,11 +51,21 @@ interface Reward {
 
 type LoyaltyProgramState = {
   refetchIndicator: number;
+  businessName: string;
+  businessLogo: string;
+  businessPhone: string;
+  businessEmail: string;
   stampLife: number | null; //null for forever, number for month duration
   stampCount: number;
   scaleAmount: string;
   definedRewards: Reward[];
   isEditing: boolean;
+  setBusinessInfo: (
+    name: string,
+    logo: string,
+    phone: string,
+    email: string
+  ) => void;
   setStampLife: (value: number | null) => void;
   incrementStampCount: () => void;
   decrementStampCount: () => void;
@@ -71,11 +81,22 @@ type LoyaltyProgramState = {
 
 export const useLoyaltyProgramStore = create<LoyaltyProgramState>((set) => ({
   refetchIndicator: 0,
+  businessName: "",
+  businessLogo: "",
+  businessPhone: "",
+  businessEmail: "",
   stampLife: null,
   stampCount: 6,
   scaleAmount: "5",
   definedRewards: [],
   isEditing: false,
+  setBusinessInfo: (name, logo, phone, email) =>
+    set({
+      businessName: name,
+      businessLogo: logo,
+      businessPhone: phone,
+      businessEmail: email,
+    }),
   setStampLife: (value) => set({ stampLife: value }),
   incrementStampCount: () =>
     set((state) => ({
