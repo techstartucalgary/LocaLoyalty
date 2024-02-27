@@ -616,7 +616,7 @@ export async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
 
 
 export async function getRedeemable(customer_id: number) {
-  const redeemables = await db.execute(sql`SELECT c.name as vendor_name, c.business_logo, r.name as reward_name, r.points_cost
+  const results = await db.execute(sql`SELECT c.name as vendor_name, c.business_logo, r.name as reward_name, r.points_cost, r.reward_id
 FROM reward r
 INNER JOIN (SELECT v.name, v.business_logo, b.vendor_id, b.points_amt
 FROM vendor v
@@ -625,8 +625,49 @@ FROM loyalty_card lc
 WHERE customer_id = ${customer_id}) AS b ON b.vendor_id = v.vendor_id) AS c ON r.vendor_id = c.vendor_id
 WHERE c.points_amt >= r.points_cost;`)
 
+  type Redeemables = {
+    business_logo: string,
+    points_cost: number,
+    reward_id: number,
+    reward_name: string,
+    vendor_name: string,
+  }[]
 
-  return redeemables.rows;
+  const redeemables = results.rows as unknown as Redeemables // Shitty typescript casting
+
+  const redeemablesWithURL: Redeemables = []
+
+  for (let i = 0; i < redeemables.length; i++) {
+    // Get s3 image url based on the key stored in the db
+    const { business_logo, ...remainder } = redeemables[i]
+
+    // Make s3 connection
+    const s3 = new S3Client({
+      region: process.env.BUCKET_REGION || "",
+      credentials: {
+        accessKeyId: process.env.BUCKET_LOCAL_ACCESS_KEY || "",
+        secretAccessKey: process.env.BUCKET_LOCAL_SECRET_ACCESS_KEY || "",
+      },
+    });
+
+    // Get the url for s3 image
+    const url = await getSignedUrl(
+      s3,
+      new GetObjectCommand({
+        Bucket: process.env.BUCKET_NAME,
+        Key: business_logo || "", //this is the imageName that will be stored into the database, ideally have a default image if the business doesn't have one set
+      }),
+      { expiresIn: 3600 }
+    );
+
+    redeemablesWithURL.push({
+      business_logo: url,
+      ...remainder,
+    })
+
+  }
+
+  return redeemablesWithURL;
 }
 
 
