@@ -33,6 +33,7 @@ export const vendor = mysqlTable("vendor", {
   vendor_id: serial("vendor_id").primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   email: varchar("email", { length: 256 }).notNull(),
+  business_email: varchar("business_email", { length: 256 }),
   address: varchar("address", { length: 256 }),
   phone: varchar("phone", { length: 16 }),
   business_phone: varchar("business_phone", { length: 16 }),
