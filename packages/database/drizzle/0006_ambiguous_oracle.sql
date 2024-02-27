@@ -1,0 +1,1 @@
+ALTER TABLE `vendor` ADD `business_phone` varchar(16);
