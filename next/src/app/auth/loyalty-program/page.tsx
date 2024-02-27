@@ -119,8 +119,8 @@ export default function LoyaltyProgram() {
       </p>
 
       {!isLoading && (
-        <div className="flex justify-start gap-40">
-          <div className="flex flex-col w-1/2">
+        <div className="flex justify-start gap-20">
+          <div className="flex flex-col w-3/5">
             <Tabs defaultValue="settings" className="">
               <TabsList>
                 <TabsTrigger value="settings">Settings</TabsTrigger>
@@ -141,11 +141,11 @@ export default function LoyaltyProgram() {
 
             <EditSection refetch={refetch} />
           </div>
-          <div className="w-1/3">
+          <div className="w-3/5">
             <p className="border-b-2 border-black text-lg font-semibold mb-5 pb-4">
               Loyalty Program Preview
             </p>
-            <div className="w-11/12 mx-auto flex flex-col gap-5">
+            <div className="mx-auto flex flex-col gap-5 w-5/6">
               <Variant1 />
               <LoyaltyProgress />
               <RewardsPreview />
