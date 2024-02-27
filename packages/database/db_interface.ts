@@ -442,14 +442,19 @@ async function getReward(reward_id) {
 
 // Get all customers has no use case for now...
 
-// Gets all vendors in the database
+// Gets all vendors that aren't in a user's wallet in the database
 export async function getAllVendorsExceptWallet(customer_id: number) {
 
   const vendorsAlreadyInWallet = await db.select({
     vendor_id: schema.loyalty_card.program_id,
   }).from(schema.loyalty_card).where(eq(schema.loyalty_card.customer_id, customer_id))
 
-  let results = []
+  let results: {
+    vendor_id: number;
+    name: string;
+    business_image: string | null;
+    description: string | null;
+  }[] = []
   // if the customer has no vendors in wallet then just get all vendors to display
   if (vendorsAlreadyInWallet.length === 0) {
     results = await db.select({

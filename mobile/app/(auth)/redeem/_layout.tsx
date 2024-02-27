@@ -19,7 +19,6 @@ const RedeemHeader = () => {
 
 export default function RedeemPage() {
 
-    const { currentExploreName } = useExploreStore();
 
     return (
         <Stack screenOptions={{
