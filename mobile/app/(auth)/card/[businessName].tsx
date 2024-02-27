@@ -118,7 +118,7 @@ const LoyaltyCardPage = () => {
 							<View className="flex-row pt-5 w-full items-center">
 								<Image
 									source={{ uri: currentBusinessLogo }}
-									className="rounded-lg w-[60px] h-[60px]"
+									className="rounded-lg w-16 h-16"
 								/>
 								<Text className="flex-1 text-2xl font-bold text-center">
 									{currentBusinessName}

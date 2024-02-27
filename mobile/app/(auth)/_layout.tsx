@@ -76,6 +76,15 @@ const TabsPage = () => {
 					}}
 				/>
 				<Tabs.Screen
+					name="redeem"
+					options={{
+						tabBarLabel: "Rewards",
+						tabBarIcon: ({ color, size }) => (
+							<Ionicons name="gift-outline" size={size} color={color} />
+						),
+					}}
+				/>
+				<Tabs.Screen
 					name="tutorial"
 					options={{ tabBarButton: () => null, headerShown: false }}
 				/>

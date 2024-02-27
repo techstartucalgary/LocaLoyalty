@@ -32,7 +32,7 @@ const ExploreCard = ({
     }
 
     return (
-        <View className="flex-1 px-4 py-4">
+        <View className="w-1/2 px-4 py-4">
             <Link href={"./explore/details"} asChild>
                 <TouchableOpacity onPress={() => {
                     handleExploreCardPress()
@@ -119,7 +119,7 @@ const Explore = () => {
     return (
         <View className="h-full w-full bg-[#F7F8F8]">
             <View className="w-full bg-[#9FBAFF] pb-8 h-52 rounded-b-[40px] pt-32 px-8">
-                <Text className="text-[#091540] text-3xl font-medium text-left">
+                <Text className="text-[#091540] text-2xl font-semibold text-left">
                     Explore Businesses
                 </Text>
             </View>

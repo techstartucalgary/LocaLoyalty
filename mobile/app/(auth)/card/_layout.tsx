@@ -13,7 +13,7 @@ const WalletHeader = () => {
 				<Pressable>
 					<Ionicons name="person-outline" size={24} color={"#000"} />
 				</Pressable>
-				<Text className="text-[#EDEDFF] text-xl font-semibold">
+				<Text className="text-[#EDEDFF] text-xl font-medium">
 					Hello, {user?.firstName}
 				</Text>
 				<Pressable>

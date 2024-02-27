@@ -104,7 +104,7 @@ const Card = ({
 							<View className="flex-row px-4 py-6 w-full items-center">
 								<Image
 									source={{ uri: businessLogo }}
-									className="rounded-lg w-[60px] h-[60px]"
+									className="rounded-lg w-16 h-16"
 									style={{ backgroundColor: "#e1e4e8" }}
 								/>
 								<Text className=" text-3xl font-bold text-center flex-1">
@@ -229,7 +229,7 @@ const Wallet = () => {
 	return (
 		<View className="h-full w-full bg-[#F7F8F8]">
 			<View className="w-full bg-[#9FBAFF] pb-8 h-52 rounded-b-[40px] pt-32 px-8">
-				<Text className="text-[#091540] text-3xl font-medium text-left">
+				<Text className="text-[#091540] text-2xl font-semibold text-left">
 					Your Cards
 				</Text>
 			</View>
