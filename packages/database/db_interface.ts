@@ -8,7 +8,7 @@ January 18 2024
 import { SocketAddress } from "net";
 import { db } from "./dbObj.js";
 import * as schema from "./schema.js";
-import { SQLWrapper, and, eq, notInArray } from "drizzle-orm";
+import { SQLWrapper, and, eq, notInArray, sql } from "drizzle-orm";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import {
   S3Client,
@@ -612,6 +612,21 @@ export async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
   }
 
   return loyaltyCardInfo;
+}
+
+
+export async function getRedeemable(customer_id: number) {
+  const redeemables = await db.execute(sql`SELECT c.name as vendor_name, c.business_logo, r.name as reward_name, r.points_cost
+FROM reward r
+INNER JOIN (SELECT v.name, v.business_logo, b.vendor_id, b.points_amt
+FROM vendor v
+INNER JOIN (SELECT vendor_id, points_amt 
+FROM loyalty_card lc
+WHERE customer_id = ${customer_id}) AS b ON b.vendor_id = v.vendor_id) AS c ON r.vendor_id = c.vendor_id
+WHERE c.points_amt >= r.points_cost;`)
+
+
+  return redeemables.rows;
 }
 
 

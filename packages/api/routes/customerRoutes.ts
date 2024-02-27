@@ -22,5 +22,8 @@ router.get("/rewards/:vendorID", vendorController.getRewards);
 // API endpoint to add a new loyalty card to a users wallet
 router.post("/add-loyalty-card", customerController.addCard)
 
+// API endpoint to get all redeemables
+router.get("/redeemables", customerController.getRedeemables)
+
 
 export default router;

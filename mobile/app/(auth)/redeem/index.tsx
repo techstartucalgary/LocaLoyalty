@@ -64,9 +64,9 @@ const RedeemList = () => {
     const { getToken } = useAuth()
 
 
-    const fetchVendors = async () => {
+    const fetchRedeemables = async () => {
         return fetchAPI(
-            "https://79e0-184-64-97-78.ngrok-free.app/customer/vendors",
+            "https://79e0-184-64-97-78.ngrok-free.app/customer/redeemables",
             "GET",
             await getToken(),
             null,
@@ -75,7 +75,7 @@ const RedeemList = () => {
     }
 
 
-    const { data, isLoading, isError, refetch, isRefetching } = useQuery({ queryKey: ["vendors"], queryFn: fetchVendors })
+    const { data, isLoading, isError, refetch, isRefetching } = useQuery({ queryKey: ["redeemables"], queryFn: fetchRedeemables })
 
 
     const [refreshing, setRefreshing] = useState(false)
@@ -86,16 +86,19 @@ const RedeemList = () => {
         setRefreshing(false)
     }
 
-    const vendorData: {
+    const redeemableData: {
         vendor_id: number;
         name: string;
         business_image: string;
         description: string;
     }[] = data
 
+    console.log(`data`, data);
+
+
     return (
         <View className="items-center h-full w-full">
-            {isError && <Text>Failed to load...</Text>}
+            {/* {isError && <Text>Failed to load...</Text>}
             {isLoading || isRefetching ? (<ActivityIndicator className="pt-16" />) :
                 (<FlatList
                     className="h-full w-full px-12 pt-6"
@@ -110,7 +113,7 @@ const RedeemList = () => {
                             />
                         );
                     }}
-                />)}
+                />)} */}
         </View>
     )
 }
