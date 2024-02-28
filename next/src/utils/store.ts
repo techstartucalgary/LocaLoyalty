@@ -73,6 +73,12 @@ type LoyaltyProgramState = {
   setScaleAmount: (value: string) => void;
   setDefinedRewards: (defined: Reward[]) => void;
   addReward: (toAdd: Reward) => void;
+  
+  // Design Tab
+  cardLayoutStyle: number;
+  incrementCardLayoutStyle: () => void;
+  decrementCardLayoutStyle: () => void;
+
   deleteReward: (toDelete: Reward) => void;
   updateReward: (initial: Reward, changed: Reward) => void;
   setIsEditing: () => void;
@@ -115,6 +121,20 @@ export const useLoyaltyProgramStore = create<LoyaltyProgramState>((set) => ({
     set((state) => ({
       definedRewards: [...state.definedRewards, toAdd],
     })),
+
+  // Design Tab
+  cardLayoutStyle: 1,
+  incrementCardLayoutStyle: () =>
+    set((state) => ({
+      cardLayoutStyle:
+        state.cardLayoutStyle < 10 ? state.cardLayoutStyle + 1 : state.cardLayoutStyle,
+    })),
+  decrementCardLayoutStyle: () =>
+    set((state) => ({
+      cardLayoutStyle:
+        state.cardLayoutStyle > 1 ? state.cardLayoutStyle - 1 : state.cardLayoutStyle,
+    })),
+
   deleteReward: (toDelete) => {
     set((state) => ({
       definedRewards: state.definedRewards.filter(
