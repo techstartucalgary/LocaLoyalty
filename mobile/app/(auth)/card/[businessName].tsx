@@ -216,12 +216,12 @@ const LoyaltyCardPage = () => {
 			</View>
 
 			{isDetailsSelected ? (
-				<ScrollView className="h-full px-12 pt-4">
+				<ScrollView className="h-full px-12 pt-4" contentContainerStyle={{ paddingBottom: 64 }}>
 					<Text className="text-lg font-semibold pb-2">
 						About {currentBusinessName}
 					</Text>
 					<Text className="pb-8">{currentBusinessDescription}</Text>
-					<MapView className="w-full h-full" />
+					<MapView className="w-full aspect-square" />
 				</ScrollView>
 			) : (
 				<RewardsSection />
