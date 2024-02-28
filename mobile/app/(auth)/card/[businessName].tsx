@@ -27,7 +27,7 @@ const RewardsSection = () => {
 	}
 
 
-	const { data, isLoading, isError } = useQuery({ queryKey: ["rewards"], queryFn: fetchRewards })
+	const { data, isError, fetchStatus } = useQuery({ queryKey: ["rewards"], queryFn: fetchRewards })
 
 
 	const rewards: {
@@ -38,11 +38,10 @@ const RewardsSection = () => {
 
 
 
-
 	return (
 		<View className="h-full w-full items-center">
 			{isError && <Text>Failed to load...</Text>}
-			{isLoading ? (<ActivityIndicator className="pt-16" />) :
+			{fetchStatus === "fetching" ? (<ActivityIndicator className="pt-16" />) :
 				(<FlatList
 					className="h-full w-full px-12 py-4"
 					data={rewards}
