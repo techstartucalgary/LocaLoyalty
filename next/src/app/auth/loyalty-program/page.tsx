@@ -1,11 +1,11 @@
 "use client";
 
-import Image from "next/image";
-import { useLoyaltyProgramStore } from "@/utils/store";
-import { useEffect, useState } from "react";
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,31 @@ import { PiFlower, PiFlowerFill } from "react-icons/pi";
 import { FaStar, FaRegStar, FaHeart, FaRegHeart, FaSmile, FaRegSmile, FaCheck, FaRegCheckCircle } from "react-icons/fa";
 import { IoLeaf, IoLeafOutline, IoMoon, IoMoonOutline, IoPaw, IoPawOutline, IoRocket, IoRocketOutline, IoSparkles, IoSparklesOutline, IoSunny, IoSunnyOutline } from "react-icons/io5";
 
-const OptionHeader = ({ title, info }: { title: string; info: string }) => {
+import {
+  DefineRewardSection,
+  EditSection,
+  ScaleRewardSection,
+  StampCountSection,
+  StampLifeSection,
+} from "./SettingsSections";
+import { fetchAPI } from "@/utils/generalAxios";
+import { useAuthStore, useLoyaltyProgramStore } from "@/utils/store";
+import { useAuth } from "@clerk/nextjs";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
+import {
+  LoyaltyProgress,
+  RewardsPreview,
+  Variant1,
+} from "./LoyaltyCardVariations";
+
+export const OptionHeader = ({
+  title,
+  info,
+}: {
+  title: string;
+  info: string;
+}) => {
   return (
     <div className="flex gap-3 items-center">
       <p className="text-xl font-semibold">{title}</p>
@@ -37,162 +61,66 @@ const OptionHeader = ({ title, info }: { title: string; info: string }) => {
   );
 };
 
-const StampLifeSection = () => {
-  const { stampLife, setStampLife } = useLoyaltyProgramStore();
+export default function LoyaltyProgram() {
+  const { getToken } = useAuth();
+  const { token, setToken } = useAuthStore();
+  const {
+    refetchIndicator,
+    stampCount,
+    setBusinessInfo,
+    setStampLife,
+    setStampCount,
+    setScaleAmount,
+    setDefinedRewards,
+  } = useLoyaltyProgramStore();
 
-  const determineStyle = (value: number | null) => {
-    return stampLife === value
-      ? "bg-black"
-      : "bg-green-500 text-black border-2 border-black bg-white hover:text-white";
+  const fetchLoyaltyProgramData = async (): Promise<any> => {
+    return fetchAPI(
+      "http://localhost:5001/business/loyalty-program",
+      "GET",
+      token,
+      null,
+      {}
+    );
   };
 
-  const stampLifeValues = [
-    { value: null, label: "Forever" },
-    { value: 3, label: "3 Months" },
-    { value: 6, label: "6 Months" },
-    { value: 9, label: "9 Months" },
-    { value: 12, label: "1 Year" },
-  ];
-
-  return (
-    <div className="border-b-2 border-slate-300 py-5">
-      <OptionHeader
-        title="Stamp life"
-        info="Choose how long your customer's stamps will last if they don't shop at your store for a certain duration"
-      />
-
-      <div className="flex gap-3 mt-3 ml-5">
-        {stampLifeValues.map((item) => {
-          return (
-            <Button
-              key={item.value}
-              size="sm"
-              className={determineStyle(item.value)}
-              onClick={() => {
-                setStampLife(item.value);
-              }}
-            >
-              {item.label}
-            </Button>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
-
-const StampCountSection = () => {
-  const { stampCount, incrementStampCount, decrementStampCount } =
-    useLoyaltyProgramStore();
-
-  return (
-    <div className="border-b-2 border-slate-300 py-5">
-      <OptionHeader
-        title="Stamp count"
-        info="Choose the max amount of stamps your customer can have at a time"
-      />
-      <div className="flex items-center gap-5 mt-3 ml-5">
-        <Button
-          size="sm"
-          className="h-7 w-7 font-semibold text-lg"
-          onClick={() => decrementStampCount()}
-        >
-          -
-        </Button>
-        <p className="text-lg font-semibold">{stampCount}</p>
-        <Button
-          size="sm"
-          className="h-7 w-7 font-semibold text-lg"
-          onClick={() => incrementStampCount()}
-        >
-          +
-        </Button>
-      </div>
-    </div>
-  );
-};
-
-const ScaleRewardSection = () => {
-  const { scaleAmount, setScaleAmount } = useLoyaltyProgramStore();
-  const [invalidInput, setInvalidInput] = useState(false);
-
-  return (
-    <div className="border-b-2 border-slate-300 py-5">
-      <OptionHeader
-        title="Scale reward"
-        info="Define how much customers must spend to earn a stamp"
-      />
-      <div className="flex items-center gap-2 mt-3 ml-5">
-        <p className="font-semibold text-lg">$</p>
-        <Input
-          type="text"
-          value={scaleAmount}
-          className={`border-2 border-slate-400 w-20 ${
-            invalidInput ? "border-red-500" : ""
-          }`}
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            const input = event.target.value;
-
-            // Allow clearing the input
-            if (input === "") {
-              setScaleAmount("");
-              setInvalidInput(true); // Consider empty input as valid or manage separately
-            } else {
-              const newValue = Number(input);
-              if (!isNaN(newValue) && newValue > 0) {
-                setInvalidInput(false);
-                setScaleAmount(input); // Ensure scaleAmount is a string for consistency
-              } else {
-                setInvalidInput(true);
-              }
-            }
-          }}
-        />
-
-        {invalidInput ? <p>Invalid Value!</p> : null}
-      </div>
-    </div>
-  );
-};
-
-const DefineRewardSection = () => {
-  const { definedRewards, setDefinedRewards } = useLoyaltyProgramStore();
+  const { data, error, isLoading, refetch } = useQuery({
+    queryKey: ["loyaltyProgramData"],
+    queryFn: fetchLoyaltyProgramData,
+    enabled: !!token,
+  });
 
   useEffect(() => {
-    setDefinedRewards([
-      {
-        title: "Free Pineapple Bun",
-        description: "placeholder text",
-        requiredStamps: 3,
-      },
-      {
-        title: "Free BBQ Pork Bun",
-        description: "placeholder text",
-        requiredStamps: 3,
-      },
-    ]);
-  }, [setDefinedRewards]);
+    if (data) {
+      setBusinessInfo(
+        data.businessName,
+        data.businessLogo,
+        data.businessPhone,
+        data.businessEmail
+      );
+      setStampLife(data.stampLife);
+      setStampCount(data.stampCount);
+      setScaleAmount(data.scaleAmount);
+      setDefinedRewards(data.definedRewards);
+    }
+  }, [
+    data,
+    refetchIndicator,
+    setBusinessInfo,
+    setDefinedRewards,
+    setScaleAmount,
+    setStampCount,
+    setStampLife,
+  ]);
 
-  return (
-    <div className="border-b-2 border-slate-300 py-5">
-      <OptionHeader
-        title="Define reward"
-        info="Create rewards that your customers can cash their stamps out for!"
-      />
+  useEffect(() => {
+    async function fetchToken() {
+      const toFetch = await getToken();
+      setToken(toFetch);
+    }
 
-      {definedRewards.map((item) => {
-        return (
-          <div
-            key="item.title"
-            className="flex border-2 p-5 border-black rounded-md"
-          >
-            <p>{item.title}</p>
-          </div>
-        );
-      })}
-    </div>
-  );
-};
+    fetchToken();
+  }, [getToken, setToken]);
 
 const CardLayoutStyleSection = () => {
   const { cardLayoutStyle, incrementCardLayoutStyle, decrementCardLayoutStyle } = useLoyaltyProgramStore();
@@ -348,38 +276,52 @@ const ColorThemeSection = () => {
   );
 };
 
-export default function LoyaltyProgram() {
   return (
     <>
       <p className="text-2xl font-semibold pt-10 pb-5">
         Loyalty Program Builder
       </p>
 
-      <div className="flex justify-start gap-40">
-        <Tabs defaultValue="settings" className="w-1/2">
-          <TabsList>
-            <TabsTrigger value="settings">Settings</TabsTrigger>
-            <TabsTrigger value="design">Design</TabsTrigger>
-          </TabsList>
-          <TabsContent value="settings">
-            <div className="ml-10">
-              <StampLifeSection />
-              <StampCountSection />
-              <ScaleRewardSection />
-              <DefineRewardSection />
+      {!isLoading && (
+        <div className="flex justify-start gap-20">
+          <div className="flex flex-col w-3/5">
+            <Tabs defaultValue="settings" className="">
+              <TabsList>
+                <TabsTrigger value="settings">Settings</TabsTrigger>
+                <TabsTrigger value="design">Design</TabsTrigger>
+              </TabsList>
+              <TabsContent value="settings">
+                <div className="ml-10">
+                  <StampLifeSection />
+                  <StampCountSection />
+                  <ScaleRewardSection />
+                  <DefineRewardSection />
+                </div>
+              </TabsContent>
+              <TabsContent value="design">
+                <div className="ml-10">
+                  <CardLayoutStyleSection />
+                  <ActiveStampSection />
+                  <LogoBackgroundSection />
+                  <ColorThemeSection />
+                </div>
+              </TabsContent>
+            </Tabs>
+
+            <EditSection refetch={refetch} />
+          </div>
+          <div className="w-3/5">
+            <p className="border-b-2 border-black text-lg font-semibold mb-5 pb-4">
+              Loyalty Program Preview
+            </p>
+            <div className="mx-auto flex flex-col gap-5 w-5/6">
+              <Variant1 />
+              <LoyaltyProgress />
+              <RewardsPreview />
             </div>
-          </TabsContent>
-          <TabsContent value="design">
-            <div className="ml-10">
-              <CardLayoutStyleSection />
-              <ActiveStampSection />
-              <LogoBackgroundSection />
-              <ColorThemeSection />
-            </div>
-          </TabsContent>
-        </Tabs>
-        <p className="bg-pink-500 w-1/3">live preview will go here</p>
-      </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

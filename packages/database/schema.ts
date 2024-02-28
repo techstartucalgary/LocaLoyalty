@@ -14,6 +14,7 @@ import {
   varchar,
   timestamp,
   decimal,
+  boolean,
 } from "drizzle-orm/mysql-core";
 
 // Customer
@@ -32,8 +33,10 @@ export const vendor = mysqlTable("vendor", {
   vendor_id: serial("vendor_id").primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   email: varchar("email", { length: 256 }).notNull(),
+  business_email: varchar("business_email", { length: 256 }),
   address: varchar("address", { length: 256 }),
   phone: varchar("phone", { length: 16 }),
+  business_phone: varchar("business_phone", { length: 16 }),
   description: text("description"),
   color: varchar("color", { length: 16 }),
   reward_program_details: text("reward_program_details"),
@@ -47,6 +50,7 @@ export const vendor = mysqlTable("vendor", {
   business_logo: text("business_logo"),
   merchant_id: varchar("merchant_id", { length: 13 }),
   clover_api_key: varchar("clover_api_key", { length: 200 }),
+  stamp_life: int("stamp_life"),
 });
 
 // Loyalty Card
@@ -84,4 +88,22 @@ export const reward = mysqlTable("reward", {
   name: varchar("name", { length: 256 }),
   description: text("description"),
   points_cost: int("points_cost").notNull(),
+});
+
+// Onboarding Completion Cards
+export const onboarding = mysqlTable("onboarding", {
+  id: serial("onboarding_id").primaryKey(),
+  icon: varchar("icon", { length: 255 }).notNull(),
+  title: varchar("title", { length: 256 }).notNull(),
+  priority: int("priority").notNull(),
+  directory: varchar("directory", { length: 256 }).notNull(),
+  buttonText: varchar("buttonText", { length: 32 }).notNull(),
+});
+
+// onboarding_vendor
+export const onboarding_vendor = mysqlTable("onboarding_vendor", {
+  id: serial("onboarding_vendor").primaryKey(),
+  onboarding_id: int("onboarding_id").notNull(),
+  vendor_id: int("vendor_id").notNull(),
+  isCompleted: boolean("isCompleted").notNull(),
 });

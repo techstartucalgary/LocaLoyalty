@@ -58,6 +58,38 @@ paths:
           description: Successful response
         500:
           description: Failure
+  /business/loyalty-program:
+    get:
+      tags:
+        - business
+      summary: Get the current loyalty program data of the user
+      description: Queries user profile and loyalty program table in DB for data and sends it back to the front-end. No params required because the header includes the clerk ID already
+      operationId: getBusinessLoyaltyProgram
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BusinessLoyaltyProgram"
+        500:
+          description: User Does not exist in DB
+    post:
+      tags:
+        - business
+      summary: Update business owner's loyalty program and rewards info
+      description: Updates the user loyalty program and rewards if valid. UserID is taken from header. A reward_id of null indicates that the reward is a new one and requires a DB insertion
+      operationId: updateBusinessLoyaltyProgram
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BusinessLoyaltyProgram"
+      responses:
+        200:
+          description: Successful response
+        500:
+          description: Failure
 components:
   schemas:
     BusinessProfile:
@@ -66,6 +98,12 @@ components:
         businessName:
           type: string
           example: "Zhang's Bakery"
+        businessPhone:
+          type: string
+          example: "1231231234"
+        businessEmail:
+          type: string
+          example: "fake@gmail.com"
         address:
           type: string
           example: "123 real address NE"
@@ -93,3 +131,43 @@ components:
         description:
           type: string
           example: "this is a really cool store"
+    BusinessLoyaltyProgram:
+      type: object
+      properties:
+        businessName:
+          type: string
+          example: "Zhang's Bakery"
+        businessLogo:
+          type: string
+          example: "some aws s3 link"
+        businessPhone:
+          type: string
+          example: "1231231234"
+        businessEmail:
+          type: string
+          example: "fake@gmail.com"
+        stampLife:
+          type: number
+          example: null
+        stampCount:
+          type: number
+          example: 6
+        scaleAmount:
+          type: string
+          example: "5"
+        definedRewards:
+          type: array
+          items:
+            $ref: "#/components/schemas/Reward"
+    Reward:
+      type: object
+      properties:
+        reward_id:
+          type: number
+          example: 8
+        title:
+          type: string
+          example: "Free Pineapple Bun"
+        requiredStamps:
+          type: number
+          example: 3

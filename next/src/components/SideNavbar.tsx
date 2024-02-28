@@ -61,14 +61,14 @@ const SideNavbar = () => {
             <SideNavBarOptions
               title="Dashboard"
               icon={TbLayoutDashboard}
-              link=""
+              link="/auth"
               id="1"
             />
 
             <SideNavBarOptions
               title="Loyalty Program"
               icon={BiGift}
-              link=""
+              link="/auth/loyalty-program"
               id="2"
             />
 
@@ -89,7 +89,7 @@ const SideNavbar = () => {
             <SideNavBarOptions
               title="Settings"
               icon={LuSettings}
-              link=""
+              link="/auth/profile"
               id="5"
             />
           </div>

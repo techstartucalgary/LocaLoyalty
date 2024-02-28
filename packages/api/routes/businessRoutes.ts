@@ -8,7 +8,17 @@ import {
 } from "@aws-sdk/client-s3";
 import crypto from "crypto";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { editVendor, getVendor } from "../../database/db_interface";
+import {
+  editVendor,
+  getVendor,
+  getAllRewardsOfVendor,
+  getVendorFromClerkID,
+  editVendorLoyaltyProgram,
+  editVendorReward,
+  addVendorReward,
+  deleteVendorReward,
+  getVendorLoyaltyProgramInfo,
+} from "../../database/db_interface";
 
 const router = express.Router();
 
@@ -101,6 +111,8 @@ router.post(
     await editVendor(
       req.auth.userId,
       body.name,
+      body.business_email,
+      body.business_phone,
       body.address,
       body.city,
       body.province,
@@ -115,5 +127,94 @@ router.post(
     res.status(200).json({ message: "Profile updated successfully" });
   }
 );
+
+router.get("/loyalty-program", async (req: Request, res: Response) => {
+  try {
+    const vendor = await getVendorFromClerkID(req.auth.userId);
+    const vendor_id = vendor![0].vendor_id;
+    const loyaltyInfo = await getVendorLoyaltyProgramInfo(vendor_id);
+    const rewards = await getAllRewardsOfVendor(vendor_id);
+
+    if (loyaltyInfo![0]?.businessLogo == null) {
+      // Checks for both undefined and null
+      throw new Error("businessLogo is null or undefined");
+    }
+
+    const url = await getSignedUrl(
+      s3,
+      new GetObjectCommand({
+        Bucket: process.env.BUCKET_NAME,
+        Key: loyaltyInfo![0].businessLogo, //this is the imageName that will be stored into the database
+      }),
+      { expiresIn: 3600 }
+    );
+
+    res.status(200).json({
+      vendor_id: vendor_id,
+      businessName: loyaltyInfo![0].businessName,
+      businessLogo: url,
+      businessPhone: loyaltyInfo![0].businessPhone,
+      businessEmail: loyaltyInfo![0].businessEmail,
+      stampLife: loyaltyInfo![0].stampLife,
+      stampCount: loyaltyInfo![0].stampCount,
+      scaleAmount: loyaltyInfo![0].scaleAmount,
+      definedRewards: rewards,
+    });
+  } catch (error: unknown) {
+    res.status(500).json({ message: "User does not exist" });
+  }
+});
+
+router.post("/loyalty-program", async (req: Request, res: Response) => {
+  try {
+    let body = req.body;
+
+    //get the initial vendor id
+    const vendor = await getVendorFromClerkID(req.auth.userId);
+    const vendor_id = vendor![0].vendor_id;
+
+    //update basic values like stampLife, stampCount, scaleAmount
+    await editVendorLoyaltyProgram(
+      vendor_id,
+      body.stampLife,
+      body.stampCount,
+      body.scaleAmount
+    );
+
+    //loop through defined rewards dealing with new rewards and updated rewards
+    body.definedRewards.map(
+      ({
+        reward_id,
+        title,
+        requiredStamps,
+      }: {
+        reward_id: number | null;
+        title: string;
+        requiredStamps: number;
+      }) => {
+        reward_id
+          ? editVendorReward(reward_id, title, requiredStamps)
+          : addVendorReward(vendor_id, title, requiredStamps);
+      }
+    );
+
+    let currentRewards = await getAllRewardsOfVendor(vendor_id);
+    const rewardsToDelete = currentRewards!.filter(
+      (currentReward) =>
+        !body.definedRewards.some(
+          (definedReward: { reward_id: number }) =>
+            definedReward.reward_id === currentReward.reward_id
+        )
+    );
+
+    rewardsToDelete.map((item) => {
+      deleteVendorReward(item.reward_id);
+    });
+
+    res.status(200).json({ message: "Profile updated successfully" });
+  } catch (Error: unknown) {
+    res.status(500).json({ message: "Something went wrong..." });
+  }
+});
 
 export default router;
