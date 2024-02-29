@@ -123,6 +123,7 @@ export default function Profile() {
     queryKey: ["initialProfileData"],
     queryFn: fetchInitialProfileData,
     enabled: !!token,
+
   });
 
   const [isEditing, setIsEditing] = useState(false);

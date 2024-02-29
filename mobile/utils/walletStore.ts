@@ -1,32 +1,56 @@
 import { create } from "zustand";
 
 type WalletState = {
+	currentBusinessID: number;
 	currentBusinessName: string;
-	currentBusinessImage: any;
+	currentBusinessLogo: string;
+	currentBusinessEmail: string;
+	currentBusinessPhone: string;
 	currentBusinessDescription: string;
 	currentCompletedStamps: number;
 	currentMaxStamps: number;
 	currentPrimaryColor: string;
+	currentCarry_over_amt: number,
+	currentSpending_per_point: number,
+	setCurrentBusinessID: (id: number) => void;
 	setCurrentBusinessName: (name: string) => void;
-	setCurrentBusinessImage: (image: any) => void;
+	setCurrentBusinessLogo: (image: string) => void;
+	setCurrentBusinessEmail: (email: string) => void;
+	setCurrentBusinessPhone: (phone: string) => void;
 	setCurrentBuisnessDescription: (desc: string) => void;
 	setCurrentCompletedStamps: (completedStampNumber: number) => void;
 	setCurrentMaxStamps: (maxStampNumber: number) => void;
 	setCurrentPrimaryColor: (color: string) => void;
+	setCurrentCarry_over_amt: (carry_over_amt: number) => void,
+	setCurrentSpending_per_point: (spending_per_point: number) => void,
 };
 
 export const useWalletStore = create<WalletState>((set) => ({
+	currentBusinessID: 0,
 	currentBusinessName: "",
-	currentBusinessImage: "",
+	currentBusinessLogo: "",
+	currentBusinessEmail: "",
+	currentBusinessPhone: "",
 	currentBusinessDescription: "",
 	currentCompletedStamps: 0,
 	currentMaxStamps: 6,
 	currentPrimaryColor: "",
+	currentCarry_over_amt: 0,
+	currentSpending_per_point: 0,
+	setCurrentBusinessID: (id) => {
+		set({ currentBusinessID: id });
+	},
 	setCurrentBusinessName: (name) => {
 		set({ currentBusinessName: name });
 	},
-	setCurrentBusinessImage: (image) => {
-		set({ currentBusinessImage: image });
+	setCurrentBusinessEmail: (email) => {
+		set({ currentBusinessEmail: email })
+	},
+	setCurrentBusinessPhone: (phone) => {
+		set({ currentBusinessPhone: phone })
+	},
+	setCurrentBusinessLogo: (image) => {
+		set({ currentBusinessLogo: image });
 	},
 	setCurrentBuisnessDescription: (desc: string) => {
 		set({ currentBusinessDescription: desc });
@@ -39,6 +63,12 @@ export const useWalletStore = create<WalletState>((set) => ({
 	},
 	setCurrentPrimaryColor: (color) => {
 		set({ currentPrimaryColor: color });
+	},
+	setCurrentCarry_over_amt: (carry_over_amt: number) => {
+		set({ currentCarry_over_amt: carry_over_amt })
+	},
+	setCurrentSpending_per_point: (spending_per_point: number) => {
+		set({ currentSpending_per_point: spending_per_point })
 	},
 }));
 

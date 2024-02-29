@@ -13,7 +13,7 @@ const WalletHeader = () => {
 				<Pressable>
 					<Ionicons name="person-outline" size={24} color={"#000"} />
 				</Pressable>
-				<Text className="text-[#EDEDFF] text-xl font-semibold">
+				<Text className="text-[#EDEDFF] text-xl font-medium">
 					Hello, {user?.firstName}
 				</Text>
 				<Pressable>
@@ -24,7 +24,7 @@ const WalletHeader = () => {
 	);
 };
 
-const BusinessCardBackButton = ({ onPress }: { onPress: () => void }) => {
+const LoyaltyCardBackButton = ({ onPress }: { onPress: () => void }) => {
 	return (
 		<Pressable onPress={onPress}>
 			<Ionicons name="arrow-back" size={24} color={"#000"} />
@@ -37,8 +37,8 @@ export default function WalletPage() {
 
 	return (
 		<Stack screenOptions={{
-            headerTransparent: true
-        }}>
+			headerTransparent: true
+		}}>
 			<Stack.Screen
 				name="index"
 				options={{
@@ -49,10 +49,10 @@ export default function WalletPage() {
 				name="[businessName]"
 				options={{
 					headerTitle: "",
-                    headerStyle: {
-                        backgroundColor: currentPrimaryColor
-                    },
-                    headerTintColor: "#000"
+					headerStyle: {
+						backgroundColor: currentPrimaryColor
+					},
+					headerTintColor: "#000"
 				}}
 			/>
 		</Stack>

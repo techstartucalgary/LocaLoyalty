@@ -5,9 +5,16 @@ Author: Max Pagels
 January 18 2024
 */
 
+import { SocketAddress } from "net";
 import { db } from "./dbObj.js";
 import * as schema from "./schema.js";
-import { SQLWrapper, and, eq } from "drizzle-orm";
+import { SQLWrapper, and, eq, notInArray, sql } from "drizzle-orm";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+} from "@aws-sdk/client-s3";
 
 // Adds a new customer to the database, returns the generated customer_id
 export async function addCustomer(
@@ -75,19 +82,18 @@ export async function addVendor(
 }
 
 // Adds a new loyalty card to the customer
-/*
-async function addLoyaltyCard(
-  customer_id, //TODO: enforce types
-  vendor_id,
-  points_amt,
-  carry_over_amt
+export async function addLoyaltyCard(
+  customer_id: number, //TODO: enforce types
+  vendor_id: number,
+  points_amt: number,
+  carry_over_amt: number,
 ) {
   // Insert loyalty card information
   await db.insert(schema.loyalty_card).values({
     customer_id: customer_id,
-    vendor_id: vendor_id,
+    program_id: vendor_id,
     points_amt: points_amt,
-    carry_over_amt: carry_over_amt,
+    carry_over_amt: carry_over_amt.toString(),
   });
 
   // Get loyalty card id
@@ -99,7 +105,7 @@ async function addLoyaltyCard(
     .where(
       and(
         eq(schema.loyalty_card.customer_id, customer_id),
-        eq(schema.loyalty_card.vendor_id, vendor_id)
+        eq(schema.loyalty_card.program_id, vendor_id)
       )
     );
 
@@ -111,7 +117,6 @@ async function addLoyaltyCard(
 
   return result[0].id;
 }
-*/
 
 // Adds a new point redemption
 // Timestamp auto generated
@@ -441,20 +446,80 @@ async function getReward(reward_id) {
 
 // Get all customers has no use case for now...
 
-// Gets all vendors in the database
-/*
-async function getAllVendors() {
-  const results = await db.select().from(schema.vendor);
+// Gets all vendors that aren't in a user's wallet in the database
+export async function getAllVendorsExceptWallet(customer_id: number) {
 
-  //if there is an error return null
-  if (Object.keys(results).length === 0) {
-    console.log("Database query failed");
-    return null;
+  const vendorsAlreadyInWallet = await db.select({
+    vendor_id: schema.loyalty_card.program_id,
+  }).from(schema.loyalty_card).where(eq(schema.loyalty_card.customer_id, customer_id))
+
+  let results: {
+    vendor_id: number;
+    name: string;
+    business_image: string | null;
+    description: string | null;
+  }[] = []
+  // if the customer has no vendors in wallet then just get all vendors to display
+  if (vendorsAlreadyInWallet.length === 0) {
+    results = await db.select({
+      vendor_id: schema.vendor.vendor_id,
+      name: schema.vendor.name,
+      business_image: schema.vendor.business_image,
+      description: schema.vendor.description,
+    }).from(schema.vendor);
+  } else {
+    const vendor_idAlreadyInWallet = vendorsAlreadyInWallet.map(vendor => vendor.vendor_id!)
+
+    results = await db.select({
+      vendor_id: schema.vendor.vendor_id,
+      name: schema.vendor.name,
+      business_image: schema.vendor.business_image,
+      description: schema.vendor.description,
+    }).from(schema.vendor).where(notInArray(schema.vendor.vendor_id, vendor_idAlreadyInWallet))
   }
 
-  return results;
+
+  type Vendor = {
+    vendor_id: number;
+    name: string;
+    business_image: string | null;
+    description: string | null;
+  }
+
+  const vendorList: Vendor[] = []
+
+  for (let i = 0; i < results.length; i++) {
+    // Get s3 image url based on the key stored in the db
+    const { business_image, ...remainder } = results[i]
+
+    // Make s3 connection
+    const s3 = new S3Client({
+      region: process.env.BUCKET_REGION || "",
+      credentials: {
+        accessKeyId: process.env.BUCKET_LOCAL_ACCESS_KEY || "",
+        secretAccessKey: process.env.BUCKET_LOCAL_SECRET_ACCESS_KEY || "",
+      },
+    });
+
+    // Get the url for s3 image
+    const url = await getSignedUrl(
+      s3,
+      new GetObjectCommand({
+        Bucket: process.env.BUCKET_NAME,
+        Key: business_image || "", //this is the imageName that will be stored into the database, ideally have a default image if the business doesn't have one set
+      }),
+      { expiresIn: 3600 }
+    );
+
+    vendorList.push({
+      business_image: url,
+      ...remainder,
+    })
+
+  }
+
+  return vendorList;
 }
-*/
 
 // Gets all loyalty cards for a given customer
 // Input: the customers customer_id
@@ -470,8 +535,145 @@ export async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
     return null;
   }
 
-  return results;
+  type LoyaltyCard = {
+    name: string;
+    email: string;
+    address: string | null;
+    phone: string | null;
+    color: string | null;
+    max_points: number | null;
+    spending_per_point: string | null;
+    business_logo: string | null;
+    desc: string | null;
+
+    points_amt: number;
+    carry_over_amt: number;
+    vendor_id: number;
+  }
+
+  let loyaltyCardInfo: LoyaltyCard[] = []
+
+
+  for (let i = 0; i < results.length; i++) {
+
+    const card = results[i]
+
+    if (card.program_id) {
+
+      // Get the vendor information from the vendor table based on the card for the user      
+      const vendorResults =
+        await db.select({
+          name: schema.vendor.name,
+          email: schema.vendor.email,
+          address: schema.vendor.address,
+          phone: schema.vendor.phone,
+          color: schema.vendor.color,
+          max_points: schema.vendor.max_points,
+          spending_per_point: schema.vendor.spending_per_point,
+          business_logo: schema.vendor.business_logo,
+          desc: schema.vendor.description,
+        }).from(schema.vendor).where(eq(schema.vendor.vendor_id, card.program_id))
+
+      // Check for db query fail
+      if (Object.keys(vendorResults).length === 0) {
+        console.log("Database query failed");
+        return null;
+      }
+
+      // Gather all vendor info into an object and push to array
+
+      // Get s3 image url based on the key stored in the db
+      const { business_logo, ...remainder } = vendorResults[0]
+
+      // Make s3 connection
+      const s3 = new S3Client({
+        region: process.env.BUCKET_REGION || "",
+        credentials: {
+          accessKeyId: process.env.BUCKET_LOCAL_ACCESS_KEY || "",
+          secretAccessKey: process.env.BUCKET_LOCAL_SECRET_ACCESS_KEY || "",
+        },
+      });
+
+      // Get the url for s3 image
+      const url = await getSignedUrl(
+        s3,
+        new GetObjectCommand({
+          Bucket: process.env.BUCKET_NAME,
+          Key: business_logo || "", //this is the imageName that will be stored into the database, ideally have a default image if the business doesn't have one set
+        }),
+        { expiresIn: 3600 }
+      );
+
+
+      loyaltyCardInfo.push({
+        ...remainder,
+        business_logo: url,
+        points_amt: card.points_amt,
+        carry_over_amt: parseFloat(card.carry_over_amt),
+        vendor_id: card.program_id
+      })
+    }
+  }
+
+  return loyaltyCardInfo;
 }
+
+
+export async function getRedeemable(customer_id: number) {
+  const results = await db.execute(sql`SELECT c.name as vendor_name, c.business_logo, r.name as reward_name, r.points_cost, r.reward_id
+FROM reward r
+INNER JOIN (SELECT v.name, v.business_logo, b.vendor_id, b.points_amt
+FROM vendor v
+INNER JOIN (SELECT vendor_id, points_amt 
+FROM loyalty_card lc
+WHERE customer_id = ${customer_id}) AS b ON b.vendor_id = v.vendor_id) AS c ON r.vendor_id = c.vendor_id
+WHERE c.points_amt >= r.points_cost;`)
+
+  type Redeemables = {
+    business_logo: string,
+    points_cost: number,
+    reward_id: number,
+    reward_name: string,
+    vendor_name: string,
+  }[]
+
+  const redeemables = results.rows as unknown as Redeemables // Shitty typescript casting
+
+  const redeemablesWithURL: Redeemables = []
+
+  for (let i = 0; i < redeemables.length; i++) {
+    // Get s3 image url based on the key stored in the db
+    const { business_logo, ...remainder } = redeemables[i]
+
+    // Make s3 connection
+    const s3 = new S3Client({
+      region: process.env.BUCKET_REGION || "",
+      credentials: {
+        accessKeyId: process.env.BUCKET_LOCAL_ACCESS_KEY || "",
+        secretAccessKey: process.env.BUCKET_LOCAL_SECRET_ACCESS_KEY || "",
+      },
+    });
+
+    // Get the url for s3 image
+    const url = await getSignedUrl(
+      s3,
+      new GetObjectCommand({
+        Bucket: process.env.BUCKET_NAME,
+        Key: business_logo || "", //this is the imageName that will be stored into the database, ideally have a default image if the business doesn't have one set
+      }),
+      { expiresIn: 3600 }
+    );
+
+    redeemablesWithURL.push({
+      business_logo: url,
+      ...remainder,
+    })
+
+  }
+
+  return redeemablesWithURL;
+}
+
 
 // Gets all point redemption history for a given loyalty card
 // Input: the loyalty_id of the loyalty card
@@ -544,7 +746,8 @@ export async function getAllRewardsOfVendor(vendor_id: number) {
       requiredStamps: schema.reward.points_cost,
     })
     .from(schema.reward)
-    .where(eq(schema.reward.vendor_id, vendor_id));
+    .where(eq(schema.reward.vendor_id, vendor_id))
+    .orderBy(schema.reward.points_cost)
 
   //if there is an error return null
   if (Object.keys(results).length === 0) {

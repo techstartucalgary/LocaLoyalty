@@ -4,6 +4,8 @@
     "migrate": "node -r esbuild-register ./migrate.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.515.0",
+    "@aws-sdk/s3-request-presigner": "^3.515.0",
     "@planetscale/database": "^1.13.0",
     "dotenv": "^16.3.1",
     "drizzle-kit": "^0.20.9",
