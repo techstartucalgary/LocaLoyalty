@@ -26,7 +26,7 @@ export async function fetchAPI(
     };
 
     const response = await axios(options);
-    console.log("from axios: " + response);
+
     return response.data;
   } catch (error) {
     const axiosError = error as AxiosError;
