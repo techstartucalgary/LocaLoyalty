@@ -125,6 +125,19 @@ app.post("/website-webhook", async (req, res) => {
   }
 });
 
+// Clover transaction webhook
+app.post("/clover-webhook", async (req, res) => {
+  console.log("Clover webhook received");
+
+  // Respond to Clover to acknowledge receipt of the webhook
+  res.status(200).json({
+    success: true,
+    message: "Clover webhook received",
+  });
+});
+
+
+
 app.get("/", (req, res) => {
   res.send("Hello");
 });
