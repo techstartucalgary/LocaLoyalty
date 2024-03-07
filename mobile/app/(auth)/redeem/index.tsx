@@ -39,57 +39,52 @@ const RedeemCard = ({
           setModalVisible(false);
         }}
       >
-        <TouchableOpacity
-          className="w-full h-full"
-          onPress={() => setModalVisible(false)}
-        >
-          <View className="flex flex-1 justify-center items-center bg-black/75 ">
-            <TouchableOpacity
-              className="mx-12 bg-white rounded-lg pt-6 px-8 items-center"
-              activeOpacity={1}
-            >
-              <View className="w-full items-center">
-                <Text className="text-2xl font-bold text-[#153463]">
-                  To Redeem
-                </Text>
-                <Text className="text-lg font-medium text-[#153463]">
-                  {reward_name}
-                </Text>
-                <Text className="text-lg italic font-semibold text-[#ACACAC]">
-                  {vendor_name}
-                </Text>
-                <View className="flex-row items-start pt-2 px-4">
-                  <View className="p-2">
-                    <Ionicons name="warning-outline" size={24} color={"#000"} />
-                  </View>
-                  <Text className="text-lg">
-                    Please confirm that the store approves of this redemption.
-                    Once you redeem the stamp at this store, it will be
-                    permanently removed from your Ready to Redeem Rewards.
-                  </Text>
+        <View className="w-full h-full flex flex-1 justify-center items-center bg-black/75 ">
+          <TouchableOpacity
+            className="mx-12 bg-white rounded-lg pt-6 px-8 items-center"
+            activeOpacity={1}
+          >
+            <View className="w-full items-center">
+              <Text className="text-2xl font-bold text-[#153463]">
+                To Redeem
+              </Text>
+              <Text className="text-lg font-medium text-[#153463]">
+                {reward_name}
+              </Text>
+              <Text className="text-lg italic font-semibold text-[#ACACAC]">
+                {vendor_name}
+              </Text>
+              <View className="flex-row items-start pt-2 px-4">
+                <View className="p-2">
+                  <Ionicons name="warning-outline" size={24} color={"#000"} />
                 </View>
-                <View className="pt-2 w-full flex-row justify-between">
-                  <TouchableOpacity
-                    className="w-28 bg-[#9C3232] px-4 py-2 rounded-full"
-                    onPress={() => setModalVisible(false)}
-                  >
-                    <Text className="text-center text-white text-lg">
-                      Cancel
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    className="w-28 bg-[#81DA8A] px-4 py-2 rounded-full"
-                    onPress={() => setModalVisible(false)}
-                  >
-                    <Text className="text-center text-white text-lg">
-                      Confirm
-                    </Text>
-                  </TouchableOpacity>
-                </View>
+                <Text className="text-lg">
+                  Please confirm that the store approves of this redemption.
+                  Once you redeem the stamp at this store, it will be
+                  permanently removed from your Ready to Redeem Rewards.
+                </Text>
               </View>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
+              <View className="pt-4 w-full flex-row justify-around">
+                <TouchableOpacity
+                  className="w-28 bg-[#9C3232] px-4 py-2 rounded-full"
+                  onPress={() => setModalVisible(false)}
+                >
+                  <Text className="text-center text-white text-lg">
+                    Cancel
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  className="w-28 bg-[#81DA8A] px-4 py-2 rounded-full"
+                  onPress={() => setModalVisible(false)}
+                >
+                  <Text className="text-center text-white text-lg">
+                    Confirm
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </TouchableOpacity>
+        </View>
       </Modal>
       <TouchableOpacity onPress={() => setModalVisible(true)}>
         <View

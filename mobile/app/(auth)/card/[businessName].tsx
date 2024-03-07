@@ -6,6 +6,8 @@ import {
   Pressable,
   ActivityIndicator,
   ScrollView,
+  TouchableOpacity,
+  Modal,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
@@ -20,7 +22,7 @@ import MapView from "react-native-maps";
 
 const RewardsSection = () => {
   const { getToken, isLoaded, isSignedIn } = useAuth();
-  const { currentBusinessID } = useWalletStore();
+  const { currentBusinessID, currentBusinessName, currentCompletedStamps } = useWalletStore();
 
   const fetchRewards = async () => {
     return fetchAPI(
@@ -43,6 +45,20 @@ const RewardsSection = () => {
     requiredStamps: number;
   }[] = data;
 
+
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalReward, setModalReward] = useState("");
+
+  function handleRewardPress(requiredStamps: number, rewardName: string) {
+    if (currentCompletedStamps < requiredStamps) {
+      return
+    }
+
+    setModalReward(rewardName)
+    setModalVisible(true)
+  }
+
   return (
     <View className="h-full w-full items-center">
       {isError && <Text>Failed to load...</Text>}
@@ -54,18 +70,78 @@ const RewardsSection = () => {
           data={rewards}
           renderItem={({ item }) => {
             return (
-              <View
-                className="bg-[#EBEBEB] p-3 shadow my-4 rounded-xl flex-row justify-between items-center"
-                key={item.reward_id}
-              >
-                <Text className="text-xl font-semibold">{item.title}</Text>
-                <View className="flex-row items-center">
-                  <Text className="text-2xl font-medium">
-                    {item.requiredStamps}
-                  </Text>
-                  <ExtraSmallStamp className="scale-150 px-4" />
-                </View>
-              </View>
+              <>
+                <Modal
+                  animationType="fade"
+                  transparent={true}
+                  visible={modalVisible}
+                  onRequestClose={() => {
+                    setModalVisible(false);
+                  }}
+                >
+                  <View className="w-full h-full px-12 flex justify-center items-center bg-black/75 ">
+                    <TouchableOpacity
+                      className="bg-white rounded-lg py-6 px-6 items-center"
+                      activeOpacity={1}
+                    >
+                      <View className="w-full items-center">
+                        <Text className="text-2xl font-bold text-[#153463]">
+                          To Redeem
+                        </Text>
+                        <Text className="text-lg font-medium text-[#153463]">
+                          {modalReward}
+                        </Text>
+                        <Text className="text-lg italic font-semibold text-[#ACACAC]">
+                          {currentBusinessName}
+                        </Text>
+                        <View className="flex-row items-start pt-2">
+                          <View className="p-2">
+                            <Ionicons name="warning-outline" size={24} color={"#000"} />
+                          </View>
+                          <Text className="text-lg">
+                            Please confirm that the store approves of this redemption.
+                            Once you redeem the stamp at this store, it will be
+                            permanently removed from your Ready to Redeem Rewards.
+                          </Text>
+                        </View>
+                        <View className="pt-4 w-full flex-row justify-around">
+                          <TouchableOpacity
+                            className="w-28 bg-[#9C3232] px-4 py-2 rounded-full"
+                            onPress={() => setModalVisible(false)}
+                          >
+                            <Text className="text-center text-white text-lg">
+                              Cancel
+                            </Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            className="w-28 bg-[#81DA8A] px-4 py-2 rounded-full"
+                            onPress={() => setModalVisible(false)}
+                          >
+                            <Text className="text-center text-white text-lg">
+                              Confirm
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                </Modal>
+                <TouchableOpacity disabled={currentCompletedStamps < item.requiredStamps} onPress={() => handleRewardPress(item.requiredStamps, item.title)}>
+                  <View
+                    className="bg-[#EBEBEB] p-3 shadow my-4 rounded-xl flex-row justify-between items-center"
+                    style={{ backgroundColor: currentCompletedStamps < item.requiredStamps ? "#EBEBEB" : "#FFFFFF" }}
+                    key={item.reward_id}
+                  >
+                    <Text className="text-xl font-semibold">{item.title}</Text>
+                    <View className="flex-row items-center">
+                      <Text className="text-2xl font-medium">
+                        {item.requiredStamps}
+                      </Text>
+                      <ExtraSmallStamp className="scale-150 px-4" />
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              </>
             );
           }}
         />
@@ -173,9 +249,8 @@ const LoyaltyCardPage = () => {
             <View
               style={{
                 backgroundColor: currentPrimaryColor,
-                width: `${
-                  (currentCarry_over_amt / currentSpending_per_point) * 100
-                }%`,
+                width: `${(currentCarry_over_amt / currentSpending_per_point) * 100
+                  }%`,
               }}
               className="absolute h-full rounded-full"
             ></View>
