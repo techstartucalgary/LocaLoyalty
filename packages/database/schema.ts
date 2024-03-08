@@ -39,6 +39,8 @@ export const vendor = mysqlTable("vendor", {
   business_phone: varchar("business_phone", { length: 16 }),
   description: text("description"),
   color: varchar("color", { length: 16 }),
+  color2: varchar("color2", { length: 16 }),
+  color3: varchar("color3", { length: 16 }),
   reward_program_details: text("reward_program_details"),
   spending_per_point: decimal("spending_per_point"),
   max_points: int("max_points"),
@@ -51,6 +53,14 @@ export const vendor = mysqlTable("vendor", {
   merchant_id: varchar("merchant_id", { length: 13 }),
   clover_api_key: varchar("clover_api_key", { length: 200 }),
   stamp_life: int("stamp_life"),
+  card_layout: int("card_layout"),
+  stamp_design_id: int("stamp_design_id"),
+});
+
+// onboarding_vendor
+export const stamp_design = mysqlTable("stamp_design", {
+  stamp_design_id: serial("stamp_design_id").primaryKey(),
+  path: varchar("path", { length: 256 }),
 });
 
 // Loyalty Card
