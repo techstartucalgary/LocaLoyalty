@@ -18,6 +18,7 @@ import {
   addVendorReward,
   deleteVendorReward,
   getVendorLoyaltyProgramInfo,
+  getStampDesigns,
 } from "../../database/db_interface";
 
 const router = express.Router();
@@ -159,6 +160,23 @@ router.get("/loyalty-program", async (req: Request, res: Response) => {
       stampCount: loyaltyInfo![0].stampCount,
       scaleAmount: loyaltyInfo![0].scaleAmount,
       definedRewards: rewards,
+      cardLayout: loyaltyInfo![0].cardLayout,
+      stampDesignId: loyaltyInfo![0].stampDesignId,
+      color1: loyaltyInfo![0].color1,
+      color2: loyaltyInfo![0].color2,
+      color3: loyaltyInfo![0].color3,
+    });
+  } catch (error: unknown) {
+    res.status(500).json({ message: "User does not exist" });
+  }
+});
+
+router.get("/stamp-design", async (req: Request, res: Response) => {
+  try {
+    const stampDesigns = await getStampDesigns();
+
+    res.status(200).json({
+      stampDesigns: stampDesigns,
     });
   } catch (error: unknown) {
     res.status(500).json({ message: "User does not exist" });
@@ -178,7 +196,12 @@ router.post("/loyalty-program", async (req: Request, res: Response) => {
       vendor_id,
       body.stampLife,
       body.stampCount,
-      body.scaleAmount
+      body.scaleAmount,
+      body.cardLayout,
+      body.stampDesignId,
+      body.color1,
+      body.color2,
+      body.color3
     );
 
     //loop through defined rewards dealing with new rewards and updated rewards

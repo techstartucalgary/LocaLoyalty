@@ -86,7 +86,7 @@ export async function addLoyaltyCard(
   customer_id: number, //TODO: enforce types
   vendor_id: number,
   points_amt: number,
-  carry_over_amt: number,
+  carry_over_amt: number
 ) {
   // Insert loyalty card information
   await db.insert(schema.loyalty_card).values({
@@ -332,7 +332,12 @@ export async function editVendorLoyaltyProgram(
   vendor_id: number,
   stampLife: number | null,
   stampCount: number,
-  scaleAmount: string
+  scaleAmount: string,
+  cardLayout: number,
+  stampDesignId: number,
+  color1: string,
+  color2: string,
+  color3: string
 ) {
   await db
     .update(schema.vendor)
@@ -340,6 +345,11 @@ export async function editVendorLoyaltyProgram(
       stamp_life: stampLife,
       max_points: stampCount,
       spending_per_point: scaleAmount,
+      card_layout: cardLayout,
+      stamp_design_id: stampDesignId,
+      color: color1,
+      color2: color2,
+      color3: color3,
     })
     .where(eq(schema.vendor.vendor_id, vendor_id));
 }
@@ -448,49 +458,57 @@ async function getReward(reward_id) {
 
 // Gets all vendors that aren't in a user's wallet in the database
 export async function getAllVendorsExceptWallet(customer_id: number) {
-
-  const vendorsAlreadyInWallet = await db.select({
-    vendor_id: schema.loyalty_card.program_id,
-  }).from(schema.loyalty_card).where(eq(schema.loyalty_card.customer_id, customer_id))
+  const vendorsAlreadyInWallet = await db
+    .select({
+      vendor_id: schema.loyalty_card.program_id,
+    })
+    .from(schema.loyalty_card)
+    .where(eq(schema.loyalty_card.customer_id, customer_id));
 
   let results: {
     vendor_id: number;
     name: string;
     business_image: string | null;
     description: string | null;
-  }[] = []
+  }[] = [];
   // if the customer has no vendors in wallet then just get all vendors to display
   if (vendorsAlreadyInWallet.length === 0) {
-    results = await db.select({
-      vendor_id: schema.vendor.vendor_id,
-      name: schema.vendor.name,
-      business_image: schema.vendor.business_image,
-      description: schema.vendor.description,
-    }).from(schema.vendor);
+    results = await db
+      .select({
+        vendor_id: schema.vendor.vendor_id,
+        name: schema.vendor.name,
+        business_image: schema.vendor.business_image,
+        description: schema.vendor.description,
+      })
+      .from(schema.vendor);
   } else {
-    const vendor_idAlreadyInWallet = vendorsAlreadyInWallet.map(vendor => vendor.vendor_id!)
+    const vendor_idAlreadyInWallet = vendorsAlreadyInWallet.map(
+      (vendor) => vendor.vendor_id!
+    );
 
-    results = await db.select({
-      vendor_id: schema.vendor.vendor_id,
-      name: schema.vendor.name,
-      business_image: schema.vendor.business_image,
-      description: schema.vendor.description,
-    }).from(schema.vendor).where(notInArray(schema.vendor.vendor_id, vendor_idAlreadyInWallet))
+    results = await db
+      .select({
+        vendor_id: schema.vendor.vendor_id,
+        name: schema.vendor.name,
+        business_image: schema.vendor.business_image,
+        description: schema.vendor.description,
+      })
+      .from(schema.vendor)
+      .where(notInArray(schema.vendor.vendor_id, vendor_idAlreadyInWallet));
   }
-
 
   type Vendor = {
     vendor_id: number;
     name: string;
     business_image: string | null;
     description: string | null;
-  }
+  };
 
-  const vendorList: Vendor[] = []
+  const vendorList: Vendor[] = [];
 
   for (let i = 0; i < results.length; i++) {
     // Get s3 image url based on the key stored in the db
-    const { business_image, ...remainder } = results[i]
+    const { business_image, ...remainder } = results[i];
 
     // Make s3 connection
     const s3 = new S3Client({
@@ -514,8 +532,7 @@ export async function getAllVendorsExceptWallet(customer_id: number) {
     vendorList.push({
       business_image: url,
       ...remainder,
-    })
-
+    });
   }
 
   return vendorList;
@@ -549,20 +566,17 @@ export async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
     points_amt: number;
     carry_over_amt: number;
     vendor_id: number;
-  }
+  };
 
-  let loyaltyCardInfo: LoyaltyCard[] = []
-
+  let loyaltyCardInfo: LoyaltyCard[] = [];
 
   for (let i = 0; i < results.length; i++) {
-
-    const card = results[i]
+    const card = results[i];
 
     if (card.program_id) {
-
-      // Get the vendor information from the vendor table based on the card for the user      
-      const vendorResults =
-        await db.select({
+      // Get the vendor information from the vendor table based on the card for the user
+      const vendorResults = await db
+        .select({
           name: schema.vendor.name,
           email: schema.vendor.email,
           address: schema.vendor.address,
@@ -572,7 +586,9 @@ export async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
           spending_per_point: schema.vendor.spending_per_point,
           business_logo: schema.vendor.business_logo,
           desc: schema.vendor.description,
-        }).from(schema.vendor).where(eq(schema.vendor.vendor_id, card.program_id))
+        })
+        .from(schema.vendor)
+        .where(eq(schema.vendor.vendor_id, card.program_id));
 
       // Check for db query fail
       if (Object.keys(vendorResults).length === 0) {
@@ -583,7 +599,7 @@ export async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
       // Gather all vendor info into an object and push to array
 
       // Get s3 image url based on the key stored in the db
-      const { business_logo, ...remainder } = vendorResults[0]
+      const { business_logo, ...remainder } = vendorResults[0];
 
       // Make s3 connection
       const s3 = new S3Client({
@@ -604,46 +620,45 @@ export async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
         { expiresIn: 3600 }
       );
 
-
       loyaltyCardInfo.push({
         ...remainder,
         business_logo: url,
         points_amt: card.points_amt,
         carry_over_amt: parseFloat(card.carry_over_amt),
-        vendor_id: card.program_id
-      })
+        vendor_id: card.program_id,
+      });
     }
   }
 
   return loyaltyCardInfo;
 }
 
-
 export async function getRedeemable(customer_id: number) {
-  const results = await db.execute(sql`SELECT c.name as vendor_name, c.business_logo, r.name as reward_name, r.points_cost, r.reward_id
+  const results =
+    await db.execute(sql`SELECT c.name as vendor_name, c.business_logo, r.name as reward_name, r.points_cost, r.reward_id
 FROM reward r
 INNER JOIN (SELECT v.name, v.business_logo, b.vendor_id, b.points_amt
 FROM vendor v
 INNER JOIN (SELECT vendor_id, points_amt 
 FROM loyalty_card lc
 WHERE customer_id = ${customer_id}) AS b ON b.vendor_id = v.vendor_id) AS c ON r.vendor_id = c.vendor_id
-WHERE c.points_amt >= r.points_cost;`)
+WHERE c.points_amt >= r.points_cost;`);
 
   type Redeemables = {
-    business_logo: string,
-    points_cost: number,
-    reward_id: number,
-    reward_name: string,
-    vendor_name: string,
-  }[]
+    business_logo: string;
+    points_cost: number;
+    reward_id: number;
+    reward_name: string;
+    vendor_name: string;
+  }[];
 
-  const redeemables = results.rows as unknown as Redeemables // Shitty typescript casting
+  const redeemables = results.rows as unknown as Redeemables; // Shitty typescript casting
 
-  const redeemablesWithURL: Redeemables = []
+  const redeemablesWithURL: Redeemables = [];
 
   for (let i = 0; i < redeemables.length; i++) {
     // Get s3 image url based on the key stored in the db
-    const { business_logo, ...remainder } = redeemables[i]
+    const { business_logo, ...remainder } = redeemables[i];
 
     // Make s3 connection
     const s3 = new S3Client({
@@ -667,13 +682,11 @@ WHERE c.points_amt >= r.points_cost;`)
     redeemablesWithURL.push({
       business_logo: url,
       ...remainder,
-    })
-
+    });
   }
 
   return redeemablesWithURL;
 }
-
 
 // Gets all point redemption history for a given loyalty card
 // Input: the loyalty_id of the loyalty card
@@ -723,6 +736,11 @@ export async function getVendorLoyaltyProgramInfo(vendor_id: number) {
       stampLife: schema.vendor.stamp_life,
       stampCount: schema.vendor.max_points,
       scaleAmount: schema.vendor.spending_per_point,
+      cardLayout: schema.vendor.card_layout,
+      stampDesignId: schema.vendor.stamp_design_id,
+      color1: schema.vendor.color,
+      color2: schema.vendor.color2,
+      color3: schema.vendor.color3,
     })
     .from(schema.vendor)
     .where(eq(schema.vendor.vendor_id, vendor_id));
@@ -733,6 +751,11 @@ export async function getVendorLoyaltyProgramInfo(vendor_id: number) {
     return null;
   }
 
+  return results;
+}
+
+export async function getStampDesigns() {
+  const results = await db.select().from(schema.stamp_design);
   return results;
 }
 
@@ -747,7 +770,7 @@ export async function getAllRewardsOfVendor(vendor_id: number) {
     })
     .from(schema.reward)
     .where(eq(schema.reward.vendor_id, vendor_id))
-    .orderBy(schema.reward.points_cost)
+    .orderBy(schema.reward.points_cost);
 
   //if there is an error return null
   if (Object.keys(results).length === 0) {
