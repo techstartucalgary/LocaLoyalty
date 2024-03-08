@@ -9,10 +9,6 @@ info:
     url: http://www.example.com/support
     email: support@example.com
 
-servers:
-  - url:
-    description:
-
 tags:
   - name: business
     description: APIs for the website that small business owners will access
@@ -70,7 +66,7 @@ paths:
       description: Display all of the registered vendors which are not in the authenticated user's wallet. Must provide valid auth field in header
       operationId: getAllVendors
       responses:
-        200: 
+        200:
           description: Successful response
           content:
             application/json:
@@ -80,13 +76,13 @@ paths:
           description: Error fetching vendors
   /customer/loyalty-cards:
     get:
-      tags: 
+      tags:
         - customer
       summary: Get the list of vendors associated with a particular user
       description: Display all of the vendors associated with a particular user (ie. the vendors added to the user's wallet). Must provide valid auth field in header
       operationId: getAllLoyaltyCards
       responses:
-        200: 
+        200:
           description: Successful response
           content:
             application/json:
@@ -96,20 +92,21 @@ paths:
           description: Error fetching loyalty cards
   /customer/rewards/{vendorID}:
     get:
-      tags: 
+      tags:
         - customer
       summary: Get the list of all the rewards for a particular vendor
       description: Get all the rewards for a given vendor's loyalty card. Must provide valid auth field in header
       operationId: getAllRewards
       parameters:
         - name: vendorID
+          in: path
           description: ID of vendor needed to get rewards
           required: true
           schema:
             type: integer
             format: int64
       responses:
-        200: 
+        200:
           description: Successful response
           content:
             application/json:
@@ -134,7 +131,7 @@ paths:
           description: Error fetching rewards
   /customer/add-loyalty-card:
     post:
-      tags: 
+      tags:
         - customer
       summary: Add a new card to a user's wallet
       description: Add a new card to an authenticated user. Must provide valid auth field in header
@@ -145,7 +142,7 @@ paths:
             schema:
               $ref: "#/components/schemas/LoyaltyCardToAdd"
       responses:
-        200: 
+        200:
           description: Successful response
           content:
             application/json:
@@ -155,6 +152,34 @@ paths:
                 example: 23
         500:
           description: Error adding new loyalty card
+  /business/stamp-design:
+    get:
+      tags:
+        - business
+      summary: Get the stamp design variations from DB
+      description: Queries stamp_design table.
+      operationId: getStampDesigns
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  stampDesigns:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        stamp_design_id:
+                          type: number
+                          example: 1
+                        path:
+                          type: string
+                          example: "/assets/star.svg"
+        500:
+          description: could not retrieve designs
   /business/loyalty-program:
     get:
       tags:
@@ -256,10 +281,26 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Reward"
+        cardLayout:
+          type: number
+          example: 1
+        stampDesignId:
+          type: number
+          example: 1
+        color1:
+          type: string
+          example: "#ABC123"
+        color2:
+          type: string
+          example: "#ABC123"
+        color3:
+          type: string
+          example: "#ABC123"
+
     LoyaltyCards:
       type: array
-      items: 
-        $ref: '#/components/schemas/LoyaltyCard'
+      items:
+        $ref: "#/components/schemas/LoyaltyCard"
     LoyaltyCard:
       type: object
       properties:
@@ -331,8 +372,8 @@ components:
           example: 3
     VendorList:
       type: array
-      items: 
-        $ref: '#/components/schemas/Vendor'
+      items:
+        $ref: "#/components/schemas/Vendor"
     Vendor:
       type: object
       properties:
