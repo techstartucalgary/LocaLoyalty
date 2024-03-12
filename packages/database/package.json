@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "generate": "pnpm drizzle-kit generate:mysql --schema=./schema.ts",
+    "generate": "pnpm drizzle-kit generate:sqlite --schema=./schema.ts",
     "migrate": "node -r esbuild-register ./migrate.ts"
   },
   "dependencies": {
@@ -10,7 +10,8 @@
     "dotenv": "^16.3.1",
     "drizzle-kit": "^0.20.9",
     "drizzle-orm": "^0.29.2",
-    "mysql-core": "^0.1.16"
+    "mysql-core": "^0.1.16",
+    "pnpm": "^8.15.4"
   },
   "devDependencies": {
     "@types/node": "^20.11.5"

@@ -7,12 +7,10 @@ Jan 11 2024
 exports.__esModule = true;
 exports.db = void 0;
 require("dotenv/config");
-var planetscale_serverless_1 = require("drizzle-orm/planetscale-serverless");
-var database_1 = require("@planetscale/database");
-// create the connection
-var connection = (0, database_1.connect)({
-    host: process.env["DATABASE_HOST"],
-    username: process.env["DATABASE_USERNAME"],
-    password: process.env["DATABASE_PASSWORD"]
+var libsql_1 = require("drizzle-orm/libsql");
+var client_1 = require("@libsql/client");
+var turso = (0, client_1.createClient)({
+    url: process.env.TURSO_DATABASE_URL,
+    authToken: process.env.TURSO_AUTH_TOKEN
 });
-exports.db = (0, planetscale_serverless_1.drizzle)(connection);
+exports.db = (0, libsql_1.drizzle)(turso);
