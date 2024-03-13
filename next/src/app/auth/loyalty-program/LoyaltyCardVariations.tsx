@@ -62,7 +62,7 @@ export const RewardsPreview = () => {
 
   return (
     <div className="flex flex-col gap-3 w-5/6 mx-auto">
-      {definedRewards
+      {definedRewards && definedRewards
         .sort((a, b) => a.requiredStamps - b.requiredStamps)
         .map((item) => {
           return (

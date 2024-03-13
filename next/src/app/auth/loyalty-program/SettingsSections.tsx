@@ -165,7 +165,7 @@ export const DefineRewardSection = () => {
       </div>
 
       <div className="flex flex-col gap-3 mt-3 ml-5">
-        {definedRewards.map((item) => {
+        {definedRewards && definedRewards.map((item) => {
           return (
             <div key={item.title} className="flex items-center gap-5">
               <div className="flex items-center border-2 p-5 justify-between font-semibold text-lg border-black rounded-md w-2/3">
