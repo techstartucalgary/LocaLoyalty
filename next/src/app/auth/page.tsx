@@ -1,9 +1,5 @@
 "use client";
-import {
-  CompletionCardProps,
-  useAuthStore,
-  useOnboardingStore,
-} from "@/utils/store";
+import { CompletionCardProps, useOnboardingStore } from "@/utils/store";
 import { useAuth } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import { Progress } from "@/components/ui/progress";
@@ -14,17 +10,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-
-export function ProgressDemo() {
-  const [progress, setProgress] = useState(13);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setProgress(66), 500);
-    return () => clearTimeout(timer);
-  }, []);
-
-  return <Progress value={progress} />;
-}
 
 const calculateProfileCompletion = (
   completionCards: CompletionCardProps[]
@@ -44,17 +29,20 @@ const calculateProfileCompletion = (
 
 export default function AuthHome() {
   const { getToken } = useAuth();
-  const { setToken } = useAuthStore();
   const { completionCards, setCompletionCards } = useOnboardingStore();
 
-  useEffect(() => {
-    async function fetchToken() {
-      const toFetch = await getToken();
-      setToken(toFetch);
-    }
-
-    fetchToken();
-  }, [getToken, setToken]);
+  /* 
+  Example API call:
+  const fetchRewards = async () => {
+    return fetchAPI(
+      `${process.env.EXPO_PUBLIC_NGROK}/customer/rewards/${currentBusinessID}`,
+      "GET",
+      await getToken(),
+      null,
+      {}
+    );
+  };
+  */
 
   useEffect(() => {
     const dummyCompletionCardData: CompletionCardProps[] = [
@@ -136,15 +124,24 @@ export default function AuthHome() {
         <Accordion type="single" collapsible>
           <AccordionItem value="item-1">
             <AccordionTrigger className="border-b-2 border-black">
-              <p className="ml-7">What is a loyalty/rewards program?</p>
+              <p className="ml-7">Why use a loyalty/rewards program?</p>
             </AccordionTrigger>
-            <AccordionContent>Place holder text</AccordionContent>
+            <AccordionContent>
+              Loyalty/rewards programs are proven to bring back return
+              customers. It also incentivizes them to increase their spending at
+              your business. It&apos;s a lot cheaper to keep a customer than to
+              get new customers!
+            </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-2">
             <AccordionTrigger className="border-b-2 border-black">
               <p className="ml-7">What type of promotions can you create?</p>
             </AccordionTrigger>
-            <AccordionContent>Placeholder text</AccordionContent>
+            <AccordionContent>
+              For now the main source of promotions will be through email blasts
+              to all of your loyalty program features. This feature is still
+              work-in-progress
+            </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-3">
             <AccordionTrigger className="border-b-2 border-black">
@@ -152,13 +149,23 @@ export default function AuthHome() {
                 What type of analytics are accessible to me?
               </p>
             </AccordionTrigger>
-            <AccordionContent>Placeholder text</AccordionContent>
+            <AccordionContent>
+              It will be analytics related to the loyalty program itself.
+              Examples being popularity of certain rewards and average spend per
+              transaction. This feature is also work in progress.
+            </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-4">
             <AccordionTrigger className="border-b-2 border-black">
               <p className="ml-7">How much does LocaLoyalty cost?</p>
             </AccordionTrigger>
-            <AccordionContent>Placeholder text</AccordionContent>
+            <AccordionContent>
+              LocaLoyalty will be free for now! The mobile app for your
+              customers is also free. We&apos;re looking for pilot users so
+              we&apos;d appreciate any referrals to other small businesses that
+              would benefit from the service. We will eventually charge a
+              subscription fee for business owners though.
+            </AccordionContent>
           </AccordionItem>
         </Accordion>
       </div>
