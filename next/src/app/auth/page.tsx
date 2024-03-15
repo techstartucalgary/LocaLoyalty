@@ -1,9 +1,5 @@
 "use client";
-import {
-  CompletionCardProps,
-  useAuthStore,
-  useOnboardingStore,
-} from "@/utils/store";
+import { CompletionCardProps, useOnboardingStore } from "@/utils/store";
 import { useAuth } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import { Progress } from "@/components/ui/progress";
@@ -14,17 +10,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-
-export function ProgressDemo() {
-  const [progress, setProgress] = useState(13);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setProgress(66), 500);
-    return () => clearTimeout(timer);
-  }, []);
-
-  return <Progress value={progress} />;
-}
 
 const calculateProfileCompletion = (
   completionCards: CompletionCardProps[]
@@ -44,17 +29,20 @@ const calculateProfileCompletion = (
 
 export default function AuthHome() {
   const { getToken } = useAuth();
-  const { setToken } = useAuthStore();
   const { completionCards, setCompletionCards } = useOnboardingStore();
 
-  useEffect(() => {
-    async function fetchToken() {
-      const toFetch = await getToken();
-      setToken(toFetch);
-    }
-
-    fetchToken();
-  }, [getToken, setToken]);
+  /* 
+  Example API call:
+  const fetchRewards = async () => {
+    return fetchAPI(
+      `${process.env.EXPO_PUBLIC_NGROK}/customer/rewards/${currentBusinessID}`,
+      "GET",
+      await getToken(),
+      null,
+      {}
+    );
+  };
+  */
 
   useEffect(() => {
     const dummyCompletionCardData: CompletionCardProps[] = [
