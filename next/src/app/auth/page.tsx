@@ -14,6 +14,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useQuery } from "@tanstack/react-query";
+import { fetchAPI } from "@/utils/generalAxios";
 
 export function ProgressDemo() {
   const [progress, setProgress] = useState(13);
@@ -44,7 +46,7 @@ const calculateProfileCompletion = (
 
 export default function AuthHome() {
   const { getToken } = useAuth();
-  const { setToken } = useAuthStore();
+  const { token, setToken } = useAuthStore();
   const { completionCards, setCompletionCards } = useOnboardingStore();
 
   useEffect(() => {
@@ -52,43 +54,70 @@ export default function AuthHome() {
       const toFetch = await getToken();
       setToken(toFetch);
     }
-
     fetchToken();
   }, [getToken, setToken]);
 
-  useEffect(() => {
-    const dummyCompletionCardData: CompletionCardProps[] = [
-      {
-        id: 1,
-        icon: "/assets/clover.png",
-        title: "Connect your Clover account",
-        priority: 1,
-        isCompleted: false,
-        directory: "/auth/profile",
-        buttonText: "Connect",
-      },
-      {
-        id: 2,
-        icon: "/assets/briefcase.png",
-        title: "Add your business information",
-        priority: 2,
-        isCompleted: false,
-        directory: "/auth/profile",
-        buttonText: "Add",
-      },
-      {
-        id: 3,
-        icon: "/assets/tag-icon.png",
-        title: "Create your loyalty program",
-        priority: 3,
-        isCompleted: false,
-        directory: "/auth/rewards",
-        buttonText: "Create",
-      },
-    ];
+  const fetchOnboardingData = async () => {
+    return fetchAPI(
+      "http://localhost:5001/business/api/onboarding",
+      "GET",
+      await getToken(),
+      null,
+      {}
+    );
+  };
 
-    setCompletionCards(dummyCompletionCardData);
-  }, [setCompletionCards]);
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["onboardingData"],
+    queryFn: fetchOnboardingData,
+    enabled: !!token,
+  });
+
+  // console.log("data", data);
+
+  useEffect(() => {
+    // const dummyCompletionCardData: CompletionCardProps[] = [
+    //   {
+    //     id: 1,
+    //     icon: "/assets/clover.svg",
+    //     title: "Connect your Clover account",
+    //     priority: 1,
+    //     isCompleted: false,
+    //     directory: "/auth/profile",
+    //     buttonText: "Connect",
+    //   },
+    //   {
+    //     id: 2,
+    //     icon: "/assets/briefcase.svg",
+    //     title: "Add your business information",
+    //     priority: 2,
+    //     isCompleted: false,
+    //     directory: "/auth/profile",
+    //     buttonText: "Add",
+    //   },
+    //   {
+    //     id: 3,
+    //     icon: "/assets/tag-icon.svg",
+    //     title: "Create your loyalty program",
+    //     priority: 3,
+    //     isCompleted: false,
+    //     directory: "/auth/rewards",
+    //     buttonText: "Create",
+    //   },
+    // ];
+
+    if (data) {
+      const { results } = data;
+      // console.log(Array.isArray(results));
+      // console.log(Array.isArray([1, 2, 3]));
+      // console.log("results:", results);
+      console.log("Fetched data reached");
+      setCompletionCards(results);
+    }
+    // if (data) {
+    //   console.log("Fetched data:", data);
+    // }
+  }, [data, setCompletionCards]);
 
   return (
     <div className="flex items-center justify-center h-full flex-col gap-10">

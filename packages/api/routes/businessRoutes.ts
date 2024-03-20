@@ -19,6 +19,9 @@ import {
   deleteVendorReward,
   getVendorLoyaltyProgramInfo,
   getStampDesigns,
+  displayOnboardingCards,
+  setOnboardingStatusComplete,
+  checkIsBusinessInformationComplete,
 } from "../../database/db_interface";
 
 const router = express.Router();
@@ -78,6 +81,8 @@ router.post(
     const files = req.files as MulterFile; // Type assertion here
     const businessImage = files.business_image ? files.business_image[0] : null;
     const businessLogo = files.business_logo ? files.business_logo[0] : null;
+    const vendor = await getVendorFromClerkID(req.auth.userId);
+    const vendor_id = vendor![0].vendor_id;
 
     let imageName = "";
     let logoName = "";
@@ -109,6 +114,7 @@ router.post(
     }
 
     let body = req.body;
+
     await editVendor(
       req.auth.userId,
       body.name,
@@ -125,9 +131,29 @@ router.post(
       body.clover_api_key
     );
 
+    const isProfileComplete = checkIsBusinessInformationComplete(body);
+
+    if (isProfileComplete && businessImage && businessLogo) {
+      // Update the onboarding completion status
+      await setOnboardingStatusComplete(vendor_id, 2);
+    }
+
     res.status(200).json({ message: "Profile updated successfully" });
   }
 );
+
+// API routes for retrieving onboarding
+router.get("/api/onboarding", async (req: Request, res: Response) => {
+  try {
+    const vendor = await getVendorFromClerkID(req.auth.userId);
+    const vendor_id = vendor![0].vendor_id;
+    const results = await displayOnboardingCards(vendor_id);
+
+    res.status(200).json({ results });
+  } catch (Error: unknown) {
+    res.status(500).json({ message: "Something went wrong..." });
+  }
+});
 
 router.get("/loyalty-program", async (req: Request, res: Response) => {
   try {

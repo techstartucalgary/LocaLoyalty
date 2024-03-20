@@ -63,7 +63,7 @@ export default function Profile() {
     return fetchAPI(
       "http://localhost:5001/business/profile",
       "GET",
-      token,
+      await getToken(),
       null,
       {}
     );
@@ -92,7 +92,7 @@ export default function Profile() {
     return fetchAPI(
       "http://localhost:5001/business/profile",
       "POST",
-      token,
+      await getToken(),
       formData,
       {
         /* headers (if necessary) */
@@ -123,7 +123,6 @@ export default function Profile() {
     queryKey: ["initialProfileData"],
     queryFn: fetchInitialProfileData,
     enabled: !!token,
-
   });
 
   const [isEditing, setIsEditing] = useState(false);

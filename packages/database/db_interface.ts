@@ -843,6 +843,70 @@ export async function editCustomer(
         */
 }
 
+export async function displayOnboardingCards(vendor_id: number) {
+  const results =
+    await db.execute(sql`SELECT v.vendor_id AS id, o.icon, o.title, o.priority, o.directory, o.buttonText, ov.isCompleted
+    FROM vendor v
+    JOIN onboarding_vendor ov ON v.vendor_id = ov.vendor_id
+    JOIN onboarding o ON ov.onboarding_id = o.onboarding_id
+    WHERE v.vendor_id = ${vendor_id}
+    ORDER BY o.priority ASC;`);
+
+  type CompletionCardsData = {
+    id: number;
+    icon: string;
+    title: string;
+    priority: number;
+    isCompleted: boolean;
+    directory: string;
+    buttonText: string;
+  }[];
+
+  const onboardingCards = results.rows as unknown as CompletionCardsData; // Shitty typescript casting
+
+  return onboardingCards;
+}
+
+export async function setOnboardingStatusComplete(
+  vendor_id: number,
+  oboarding_id: number
+) {
+  // Logic to update the onboarding_vendor table
+  // Set `isCompleted` to true where `vendor_id` and `onboarding_id` match
+  await db.execute(sql`
+    UPDATE onboarding_vendor
+    SET isCompleted = 1
+    WHERE vendor_id = ${vendor_id} AND onboarding_id = ${oboarding_id};`);
+}
+
+type BusinessProfileData = {
+  name: string;
+  business_email: string;
+  address: string;
+  business_phone: string;
+  description: string;
+  city: string;
+  province: string;
+  postal_code: string;
+};
+
+export function checkIsBusinessInformationComplete(
+  profileData: BusinessProfileData
+) {
+  // Here, you'd check that all required profile fields are filled in
+  // Return true if the profile is complete
+  return [
+    profileData.name,
+    profileData.business_email,
+    profileData.address,
+    profileData.business_phone,
+    profileData.description,
+    profileData.city,
+    profileData.province,
+    profileData.postal_code,
+  ].every((field) => field !== undefined && field !== "");
+}
+
 // Edits one attribute of a loyalty card
 // Input: The loyalty_id, the attribute name, and the new attribute value
 // Returns 1 if successfull, or null if the query failed
