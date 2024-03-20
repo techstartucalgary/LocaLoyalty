@@ -1,7 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { fetchAPI } from "@/utils/generalAxios";
-import { useAuthStore } from "@/utils/store";
 import { useAuth } from "@clerk/nextjs";
 import {
   AlertDialog,
@@ -57,7 +56,6 @@ export default function Profile() {
   };
 
   const { getToken } = useAuth();
-  const { token, setToken } = useAuthStore();
 
   const fetchInitialProfileData = async () => {
     return fetchAPI(
@@ -137,15 +135,6 @@ export default function Profile() {
       setProfileData(data);
     }
   }, [data]);
-
-  useEffect(() => {
-    async function fetchToken() {
-      const toFetch = await getToken();
-      setToken(toFetch);
-    }
-
-    fetchToken();
-  }, [getToken, setToken]);
 
   const handleTextInputChange = (
     fieldName: keyof ProfileData,
