@@ -73,50 +73,12 @@ export default function AuthHome() {
     enabled: !!token,
   });
 
-  // console.log("data", data);
-
   useEffect(() => {
-    // const dummyCompletionCardData: CompletionCardProps[] = [
-    //   {
-    //     id: 1,
-    //     icon: "/assets/clover.svg",
-    //     title: "Connect your Clover account",
-    //     priority: 1,
-    //     isCompleted: false,
-    //     directory: "/auth/profile",
-    //     buttonText: "Connect",
-    //   },
-    //   {
-    //     id: 2,
-    //     icon: "/assets/briefcase.svg",
-    //     title: "Add your business information",
-    //     priority: 2,
-    //     isCompleted: false,
-    //     directory: "/auth/profile",
-    //     buttonText: "Add",
-    //   },
-    //   {
-    //     id: 3,
-    //     icon: "/assets/tag-icon.svg",
-    //     title: "Create your loyalty program",
-    //     priority: 3,
-    //     isCompleted: false,
-    //     directory: "/auth/rewards",
-    //     buttonText: "Create",
-    //   },
-    // ];
-
     if (data) {
       const { results } = data;
-      // console.log(Array.isArray(results));
-      // console.log(Array.isArray([1, 2, 3]));
-      // console.log("results:", results);
       console.log("Fetched data reached");
       setCompletionCards(results);
     }
-    // if (data) {
-    //   console.log("Fetched data:", data);
-    // }
   }, [data, setCompletionCards]);
 
   return (

@@ -78,67 +78,73 @@ router.post(
     { name: "business_logo", maxCount: 1 },
   ]),
   async (req: Request, res: Response) => {
-    const files = req.files as MulterFile; // Type assertion here
-    const businessImage = files.business_image ? files.business_image[0] : null;
-    const businessLogo = files.business_logo ? files.business_logo[0] : null;
-    const vendor = await getVendorFromClerkID(req.auth.userId);
-    const vendor_id = vendor![0].vendor_id;
+    try {
+      const files = req.files as MulterFile; // Type assertion here
+      const businessImage = files.business_image
+        ? files.business_image[0]
+        : null;
+      const businessLogo = files.business_logo ? files.business_logo[0] : null;
+      const vendor = await getVendorFromClerkID(req.auth.userId);
+      const vendor_id = vendor![0].vendor_id;
 
-    let imageName = "";
-    let logoName = "";
+      let imageName = "";
+      let logoName = "";
 
-    if (businessImage) {
-      imageName = randomImageName();
+      if (businessImage) {
+        imageName = randomImageName();
 
-      await s3.send(
-        new PutObjectCommand({
-          Bucket: process.env.BUCKET_NAME,
-          Key: imageName,
-          Body: businessImage?.buffer,
-          ContentType: businessImage?.mimetype,
-        })
+        await s3.send(
+          new PutObjectCommand({
+            Bucket: process.env.BUCKET_NAME,
+            Key: imageName,
+            Body: businessImage?.buffer,
+            ContentType: businessImage?.mimetype,
+          })
+        );
+      }
+
+      if (businessLogo) {
+        logoName = randomImageName();
+
+        await s3.send(
+          new PutObjectCommand({
+            Bucket: process.env.BUCKET_NAME,
+            Key: logoName,
+            Body: businessLogo?.buffer,
+            ContentType: businessLogo?.mimetype,
+          })
+        );
+      }
+
+      let body = req.body;
+
+      await editVendor(
+        req.auth.userId,
+        body.name,
+        body.business_email,
+        body.business_phone,
+        body.address,
+        body.city,
+        body.province,
+        body.postal_code,
+        imageName,
+        logoName,
+        body.description,
+        body.merchant_id,
+        body.clover_api_key
       );
+
+      const isProfileComplete = checkIsBusinessInformationComplete(body);
+
+      if (isProfileComplete && businessImage && businessLogo) {
+        // Update the onboarding completion status
+        await setOnboardingStatusComplete(vendor_id, 2);
+      }
+
+      res.status(200).json({ message: "Profile updated successfully" });
+    } catch {
+      res.status(500).json({ message: "Something went wrong..." });
     }
-
-    if (businessLogo) {
-      logoName = randomImageName();
-
-      await s3.send(
-        new PutObjectCommand({
-          Bucket: process.env.BUCKET_NAME,
-          Key: logoName,
-          Body: businessLogo?.buffer,
-          ContentType: businessLogo?.mimetype,
-        })
-      );
-    }
-
-    let body = req.body;
-
-    await editVendor(
-      req.auth.userId,
-      body.name,
-      body.business_email,
-      body.business_phone,
-      body.address,
-      body.city,
-      body.province,
-      body.postal_code,
-      imageName,
-      logoName,
-      body.description,
-      body.merchant_id,
-      body.clover_api_key
-    );
-
-    const isProfileComplete = checkIsBusinessInformationComplete(body);
-
-    if (isProfileComplete && businessImage && businessLogo) {
-      // Update the onboarding completion status
-      await setOnboardingStatusComplete(vendor_id, 2);
-    }
-
-    res.status(200).json({ message: "Profile updated successfully" });
   }
 );
 
