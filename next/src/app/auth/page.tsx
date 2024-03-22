@@ -13,17 +13,6 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { fetchAPI } from "@/utils/generalAxios";
 
-export function ProgressDemo() {
-  const [progress, setProgress] = useState(13);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setProgress(66), 500);
-    return () => clearTimeout(timer);
-  }, []);
-
-  return <Progress value={progress} />;
-}
-
 const calculateProfileCompletion = (
   completionCards: CompletionCardProps[]
 ): number => {
@@ -42,16 +31,7 @@ const calculateProfileCompletion = (
 
 export default function AuthHome() {
   const { getToken } = useAuth();
-  const { token, setToken } = useAuthStore();
   const { completionCards, setCompletionCards } = useOnboardingStore();
-
-  useEffect(() => {
-    async function fetchToken() {
-      const toFetch = await getToken();
-      setToken(toFetch);
-    }
-    fetchToken();
-  }, [getToken, setToken]);
 
   const fetchOnboardingData = async () => {
     return fetchAPI(
@@ -66,14 +46,11 @@ export default function AuthHome() {
   const { data, error, isLoading } = useQuery({
     queryKey: ["onboardingData"],
     queryFn: fetchOnboardingData,
-    enabled: !!token,
   });
 
   useEffect(() => {
     if (data) {
-      const { results } = data;
-      console.log("Fetched data reached");
-      setCompletionCards(results);
+      setCompletionCards(data.results);
     }
   }, [data, setCompletionCards]);
 
@@ -110,11 +87,15 @@ export default function AuthHome() {
         </div>
 
         <div className="flex justify-evenly w-11/12">
-          {completionCards
-            .filter((item) => !item.isCompleted)
-            .map((filteredItem) => (
-              <ProfileCompletionCard key={filteredItem.id} {...filteredItem} />
-            ))}
+          {completionCards &&
+            completionCards
+              .filter((item) => !item.isCompleted)
+              .map((filteredItem) => (
+                <ProfileCompletionCard
+                  key={filteredItem.onboarding_id}
+                  {...filteredItem}
+                />
+              ))}
         </div>
       </div>
 
