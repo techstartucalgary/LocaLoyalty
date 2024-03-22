@@ -10,6 +10,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useQuery } from "@tanstack/react-query";
+import { fetchAPI } from "@/utils/generalAxios";
 
 const calculateProfileCompletion = (
   completionCards: CompletionCardProps[]
@@ -31,52 +33,26 @@ export default function AuthHome() {
   const { getToken } = useAuth();
   const { completionCards, setCompletionCards } = useOnboardingStore();
 
-  /* 
-  Example API call:
-  const fetchRewards = async () => {
+  const fetchOnboardingData = async () => {
     return fetchAPI(
-      `${process.env.EXPO_PUBLIC_NGROK}/customer/rewards/${currentBusinessID}`,
+      "http://localhost:5001/business/api/onboarding",
       "GET",
       await getToken(),
       null,
       {}
     );
   };
-  */
+
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["onboardingData"],
+    queryFn: fetchOnboardingData,
+  });
 
   useEffect(() => {
-    const dummyCompletionCardData: CompletionCardProps[] = [
-      {
-        id: 1,
-        icon: "/assets/clover.png",
-        title: "Connect your Clover account",
-        priority: 1,
-        isCompleted: false,
-        directory: "/auth/profile",
-        buttonText: "Connect",
-      },
-      {
-        id: 2,
-        icon: "/assets/briefcase.png",
-        title: "Add your business information",
-        priority: 2,
-        isCompleted: false,
-        directory: "/auth/profile",
-        buttonText: "Add",
-      },
-      {
-        id: 3,
-        icon: "/assets/tag-icon.png",
-        title: "Create your loyalty program",
-        priority: 3,
-        isCompleted: false,
-        directory: "/auth/rewards",
-        buttonText: "Create",
-      },
-    ];
-
-    setCompletionCards(dummyCompletionCardData);
-  }, [setCompletionCards]);
+    if (data) {
+      setCompletionCards(data.results);
+    }
+  }, [data, setCompletionCards]);
 
   return (
     <div className="flex items-center justify-center h-full flex-col gap-10">
@@ -111,11 +87,15 @@ export default function AuthHome() {
         </div>
 
         <div className="flex justify-evenly w-11/12">
-          {completionCards
-            .filter((item) => !item.isCompleted)
-            .map((filteredItem) => (
-              <ProfileCompletionCard key={filteredItem.id} {...filteredItem} />
-            ))}
+          {completionCards &&
+            completionCards
+              .filter((item) => !item.isCompleted)
+              .map((filteredItem) => (
+                <ProfileCompletionCard
+                  key={filteredItem.onboarding_id}
+                  {...filteredItem}
+                />
+              ))}
         </div>
       </div>
 
