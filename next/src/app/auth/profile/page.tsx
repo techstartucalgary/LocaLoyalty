@@ -120,7 +120,6 @@ export default function Profile() {
   const { data, error, isLoading } = useQuery({
     queryKey: ["initialProfileData"],
     queryFn: fetchInitialProfileData,
-    enabled: !!token,
   });
 
   const [isEditing, setIsEditing] = useState(false);
