@@ -1,5 +1,5 @@
 /*
-Database migration script. Run this to push schema to Planetscale. 
+Database migration script. Run this to push schema to Turso. 
 Author: Max Pagels
 December 28, 2023
 */
