@@ -80,8 +80,13 @@ type LoyaltyProgramState = {
 
   // Design Tab
   cardLayoutStyle: number;
+  activeStamp: string;
   incrementCardLayoutStyle: () => void;
   decrementCardLayoutStyle: () => void;
+
+  colors: [string, string, string];
+  colorLabels: [string, string, string];
+  setColorTheme: (color: string, index: number) => void;
 };
 
 export const useLoyaltyProgramStore = create<LoyaltyProgramState>((set) => ({
@@ -153,6 +158,8 @@ export const useLoyaltyProgramStore = create<LoyaltyProgramState>((set) => ({
   },  
   // Design Tab
   cardLayoutStyle: 1,
+  activeStamp: "",
+
   incrementCardLayoutStyle: () =>
     set((state) => ({
       cardLayoutStyle:
@@ -163,4 +170,13 @@ export const useLoyaltyProgramStore = create<LoyaltyProgramState>((set) => ({
       cardLayoutStyle:
         state.cardLayoutStyle > 1 ? state.cardLayoutStyle - 1 : state.cardLayoutStyle,
     })),
+
+  colors: ['#000000', '#EDEDED', '#FFFFFF'],
+  colorLabels: ['Primary', 'Secondary', 'Tertiary'],
+  setColorTheme: (color, index) =>
+    set((state) => {
+      const newColors = [...state.colors] as [string, string, string];
+      newColors[index] = color;
+      return { colors: newColors };
+    }),
 }));

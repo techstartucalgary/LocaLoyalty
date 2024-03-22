@@ -13,6 +13,31 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { FaPencilAlt } from "react-icons/fa";
+import { Sketch } from '@uiw/react-color';
+import { useState, useEffect, useRef } from "react";
+
+function hexToRgb(hex: string) {
+    hex = hex.replace(/^#/, '');
+    var bigint = parseInt(hex, 16);
+    var r = (bigint >> 16) & 255;
+    var g = (bigint >> 8) & 255;
+    var b = bigint & 255;
+    return [r, g, b];
+}
+
+function luminance(r: number, g: number, b: number) {
+    var a = [r, g, b].map(function (v) {
+        v /= 255;
+        return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+    });
+    return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+}
+
+function determineTextColor(hex: string) {
+    const [r, g, b] = hexToRgb(hex);
+    return luminance(r, g, b) > 0.179 ? '#000000' : '#FFFFFF';
+}
 
 export const CardLayoutStyleSection = () => {
     const {
@@ -49,31 +74,6 @@ export const CardLayoutStyleSection = () => {
 };
 
 export const ActiveStampSection = () => {
-    // const activeStampOptions = [
-    //     { value: "star1", label: "Star 1", Icon: FaStar },
-    //     { value: "star2", label: "Star 2", Icon: FaRegStar },
-    //     { value: "heart1", label: "Heart 1", Icon: FaHeart },
-    //     { value: "heart2", label: "Heart 2", Icon: FaRegHeart },
-    //     { value: "smile1", label: "Smile 1", Icon: FaSmile },
-    //     { value: "smile2", label: "Smile 2", Icon: FaRegSmile },
-    //     { value: "check1", label: "Check 1", Icon: FaCheck },
-    //     { value: "check2", label: "Check 2", Icon: FaRegCheckCircle },
-    //     { value: "leaf1", label: "Leaf 1", Icon: IoLeaf },
-    //     { value: "leaf2", label: "Leaf 2", Icon: IoLeafOutline },
-    //     { value: "sun1", label: "Sun 1", Icon: IoSunny },
-    //     { value: "sun2", label: "Sun 2", Icon: IoSunnyOutline },
-    //     { value: "moon1", label: "Moon 1", Icon: IoMoon },
-    //     { value: "moon2", label: "Moon 2", Icon: IoMoonOutline },
-    //     { value: "paw1", label: "Paw 1", Icon: IoPaw },
-    //     { value: "paw2", label: "Paw 2", Icon: IoPawOutline },
-    //     { value: "rocket1", label: "Rocket 1", Icon: IoRocket },
-    //     { value: "rocket2", label: "Rocket 2", Icon: IoRocketOutline },
-    //     { value: "flower1", label: "Flower 1", Icon: PiFlower },
-    //     { value: "flower2", label: "Flower 2", Icon: PiFlowerFill },
-    //     { value: "sparkle1", label: "Sparkle 1", Icon: IoSparkles },
-    //     { value: "sparkle2", label: "Sparkle 2", Icon: IoSparklesOutline },
-    // ];
-
     const activeStampOptions = [
         { value: "check1", label: "Check 1", Icon: "/assets/stamp_icons/solar--check-circle-bold.svg" },
         { value: "check2", label: "Check 2", Icon: "/assets/stamp_icons/solar--check-circle-linear.svg" },
@@ -127,67 +127,56 @@ export const ActiveStampSection = () => {
 };
 
 export const ColorThemeSection = () => {
-    const HexColorCodes = [
-        {
-            value: "theme1",
-            id: "t1",
-            color1: "#000000",
-            color2: "#FFFFFF",
-            color3: "#EDEDED",
-        },
-        {
-            value: "theme2",
-            id: "t2",
-            color1: "#CD6464",
-            color2: "#FFC3CB",
-            color3: "#FFFFFF",
-        },
-        {
-            value: "theme3",
-            id: "t3",
-            color1: "#2C5E92",
-            color2: "#A9CEF4",
-            color3: "#FFFFFF",
-        },
-        {
-            value: "theme4",
-            id: "t4",
-            color1: "#5952A5",
-            color2: "#94A3DB",
-            color3: "#FFFFFF",
-        },
-    ];
+    const [showPickerIndex, setShowPickerIndex] = useState<number | null>(null);
+    const { colors, colorLabels, setColorTheme } = useLoyaltyProgramStore();
+    const pickerRef = useRef<HTMLDivElement | null>(null); // Ref type specified here
+
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (pickerRef.current && !pickerRef.current.contains(event.target as Node)) {
+                setShowPickerIndex(null);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    const handleColorChange = (color: { hex: string; }, index: number) => {
+        setColorTheme(color.hex, index);
+    };
 
     return (
         <div className="py-5">
             <OptionHeader title="Color Theme" info="..." />
-
-            <div className="mt-3 ml-5">
-                <RadioGroup defaultValue="theme1">
-                    {HexColorCodes.map(({ value, id, color1, color2, color3 }) => (
-                        <div className="flex items-center" key={id}>
-                            <RadioGroupItem
-                                value={value}
-                                id={id}
-                                className="w-6 h-6 border-2 mr-4"
-                            />
-                            <div className="flex gap-2">
-                                <div
-                                    className="h-7 w-7 rounded-md border-2 border-black"
-                                    style={{ backgroundColor: color1 }}
-                                ></div>
-                                <div
-                                    className="h-7 w-7 rounded-md border-2 border-black"
-                                    style={{ backgroundColor: color2 }}
-                                ></div>
-                                <div
-                                    className="h-7 w-7 rounded-md border-2 border-black"
-                                    style={{ backgroundColor: color3 }}
-                                ></div>
+            <div className="mt-3 ml-5 flex gap-4">
+                {colors.map((color, index) => (
+                    <div key={index} className="relative">
+                        {showPickerIndex === index && (
+                            <div ref={pickerRef} className="absolute z-10" style={{ marginTop: '-292.5px' }}>
+                                <Sketch
+                                    disableAlpha={true}
+                                    color={color}
+                                    onChange={(color) => {
+                                        handleColorChange(color, index);
+                                    }}
+                                />
                             </div>
+                        )}
+                        <div className="flex flex-col justify-center w-fit bg-white p-2 drop-shadow rounded-md">
+                            <div className="w-24 h-24 mb-2 flex items-center justify-center" style={{ backgroundColor: color }}>
+                                <button
+                                    onClick={() => setShowPickerIndex(index)}
+                                >
+                                    <FaPencilAlt className="w-4 h-4" style={{ color: determineTextColor(color) }} />
+                                </button>
+                            </div>
+                            <h1 className="font-semibold text-sm">{colorLabels[index]}</h1>
+                            <h1 className="font-semibold text-xs uppercase">{color}</h1>
                         </div>
-                    ))}
-                </RadioGroup>
+                    </div>
+                ))}
             </div>
         </div>
     );
