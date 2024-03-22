@@ -3,6 +3,7 @@ import { create } from "zustand";
 type WalletState = {
 	currentBusinessID: number;
 	currentBusinessName: string;
+	currentBusinessAddress: string;
 	currentBusinessLogo: string;
 	currentBusinessEmail: string;
 	currentBusinessPhone: string;
@@ -10,10 +11,11 @@ type WalletState = {
 	currentCompletedStamps: number;
 	currentMaxStamps: number;
 	currentPrimaryColor: string;
-	currentCarry_over_amt: number,
-	currentSpending_per_point: number,
+	currentCarry_over_amt: number;
+	currentSpending_per_point: number;
 	setCurrentBusinessID: (id: number) => void;
 	setCurrentBusinessName: (name: string) => void;
+	setCurrentBusinessAddress: (address: string) => void;
 	setCurrentBusinessLogo: (image: string) => void;
 	setCurrentBusinessEmail: (email: string) => void;
 	setCurrentBusinessPhone: (phone: string) => void;
@@ -21,13 +23,14 @@ type WalletState = {
 	setCurrentCompletedStamps: (completedStampNumber: number) => void;
 	setCurrentMaxStamps: (maxStampNumber: number) => void;
 	setCurrentPrimaryColor: (color: string) => void;
-	setCurrentCarry_over_amt: (carry_over_amt: number) => void,
-	setCurrentSpending_per_point: (spending_per_point: number) => void,
+	setCurrentCarry_over_amt: (carry_over_amt: number) => void;
+	setCurrentSpending_per_point: (spending_per_point: number) => void;
 };
 
 export const useWalletStore = create<WalletState>((set) => ({
 	currentBusinessID: 0,
 	currentBusinessName: "",
+	currentBusinessAddress: "",
 	currentBusinessLogo: "",
 	currentBusinessEmail: "",
 	currentBusinessPhone: "",
@@ -43,11 +46,14 @@ export const useWalletStore = create<WalletState>((set) => ({
 	setCurrentBusinessName: (name) => {
 		set({ currentBusinessName: name });
 	},
+	setCurrentBusinessAddress: (address) => {
+		set({ currentBusinessAddress: address });
+	},
 	setCurrentBusinessEmail: (email) => {
-		set({ currentBusinessEmail: email })
+		set({ currentBusinessEmail: email });
 	},
 	setCurrentBusinessPhone: (phone) => {
-		set({ currentBusinessPhone: phone })
+		set({ currentBusinessPhone: phone });
 	},
 	setCurrentBusinessLogo: (image) => {
 		set({ currentBusinessLogo: image });
@@ -65,10 +71,9 @@ export const useWalletStore = create<WalletState>((set) => ({
 		set({ currentPrimaryColor: color });
 	},
 	setCurrentCarry_over_amt: (carry_over_amt: number) => {
-		set({ currentCarry_over_amt: carry_over_amt })
+		set({ currentCarry_over_amt: carry_over_amt });
 	},
 	setCurrentSpending_per_point: (spending_per_point: number) => {
-		set({ currentSpending_per_point: spending_per_point })
+		set({ currentSpending_per_point: spending_per_point });
 	},
 }));
-
