@@ -6,6 +6,3 @@ const foo = sqliteTable("foo", {
 });
 
 
-const foo2 = sqliteTable("foo2", {
-    bar: text("bar").notNull().default("Hey!"),
-  });
