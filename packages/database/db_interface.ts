@@ -845,7 +845,7 @@ export async function editCustomer(
 
 export async function displayOnboardingCards(vendor_id: number) {
   const results =
-    await db.execute(sql`SELECT v.vendor_id AS id, o.icon, o.title, o.priority, o.directory, o.buttonText, ov.isCompleted
+    await db.execute(sql`SELECT o.onboarding_id, o.icon, o.title, o.priority, o.directory, o.buttonText, ov.isCompleted
     FROM vendor v
     JOIN onboarding_vendor ov ON v.vendor_id = ov.vendor_id
     JOIN onboarding o ON ov.onboarding_id = o.onboarding_id
@@ -864,6 +864,7 @@ export async function displayOnboardingCards(vendor_id: number) {
 
   const onboardingCards = results.rows as unknown as CompletionCardsData; // Shitty typescript casting
 
+  console.log("Here are the results", onboardingCards);
   return onboardingCards;
 }
 
