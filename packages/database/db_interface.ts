@@ -120,8 +120,7 @@ export async function addLoyaltyCard(
 
 // Adds a new point redemption
 // Timestamp auto generated
-
-async function addPointRedemption(
+export async function addPointRedemption(
   history_id,
   loyalty_id, //TODO: enforce types
   points_redeemed
@@ -161,8 +160,7 @@ async function addPointRedemption(
 }
 
 // Adds a new transaction a customer completed
-/*
-async function addTransaction(
+export async function addTransaction(
   loyalty_id, //TODO: enforce types
   vendor_id,
   purchase_amt,
@@ -204,11 +202,9 @@ async function addTransaction(
 
   return result[0].id;
 }
-*/
 
 // Adds a new reward to a vendor program
-/*
-async function addReward(
+export  async function addReward(
   vendor_id, //TODO: enforce types
   name,
   description,
@@ -240,7 +236,7 @@ async function addReward(
 
   return result[0].id;
 }
-*/
+
 // Gets the customer object
 // Input: the customer ID
 export async function getCustomer(customer_id: number) {
@@ -382,10 +378,9 @@ export async function addVendorReward(
   });
 }
 
-/*
 // Gets the loyalty card object
 // Input: the loyalty car ID
-async function getLoyaltyCard(loyalty_id) {
+export async function getLoyaltyCard(loyalty_id) {
   const result = await db
     .select()
     .from(schema.loyalty_card)
@@ -399,12 +394,10 @@ async function getLoyaltyCard(loyalty_id) {
 
   return result[0];
 }
-*/
 
 // Gets the point redemption history object
 // Input: the loyalty card ID
-/*
-async function getPointRedemptionHistory(loyalty_id) {
+export async function getPointRedemptionHistory(loyalty_id) {
   const result = await db
     .select()
     .from(schema.point_redemption_history)
@@ -421,7 +414,7 @@ async function getPointRedemptionHistory(loyalty_id) {
 
 // Gets the transaction object
 // Input: the transaction ID
-async function getTransaction(transaction_id) {
+export async function getTransaction(transaction_id) {
   const result = await db
     .select()
     .from(schema.transaction)
@@ -435,12 +428,10 @@ async function getTransaction(transaction_id) {
 
   return result[0];
 }
-*/
 
 // Gets the reward object
 // Input: the reward ID
-/*
-async function getReward(reward_id) {
+export async function getReward(reward_id) {
   const result = await db
     .select()
     .from(schema.reward)
@@ -454,7 +445,6 @@ async function getReward(reward_id) {
 
   return result[0];
 }
-*/
 
 // Get all customers has no use case for now...
 
@@ -692,8 +682,7 @@ WHERE c.points_amt >= r.points_cost;`);
 
 // Gets all point redemption history for a given loyalty card
 // Input: the loyalty_id of the loyalty card
-/*
-async function getAllPointRedemptionHistoryOfCard(loyalty_id) {
+export async function getAllPointRedemptionHistoryOfCard(loyalty_id) {
   const results = await db
     .select()
     .from(schema.point_redemption_history)
@@ -707,11 +696,9 @@ async function getAllPointRedemptionHistoryOfCard(loyalty_id) {
 
   return results;
 }
-*/
 
 // Gets all previous transactions for a given loyalty card
 // Input: the loyalty_id of the loyalty card
-/*
 async function getAllTransactionsOfCard(loyalty_id) {
   const results = await db
     .select()
@@ -726,7 +713,6 @@ async function getAllTransactionsOfCard(loyalty_id) {
 
   return results;
 }
-*/
 
 export async function getVendorLoyaltyProgramInfo(vendor_id: number) {
   const results = await db
@@ -848,8 +834,7 @@ export async function editCustomer(
 // Edits one attribute of a loyalty card
 // Input: The loyalty_id, the attribute name, and the new attribute value
 // Returns 1 if successfull, or null if the query failed
-/*
-async function editLoyaltyCard(loyalty_id, attribute, newValue) {
+export async function editLoyaltyCard(loyalty_id, attribute, newValue) {
     // Update value
     await db.update(schema.loyalty_card)
         .set({ [attribute]: [newValue] })
@@ -869,13 +854,11 @@ async function editLoyaltyCard(loyalty_id, attribute, newValue) {
         return null;
     }
 }
-*/
 
 // Edits one attribute of a point redemption history
 // Input: The history_id, the attribute name, and the new attribute value
 // Returns 1 if successfull, or null if the query failed
-/*
-async function editPointRedemptionHistory(history_id, attribute, newValue) {
+export async function editPointRedemptionHistory(history_id, attribute, newValue) {
     // Update value
     await db.update(schema.point_redemption_history)
         .set({ [attribute]: [newValue] })
@@ -895,13 +878,11 @@ async function editPointRedemptionHistory(history_id, attribute, newValue) {
         return null;
     }
 }
-*/
 
 // Edits one attribute of a transaction
 // Input: The transaction_id, the attribute name, and the new attribute value
 // Returns 1 if successfull, or null if the query failed
-/*
-async function editTransaction(transaction_id, attribute, newValue) {
+export async function editTransaction(transaction_id, attribute, newValue) {
     // Update value
     await db.update(schema.transaction)
         .set({ [attribute]: [newValue] })
@@ -925,7 +906,7 @@ async function editTransaction(transaction_id, attribute, newValue) {
 // Edits one attribute of a reward
 // Input: The reward_id, the attribute name, and the new attribute value
 // Returns 1 if successfull, or null if the query failed
-async function editReward(reward_id, attribute, newValue) {
+export async function editReward(reward_id, attribute, newValue) {
     // Update value
     await db.update(schema.reward)
         .set({ [attribute]: [newValue] })
@@ -945,4 +926,4 @@ async function editReward(reward_id, attribute, newValue) {
         return null;
     }
 }
-*/
+

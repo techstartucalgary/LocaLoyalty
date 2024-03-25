@@ -40,6 +40,8 @@ export const vendor = sqliteTable("vendor", {
   business_phone: varchar("business_phone", { length: 16 }),
   description: text("description"),
   color: varchar("color", { length: 16 }),
+  color2: varchar("color2", { length: 16 }),
+  color3: varchar("color3", { length: 16 }),
   reward_program_details: text("reward_program_details"),
   spending_per_point: decimal("spending_per_point"),
   max_points: int("max_points"),
