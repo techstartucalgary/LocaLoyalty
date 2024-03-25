@@ -628,13 +628,13 @@ export async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
 export async function getRedeemable(customer_id: number) {
   const results =
     await db.execute(sql`SELECT c.name as vendor_name, c.business_logo, r.name as reward_name, r.points_cost, r.reward_id
-FROM reward r
-INNER JOIN (SELECT v.name, v.business_logo, b.vendor_id, b.points_amt
-FROM vendor v
-INNER JOIN (SELECT vendor_id, points_amt 
-FROM loyalty_card lc
-WHERE customer_id = ${customer_id}) AS b ON b.vendor_id = v.vendor_id) AS c ON r.vendor_id = c.vendor_id
-WHERE c.points_amt >= r.points_cost;`);
+      FROM reward r
+      INNER JOIN (SELECT v.name, v.business_logo, b.vendor_id, b.points_amt
+      FROM vendor v
+      INNER JOIN (SELECT vendor_id, points_amt 
+      FROM loyalty_card lc
+      WHERE customer_id = ${customer_id}) AS b ON b.vendor_id = v.vendor_id) AS c ON r.vendor_id = c.vendor_id
+      WHERE c.points_amt >= r.points_cost;`);
 
   type Redeemables = {
     business_logo: string;
