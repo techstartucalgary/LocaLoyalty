@@ -52,6 +52,14 @@ export const vendor = sqliteTable("vendor", {
   merchant_id: varchar("merchant_id", { length: 13 }),
   clover_api_key: varchar("clover_api_key", { length: 200 }),
   stamp_life: int("stamp_life"),
+  card_layout: int("card_layout"),
+  stamp_design_id: int("stamp_design_id"),
+});
+
+// onboarding_vendor
+export const stamp_design = sqliteTable("stamp_design", {
+  stamp_design_id: serial("stamp_design_id").primaryKey(),
+  path: varchar("path", { length: 256 }),
 });
 
 // Loyalty Card
@@ -64,9 +72,7 @@ export const loyalty_card = sqliteTable("loyalty_card", {
 });
 
 // Point Redemption History
-export const point_redemption_history = sqliteTable(
-  "point_redemption_history",
-  {
+export const point_redemption_history = sqliteTable("point_redemption_history",{
     history_id: serial("history_id").primaryKey(),
     loyalty_id: int("loyalty_id"), //references loyalty_card.loyalty_id
     points_redeemed: int("points_redeemed").notNull(),
