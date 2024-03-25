@@ -120,19 +120,22 @@ export async function addLoyaltyCard(
 
 // Adds a new point redemption
 // Timestamp auto generated
-/*
+
 async function addPointRedemption(
+  history_id,
   loyalty_id, //TODO: enforce types
   points_redeemed
 ) {
   //take timestamp
-  const stamp = new Date();
+  const stamp = new Date().toDateString();
+
 
   //insert data
   await db.insert(schema.point_redemption_history).values({
+    history_id: history_id,
     loyalty_id: loyalty_id,
     points_redeemed: points_redeemed,
-    timestamp: stamp,
+    timestamp: stamp
   });
 
   // Get point redemption id
@@ -156,7 +159,6 @@ async function addPointRedemption(
 
   return result;
 }
-*/
 
 // Adds a new transaction a customer completed
 /*
