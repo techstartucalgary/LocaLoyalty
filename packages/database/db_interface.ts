@@ -6,8 +6,8 @@ January 18 2024
 */
 
 import { SocketAddress } from "net";
-import { db } from "./dbObj.js";
-import * as schema from "./schema.js";
+import { db } from "./dbObj.ts";
+import * as schema from "./schema.ts";
 import { SQLWrapper, and, eq, notInArray, sql } from "drizzle-orm";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import {

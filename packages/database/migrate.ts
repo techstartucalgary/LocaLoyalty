@@ -5,7 +5,7 @@ December 28, 2023
 */
 
 import "dotenv/config";
-import { db } from "./dbObj.js";
+import { db } from "./dbObj.ts";
 import { migrate } from "drizzle-orm/libsql/migrator";
 
 
