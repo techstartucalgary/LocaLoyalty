@@ -2,7 +2,7 @@
 import { create } from "zustand";
 
 export interface CompletionCardProps {
-  id: number;
+  onboarding_id: number;
   icon: string;
   title: string;
   priority: number;
@@ -23,7 +23,7 @@ export const useOnboardingStore = create<OnboardingState>((set) => ({
   setComplete: (id) =>
     set((state) => {
       const updatedCards = state.completionCards.map((card) => {
-        if (card.id === id) {
+        if (card.onboarding_id === id) {
           return { ...card, isCompleted: !card.isCompleted };
         }
         return card;

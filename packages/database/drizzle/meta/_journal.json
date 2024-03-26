@@ -1,68 +1,19 @@
 {
   "version": "5",
-  "dialect": "mysql",
+  "dialect": "sqlite",
   "entries": [
     {
       "idx": 0,
       "version": "5",
-      "when": 1707100236929,
-      "tag": "0001_sudden_madelyne_pryor",
+      "when": 1711087297541,
+      "tag": "0000_material_the_executioner",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "5",
-      "when": 1707100421305,
-      "tag": "0001_stiff_slipstream",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1707196153758,
-      "tag": "0002_jazzy_the_fallen",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1707197279435,
-      "tag": "0003_robust_luminals",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "5",
-      "when": 1708550801075,
-      "tag": "0004_dashing_eddie_brock",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "5",
-      "when": 1708563510346,
-      "tag": "0005_slim_swordsman",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "5",
-      "when": 1709016496192,
-      "tag": "0006_ambiguous_oracle",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "5",
-      "when": 1709018166130,
-      "tag": "0007_tiny_rictor",
-      "breakpoints": true
-    },
-    {
-      "idx": 8,
-      "version": "5",
-      "when": 1709880413237,
-      "tag": "0008_black_groot",
+      "when": 1711422041410,
+      "tag": "0001_keen_mastermind",
       "breakpoints": true
     }
   ]
