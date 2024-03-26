@@ -133,7 +133,7 @@ async function addPointRedemption(
     history_id: history_id,
     loyalty_id: loyalty_id,
     points_redeemed: points_redeemed,
-    timestamp: stamp
+    timestamp: stamp,
   });
 
   // Get point redemption id
@@ -832,21 +832,12 @@ export async function editCustomer(
 
 export async function displayOnboardingCards(vendor_id: number) {
   const results =
-<<<<<<< HEAD
     await db.run(sql`SELECT o.onboarding_id, o.icon, o.title, o.priority, o.directory, o.buttonText, ov.isCompleted
         FROM vendor v
         JOIN onboarding_vendor ov ON v.vendor_id = ov.vendor_id
         JOIN onboarding o ON ov.onboarding_id = o.onboarding_id
         WHERE v.vendor_id = ${vendor_id}
         ORDER BY o.priority ASC;`);
-=======
-    await db.execute(sql`SELECT o.onboarding_id, o.icon, o.title, o.priority, o.directory, o.buttonText, ov.isCompleted
-    FROM vendor v
-    JOIN onboarding_vendor ov ON v.vendor_id = ov.vendor_id
-    JOIN onboarding o ON ov.onboarding_id = o.onboarding_id
-    WHERE v.vendor_id = ${vendor_id}
-    ORDER BY o.priority ASC;`);
->>>>>>> abc581e1306ef140b37d576c5a90fce44692a26c
 
   type CompletionCardsData = {
     id: number;
@@ -870,14 +861,10 @@ export async function setOnboardingStatusComplete(
 ) {
   // Logic to update the onboarding_vendor table
   // Set `isCompleted` to true where `vendor_id` and `onboarding_id` match
-<<<<<<< HEAD
-  await db.run(sql`
-=======
-  await db.execute(sql`
->>>>>>> abc581e1306ef140b37d576c5a90fce44692a26c
-    UPDATE onboarding_vendor
-    SET isCompleted = 1
-    WHERE vendor_id = ${vendor_id} AND onboarding_id = ${oboarding_id};`);
+
+  await db.run(
+    sql`UPDATE onboarding_vendor SET isCompleted = 1 WHERE vendor_id = ${vendor_id} AND onboarding_id = ${oboarding_id};`
+  );
 }
 
 type BusinessProfileData = {
@@ -912,94 +899,102 @@ export function checkIsBusinessInformationComplete(
 // Input: The loyalty_id, the attribute name, and the new attribute value
 // Returns 1 if successfull, or null if the query failed
 async function editLoyaltyCard(loyalty_id, attribute, newValue) {
-    // Update value
-    await db.update(schema.loyalty_card)
-        .set({ [attribute]: [newValue] })
-        .where(eq(schema.loyalty_card.loyalty_id, loyalty_id));
+  // Update value
+  await db
+    .update(schema.loyalty_card)
+    .set({ [attribute]: [newValue] })
+    .where(eq(schema.loyalty_card.loyalty_id, loyalty_id));
 
-    // Test if the query was successful
-    const result = await db.select({
-        r: schema.loyalty_card[attribute]
+  // Test if the query was successful
+  const result = await db
+    .select({
+      r: schema.loyalty_card[attribute],
     })
-        .from(schema.loyalty_card)
-        .where(eq(schema.loyalty_card.loyalty_id, loyalty_id));
+    .from(schema.loyalty_card)
+    .where(eq(schema.loyalty_card.loyalty_id, loyalty_id));
 
-    // Return 1 if successful, or null if failure
-    if (result[0].r == newValue) {
-        return 1;
-    } else {
-        return null;
-    }
+  // Return 1 if successful, or null if failure
+  if (result[0].r == newValue) {
+    return 1;
+  } else {
+    return null;
+  }
 }
 
 // Edits one attribute of a point redemption history
 // Input: The history_id, the attribute name, and the new attribute value
 // Returns 1 if successfull, or null if the query failed
 async function editPointRedemptionHistory(history_id, attribute, newValue) {
-    // Update value
-    await db.update(schema.point_redemption_history)
-        .set({ [attribute]: [newValue] })
-        .where(eq(schema.point_redemption_history.history_id, history_id));
+  // Update value
+  await db
+    .update(schema.point_redemption_history)
+    .set({ [attribute]: [newValue] })
+    .where(eq(schema.point_redemption_history.history_id, history_id));
 
-    // Test if the query was successful
-    const result = await db.select({
-        r: schema.point_redemption_history[attribute]
+  // Test if the query was successful
+  const result = await db
+    .select({
+      r: schema.point_redemption_history[attribute],
     })
-        .from(schema.point_redemption_history)
-        .where(eq(schema.point_redemption_history.history_id, history_id));
+    .from(schema.point_redemption_history)
+    .where(eq(schema.point_redemption_history.history_id, history_id));
 
-    // Return 1 if successful, or null if failure
-    if (result[0].r == newValue) {
-        return 1;
-    } else {
-        return null;
-    }
+  // Return 1 if successful, or null if failure
+  if (result[0].r == newValue) {
+    return 1;
+  } else {
+    return null;
+  }
 }
 
 // Edits one attribute of a transaction
 // Input: The transaction_id, the attribute name, and the new attribute value
 // Returns 1 if successfull, or null if the query failed
 async function editTransaction(transaction_id, attribute, newValue) {
-    // Update value
-    await db.update(schema.transaction)
-        .set({ [attribute]: [newValue] })
-        .where(eq(schema.transaction.transaction_id, transaction_id));
+  // Update value
+  await db
+    .update(schema.transaction)
+    .set({ [attribute]: [newValue] })
+    .where(eq(schema.transaction.transaction_id, transaction_id));
 
-    // Test if the query was successful
-    const result = await db.select({
-        r: schema.transaction[attribute]
+  // Test if the query was successful
+  const result = await db
+    .select({
+      r: schema.transaction[attribute],
     })
-        .from(schema.transaction)
-        .where(eq(schema.transaction.transaction_id, transaction_id));
+    .from(schema.transaction)
+    .where(eq(schema.transaction.transaction_id, transaction_id));
 
-    // Return 1 if successful, or null if failure
-    if (result[0].r == newValue) {
-        return 1;
-    } else {
-        return null;
-    }
+  // Return 1 if successful, or null if failure
+  if (result[0].r == newValue) {
+    return 1;
+  } else {
+    return null;
+  }
 }
 
 // Edits one attribute of a reward
 // Input: The reward_id, the attribute name, and the new attribute value
 // Returns 1 if successfull, or null if the query failed
 async function editReward(reward_id, attribute, newValue) {
-    // Update value
-    await db.update(schema.reward)
-        .set({ [attribute]: [newValue] })
-        .where(eq(schema.reward.reward_id, reward_id));
+  // Update value
+  await db
+    .update(schema.reward)
+    .set({ [attribute]: [newValue] })
+    .where(eq(schema.reward.reward_id, reward_id));
 
-    // Test if the query was successful
-    const result = await db.select({
-        r: schema.reward[attribute]
+  // Test if the query was successful
+  const result = await db
+    .select({
+      r: schema.reward[attribute],
     })
-        .from(schema.reward)
-        .where(eq(schema.reward.reward_id, reward_id));
+    .from(schema.reward)
+    .where(eq(schema.reward.reward_id, reward_id));
 
-    // Return 1 if successful, or null if failure
-    if (result[0].r == newValue) {
-        return 1;
-    } else {
-        return null;
-    }
+  // Return 1 if successful, or null if failure
+  if (result[0].r == newValue) {
+    return 1;
+  } else {
+    return null;
+  }
 }
