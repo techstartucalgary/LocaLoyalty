@@ -36,9 +36,11 @@ export default function WalletPage() {
 	const { currentPrimaryColor } = useWalletStore();
 
 	return (
-		<Stack screenOptions={{
-			headerTransparent: true
-		}}>
+		<Stack
+			screenOptions={{
+				headerTransparent: true,
+			}}
+		>
 			<Stack.Screen
 				name="index"
 				options={{
@@ -50,9 +52,9 @@ export default function WalletPage() {
 				options={{
 					headerTitle: "",
 					headerStyle: {
-						backgroundColor: currentPrimaryColor
+						backgroundColor: currentPrimaryColor,
 					},
-					headerTintColor: "#000"
+					headerTintColor: "#000",
 				}}
 			/>
 		</Stack>
