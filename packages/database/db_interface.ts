@@ -120,14 +120,13 @@ export async function addLoyaltyCard(
 
 // Adds a new point redemption
 // Timestamp auto generated
-export async function addPointRedemption(
-  history_id,
+async function addPointRedemption(
   loyalty_id, //TODO: enforce types
+  history_id,
   points_redeemed
 ) {
   //take timestamp
   const stamp = new Date().toDateString();
-
 
   //insert data
   await db.insert(schema.point_redemption_history).values({
@@ -160,7 +159,7 @@ export async function addPointRedemption(
 }
 
 // Adds a new transaction a customer completed
-export async function addTransaction(
+async function addTransaction(
   loyalty_id, //TODO: enforce types
   vendor_id,
   purchase_amt,
@@ -204,7 +203,7 @@ export async function addTransaction(
 }
 
 // Adds a new reward to a vendor program
-export  async function addReward(
+async function addReward(
   vendor_id, //TODO: enforce types
   name,
   description,
@@ -380,7 +379,7 @@ export async function addVendorReward(
 
 // Gets the loyalty card object
 // Input: the loyalty car ID
-export async function getLoyaltyCard(loyalty_id) {
+async function getLoyaltyCard(loyalty_id) {
   const result = await db
     .select()
     .from(schema.loyalty_card)
@@ -397,7 +396,7 @@ export async function getLoyaltyCard(loyalty_id) {
 
 // Gets the point redemption history object
 // Input: the loyalty card ID
-export async function getPointRedemptionHistory(loyalty_id) {
+async function getPointRedemptionHistory(loyalty_id) {
   const result = await db
     .select()
     .from(schema.point_redemption_history)
@@ -414,7 +413,7 @@ export async function getPointRedemptionHistory(loyalty_id) {
 
 // Gets the transaction object
 // Input: the transaction ID
-export async function getTransaction(transaction_id) {
+async function getTransaction(transaction_id) {
   const result = await db
     .select()
     .from(schema.transaction)
@@ -431,7 +430,7 @@ export async function getTransaction(transaction_id) {
 
 // Gets the reward object
 // Input: the reward ID
-export async function getReward(reward_id) {
+async function getReward(reward_id) {
   const result = await db
     .select()
     .from(schema.reward)
@@ -627,14 +626,14 @@ export async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
 
 export async function getRedeemable(customer_id: number) {
   const results =
-    await db.execute(sql`SELECT c.name as vendor_name, c.business_logo, r.name as reward_name, r.points_cost, r.reward_id
-      FROM reward r
-      INNER JOIN (SELECT v.name, v.business_logo, b.vendor_id, b.points_amt
-      FROM vendor v
-      INNER JOIN (SELECT vendor_id, points_amt 
-      FROM loyalty_card lc
-      WHERE customer_id = ${customer_id}) AS b ON b.vendor_id = v.vendor_id) AS c ON r.vendor_id = c.vendor_id
-      WHERE c.points_amt >= r.points_cost;`);
+    await db.run(sql`SELECT c.name as vendor_name, c.business_logo, r.name as reward_name, r.points_cost, r.reward_id
+        FROM reward r
+        INNER JOIN (SELECT v.name, v.business_logo, b.vendor_id, b.points_amt
+        FROM vendor v
+        INNER JOIN (SELECT vendor_id, points_amt 
+        FROM loyalty_card lc
+        WHERE customer_id = ${customer_id}) AS b ON b.vendor_id = v.vendor_id) AS c ON r.vendor_id = c.vendor_id
+        WHERE c.points_amt >= r.points_cost;`);
 
   type Redeemables = {
     business_logo: string;
@@ -682,7 +681,7 @@ export async function getRedeemable(customer_id: number) {
 
 // Gets all point redemption history for a given loyalty card
 // Input: the loyalty_id of the loyalty card
-export async function getAllPointRedemptionHistoryOfCard(loyalty_id) {
+async function getAllPointRedemptionHistoryOfCard(loyalty_id) {
   const results = await db
     .select()
     .from(schema.point_redemption_history)
@@ -831,10 +830,75 @@ export async function editCustomer(
         */
 }
 
+export async function displayOnboardingCards(vendor_id: number) {
+  const results =
+    await db.run(sql`SELECT o.onboarding_id, o.icon, o.title, o.priority, o.directory, o.buttonText, ov.isCompleted
+        FROM vendor v
+        JOIN onboarding_vendor ov ON v.vendor_id = ov.vendor_id
+        JOIN onboarding o ON ov.onboarding_id = o.onboarding_id
+        WHERE v.vendor_id = ${vendor_id}
+        ORDER BY o.priority ASC;`);
+
+  type CompletionCardsData = {
+    id: number;
+    icon: string;
+    title: string;
+    priority: number;
+    isCompleted: boolean;
+    directory: string;
+    buttonText: string;
+  }[];
+
+  const onboardingCards = results.rows as unknown as CompletionCardsData; // Shitty typescript casting
+
+  console.log("Here are the results", onboardingCards);
+  return onboardingCards;
+}
+
+export async function setOnboardingStatusComplete(
+  vendor_id: number,
+  oboarding_id: number
+) {
+  // Logic to update the onboarding_vendor table
+  // Set `isCompleted` to true where `vendor_id` and `onboarding_id` match
+  await db.run(sql`
+    UPDATE onboarding_vendor
+    SET isCompleted = 1
+    WHERE vendor_id = ${vendor_id} AND onboarding_id = ${oboarding_id};`);
+}
+
+type BusinessProfileData = {
+  name: string;
+  business_email: string;
+  address: string;
+  business_phone: string;
+  description: string;
+  city: string;
+  province: string;
+  postal_code: string;
+};
+
+export function checkIsBusinessInformationComplete(
+  profileData: BusinessProfileData
+) {
+  // Here, you'd check that all required profile fields are filled in
+  // Return true if the profile is complete
+  return [
+    profileData.name,
+    profileData.business_email,
+    profileData.address,
+    profileData.business_phone,
+    profileData.description,
+    profileData.city,
+    profileData.province,
+    profileData.postal_code,
+  ].every((field) => field !== undefined && field !== "");
+}
+
 // Edits one attribute of a loyalty card
 // Input: The loyalty_id, the attribute name, and the new attribute value
 // Returns 1 if successfull, or null if the query failed
-export async function editLoyaltyCard(loyalty_id, attribute, newValue) {
+async function editLoyaltyCard(loyalty_id, attribute, newValue) {
     // Update value
     await db.update(schema.loyalty_card)
         .set({ [attribute]: [newValue] })
@@ -858,7 +922,7 @@ export async function editLoyaltyCard(loyalty_id, attribute, newValue) {
 // Edits one attribute of a point redemption history
 // Input: The history_id, the attribute name, and the new attribute value
 // Returns 1 if successfull, or null if the query failed
-export async function editPointRedemptionHistory(history_id, attribute, newValue) {
+async function editPointRedemptionHistory(history_id, attribute, newValue) {
     // Update value
     await db.update(schema.point_redemption_history)
         .set({ [attribute]: [newValue] })
@@ -882,7 +946,7 @@ export async function editPointRedemptionHistory(history_id, attribute, newValue
 // Edits one attribute of a transaction
 // Input: The transaction_id, the attribute name, and the new attribute value
 // Returns 1 if successfull, or null if the query failed
-export async function editTransaction(transaction_id, attribute, newValue) {
+async function editTransaction(transaction_id, attribute, newValue) {
     // Update value
     await db.update(schema.transaction)
         .set({ [attribute]: [newValue] })
@@ -906,7 +970,7 @@ export async function editTransaction(transaction_id, attribute, newValue) {
 // Edits one attribute of a reward
 // Input: The reward_id, the attribute name, and the new attribute value
 // Returns 1 if successfull, or null if the query failed
-export async function editReward(reward_id, attribute, newValue) {
+async function editReward(reward_id, attribute, newValue) {
     // Update value
     await db.update(schema.reward)
         .set({ [attribute]: [newValue] })
@@ -926,4 +990,3 @@ export async function editReward(reward_id, attribute, newValue) {
         return null;
     }
 }
-
