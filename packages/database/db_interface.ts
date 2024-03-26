@@ -832,12 +832,21 @@ export async function editCustomer(
 
 export async function displayOnboardingCards(vendor_id: number) {
   const results =
+<<<<<<< HEAD
     await db.run(sql`SELECT o.onboarding_id, o.icon, o.title, o.priority, o.directory, o.buttonText, ov.isCompleted
         FROM vendor v
         JOIN onboarding_vendor ov ON v.vendor_id = ov.vendor_id
         JOIN onboarding o ON ov.onboarding_id = o.onboarding_id
         WHERE v.vendor_id = ${vendor_id}
         ORDER BY o.priority ASC;`);
+=======
+    await db.execute(sql`SELECT o.onboarding_id, o.icon, o.title, o.priority, o.directory, o.buttonText, ov.isCompleted
+    FROM vendor v
+    JOIN onboarding_vendor ov ON v.vendor_id = ov.vendor_id
+    JOIN onboarding o ON ov.onboarding_id = o.onboarding_id
+    WHERE v.vendor_id = ${vendor_id}
+    ORDER BY o.priority ASC;`);
+>>>>>>> abc581e1306ef140b37d576c5a90fce44692a26c
 
   type CompletionCardsData = {
     id: number;
@@ -861,7 +870,11 @@ export async function setOnboardingStatusComplete(
 ) {
   // Logic to update the onboarding_vendor table
   // Set `isCompleted` to true where `vendor_id` and `onboarding_id` match
+<<<<<<< HEAD
   await db.run(sql`
+=======
+  await db.execute(sql`
+>>>>>>> abc581e1306ef140b37d576c5a90fce44692a26c
     UPDATE onboarding_vendor
     SET isCompleted = 1
     WHERE vendor_id = ${vendor_id} AND onboarding_id = ${oboarding_id};`);

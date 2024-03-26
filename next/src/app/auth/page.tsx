@@ -1,9 +1,5 @@
 "use client";
-import {
-  CompletionCardProps,
-  useAuthStore,
-  useOnboardingStore,
-} from "@/utils/store";
+import { CompletionCardProps, useOnboardingStore } from "@/utils/store";
 import { useAuth } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import { Progress } from "@/components/ui/progress";
@@ -14,17 +10,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-
-export function ProgressDemo() {
-  const [progress, setProgress] = useState(13);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setProgress(66), 500);
-    return () => clearTimeout(timer);
-  }, []);
-
-  return <Progress value={progress} />;
-}
+import { useQuery } from "@tanstack/react-query";
+import { fetchAPI } from "@/utils/generalAxios";
 
 const calculateProfileCompletion = (
   completionCards: CompletionCardProps[]
@@ -44,51 +31,28 @@ const calculateProfileCompletion = (
 
 export default function AuthHome() {
   const { getToken } = useAuth();
-  const { setToken } = useAuthStore();
   const { completionCards, setCompletionCards } = useOnboardingStore();
 
+  const fetchOnboardingData = async () => {
+    return fetchAPI(
+      "http://localhost:5001/business/api/onboarding",
+      "GET",
+      await getToken(),
+      null,
+      {}
+    );
+  };
+
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["onboardingData"],
+    queryFn: fetchOnboardingData,
+  });
+
   useEffect(() => {
-    async function fetchToken() {
-      const toFetch = await getToken();
-      setToken(toFetch);
+    if (data) {
+      setCompletionCards(data.results);
     }
-
-    fetchToken();
-  }, [getToken, setToken]);
-
-  useEffect(() => {
-    const dummyCompletionCardData: CompletionCardProps[] = [
-      {
-        id: 1,
-        icon: "/assets/clover.png",
-        title: "Connect your Clover account",
-        priority: 1,
-        isCompleted: false,
-        directory: "/auth/profile",
-        buttonText: "Connect",
-      },
-      {
-        id: 2,
-        icon: "/assets/briefcase.png",
-        title: "Add your business information",
-        priority: 2,
-        isCompleted: false,
-        directory: "/auth/profile",
-        buttonText: "Add",
-      },
-      {
-        id: 3,
-        icon: "/assets/tag-icon.png",
-        title: "Create your loyalty program",
-        priority: 3,
-        isCompleted: false,
-        directory: "/auth/rewards",
-        buttonText: "Create",
-      },
-    ];
-
-    setCompletionCards(dummyCompletionCardData);
-  }, [setCompletionCards]);
+  }, [data, setCompletionCards]);
 
   return (
     <div className="flex items-center justify-center h-full flex-col gap-10">
@@ -123,11 +87,15 @@ export default function AuthHome() {
         </div>
 
         <div className="flex justify-evenly w-11/12">
-          {completionCards
-            .filter((item) => !item.isCompleted)
-            .map((filteredItem) => (
-              <ProfileCompletionCard key={filteredItem.id} {...filteredItem} />
-            ))}
+          {completionCards &&
+            completionCards
+              .filter((item) => !item.isCompleted)
+              .map((filteredItem) => (
+                <ProfileCompletionCard
+                  key={filteredItem.onboarding_id}
+                  {...filteredItem}
+                />
+              ))}
         </div>
       </div>
 
@@ -136,15 +104,24 @@ export default function AuthHome() {
         <Accordion type="single" collapsible>
           <AccordionItem value="item-1">
             <AccordionTrigger className="border-b-2 border-black">
-              <p className="ml-7">What is a loyalty/rewards program?</p>
+              <p className="ml-7">Why use a loyalty/rewards program?</p>
             </AccordionTrigger>
-            <AccordionContent>Place holder text</AccordionContent>
+            <AccordionContent>
+              Loyalty/rewards programs are proven to bring back return
+              customers. It also incentivizes them to increase their spending at
+              your business. It&apos;s a lot cheaper to keep a customer than to
+              get new customers!
+            </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-2">
             <AccordionTrigger className="border-b-2 border-black">
               <p className="ml-7">What type of promotions can you create?</p>
             </AccordionTrigger>
-            <AccordionContent>Placeholder text</AccordionContent>
+            <AccordionContent>
+              For now the main source of promotions will be through email blasts
+              to all of your loyalty program features. This feature is still
+              work-in-progress
+            </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-3">
             <AccordionTrigger className="border-b-2 border-black">
@@ -152,13 +129,23 @@ export default function AuthHome() {
                 What type of analytics are accessible to me?
               </p>
             </AccordionTrigger>
-            <AccordionContent>Placeholder text</AccordionContent>
+            <AccordionContent>
+              It will be analytics related to the loyalty program itself.
+              Examples being popularity of certain rewards and average spend per
+              transaction. This feature is also work in progress.
+            </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-4">
             <AccordionTrigger className="border-b-2 border-black">
               <p className="ml-7">How much does LocaLoyalty cost?</p>
             </AccordionTrigger>
-            <AccordionContent>Placeholder text</AccordionContent>
+            <AccordionContent>
+              LocaLoyalty will be free for now! The mobile app for your
+              customers is also free. We&apos;re looking for pilot users so
+              we&apos;d appreciate any referrals to other small businesses that
+              would benefit from the service. We will eventually charge a
+              subscription fee for business owners though.
+            </AccordionContent>
           </AccordionItem>
         </Accordion>
       </div>

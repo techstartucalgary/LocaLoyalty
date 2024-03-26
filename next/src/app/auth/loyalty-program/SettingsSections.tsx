@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { useAuthStore, useLoyaltyProgramStore } from "@/utils/store";
+import { useLoyaltyProgramStore } from "@/utils/store";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import {
@@ -8,6 +8,7 @@ import {
   DeleteRewardDialog,
   EditRewardDialog,
 } from "./RewardDialogs";
+import { useAuth } from "@clerk/nextjs";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -206,13 +207,15 @@ export const EditSection = ({
     definedRewards,
     incrementRefetch,
   } = useLoyaltyProgramStore();
-  const { token } = useAuthStore();
+
+  const { getToken } = useAuth();
+
   const sendModifiedLoyaltyProgramData = async () => {
     // Make the API call with formData
     return fetchAPI(
       "http://localhost:5001/business/loyalty-program",
       "POST",
-      token,
+      await getToken(),
       {
         stampLife: stampLife,
         stampCount: stampCount,

@@ -1,18 +1,8 @@
 // counterStore.ts
 import { create } from "zustand";
 
-type AuthState = {
-  token: string | null;
-  setToken: (val: string | null) => void;
-};
-
-export const useAuthStore = create<AuthState>((set) => ({
-  token: null,
-  setToken: (val) => set({ token: val }),
-}));
-
 export interface CompletionCardProps {
-  id: number;
+  onboarding_id: number;
   icon: string;
   title: string;
   priority: number;
@@ -33,7 +23,7 @@ export const useOnboardingStore = create<OnboardingState>((set) => ({
   setComplete: (id) =>
     set((state) => {
       const updatedCards = state.completionCards.map((card) => {
-        if (card.id === id) {
+        if (card.onboarding_id === id) {
           return { ...card, isCompleted: !card.isCompleted };
         }
         return card;
@@ -73,7 +63,7 @@ type LoyaltyProgramState = {
   setScaleAmount: (value: string) => void;
   setDefinedRewards: (defined: Reward[]) => void;
   addReward: (toAdd: Reward) => void;
-  
+
   // Design Tab
   cardLayoutStyle: number;
   incrementCardLayoutStyle: () => void;
@@ -127,12 +117,16 @@ export const useLoyaltyProgramStore = create<LoyaltyProgramState>((set) => ({
   incrementCardLayoutStyle: () =>
     set((state) => ({
       cardLayoutStyle:
-        state.cardLayoutStyle < 10 ? state.cardLayoutStyle + 1 : state.cardLayoutStyle,
+        state.cardLayoutStyle < 10
+          ? state.cardLayoutStyle + 1
+          : state.cardLayoutStyle,
     })),
   decrementCardLayoutStyle: () =>
     set((state) => ({
       cardLayoutStyle:
-        state.cardLayoutStyle > 1 ? state.cardLayoutStyle - 1 : state.cardLayoutStyle,
+        state.cardLayoutStyle > 1
+          ? state.cardLayoutStyle - 1
+          : state.cardLayoutStyle,
     })),
 
   deleteReward: (toDelete) => {
