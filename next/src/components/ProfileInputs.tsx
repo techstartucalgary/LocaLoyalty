@@ -92,7 +92,7 @@ export const LongTextInput = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className="form-textarea p-2 border-2 border-slate-200 rounded-md" // Add your styling classes here
+        className="form-textarea p-2 border-2 border-slate-200 rounded-md focus:outline-none focus:border-black" // Add your styling classes here
         rows={4} // You can set the default number of rows
       />
     </>

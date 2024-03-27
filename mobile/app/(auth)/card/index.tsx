@@ -20,6 +20,7 @@ import { fetchAPI } from "../../../utils/generalAxios";
 type Card = {
   businessID: number;
   businessName: string;
+  businessAddress: string;
   businessLogo: string;
   businessDesc: string;
   businessEmail: string;
@@ -35,6 +36,7 @@ type Card = {
 const Card = ({
   businessID,
   businessName,
+  businessAddress,
   businessLogo,
   businessEmail,
   businessPhone,
@@ -49,6 +51,7 @@ const Card = ({
   const {
     setCurrentBusinessID,
     setCurrentBusinessName,
+    setCurrentBusinessAddress,
     setCurrentBusinessLogo,
     setCurrentBusinessEmail,
     setCurrentBusinessPhone,
@@ -64,6 +67,7 @@ const Card = ({
   function handleCardClick(cardPressed: Card) {
     setCurrentBusinessID(cardPressed.businessID);
     setCurrentBusinessName(cardPressed.businessName);
+    setCurrentBusinessAddress(cardPressed.businessAddress);
     setCurrentBusinessLogo(cardPressed.businessLogo);
     setCurrentBusinessEmail(cardPressed.businessEmail);
     setCurrentBusinessPhone(cardPressed.businessPhone);
@@ -95,6 +99,7 @@ const Card = ({
             handleCardClick({
               businessID: businessID,
               businessName: businessName,
+              businessAddress: businessAddress,
               businessLogo: businessLogo,
               businessEmail: businessEmail,
               businessPhone: businessPhone,
@@ -225,6 +230,7 @@ const CardList = () => {
                 businessID={item.vendor_id}
                 businessName={item.name}
                 businessEmail={item.email}
+                businessAddress={item.address}
                 businessPhone={item.phone}
                 businessLogo={item.business_logo}
                 businessDesc={item.desc}

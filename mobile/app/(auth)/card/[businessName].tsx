@@ -18,7 +18,7 @@ import ExtraSmallStamp from "../../../assets/images/extraSmallStamp";
 import { useAuth } from "@clerk/clerk-expo";
 import { fetchAPI } from "../../../utils/generalAxios";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import MapView from "react-native-maps";
+import MapView, { Callout, Marker, PROVIDER_GOOGLE } from "react-native-maps";
 
 const Reward = ({
   requiredStamps,
@@ -206,9 +206,90 @@ const RewardsSection = () => {
   );
 };
 
+const DetailsSection = ({
+  currentBusinessName,
+  currentBusinessAddress,
+  currentBusinessDescription,
+  currentBusinessLogo,
+}: {
+  currentBusinessName: string;
+  currentBusinessAddress: string;
+  currentBusinessDescription: string;
+  currentBusinessLogo: string;
+}) => {
+  console.log(currentBusinessAddress);
+  console.log(
+    `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+      currentBusinessAddress
+    )}&key=${process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY}`
+  );
+
+  const fetchCoordinates = async () => {
+    return fetchAPI(
+      `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+        currentBusinessAddress
+      )}&key=${process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY}`,
+      "GET",
+      null,
+      null,
+      {}
+    );
+  };
+
+  const { data, isError, fetchStatus } = useQuery({
+    queryKey: ["rewards"],
+    queryFn: fetchCoordinates,
+  });
+
+  console.log(`data`, data);
+
+  return (
+    <ScrollView
+      className="h-full px-[10%] pt-4"
+      contentContainerStyle={{ paddingBottom: 64 }}
+    >
+      <Text className="text-lg font-semibold pb-2">
+        About {currentBusinessName}
+      </Text>
+      <Text className="pb-8">{currentBusinessDescription}</Text>
+      {isError && <Text>Failed to load map...</Text>}
+      {fetchStatus === "fetching" ? (
+        <ActivityIndicator className="pt-16" />
+      ) : (
+        <MapView
+          className="w-full aspect-square"
+          provider={PROVIDER_GOOGLE}
+          initialRegion={{
+            latitude: 51.074615,
+            longitude: -114.128393,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        >
+          <Marker coordinate={{ latitude: 51.074615, longitude: -114.128393 }}>
+            <Callout>
+              <View className="flex-row items-center p-2">
+                <Image
+                  source={{ uri: currentBusinessLogo }}
+                  className="rounded-lg w-12 h-12"
+                />
+                <Text className="text-xl font-bold pl-2">
+                  {currentBusinessName}
+                </Text>
+              </View>
+            </Callout>
+          </Marker>
+        </MapView>
+      )}
+    </ScrollView>
+  );
+};
+
+
 const LoyaltyCardPage = () => {
   const {
     currentBusinessName,
+    currentBusinessAddress,
     currentBusinessLogo,
     currentBusinessEmail,
     currentBusinessPhone,
@@ -247,60 +328,59 @@ const LoyaltyCardPage = () => {
   }
 
   return (
-    <View className="w-full h-full">
+    <View className="w-full h-full ">
       <View
         style={{ backgroundColor: currentPrimaryColor }}
-        className="w-full h-52 pt-28 mb-28 rounded-b-[40px]"
-      >
-        <View className="h-full px-12">
-          <View className="w-full border-2 rounded-xl">
-            <View className="items-center px-6 bg-[#F7F8F8] rounded-xl">
-              <View className="flex-row pt-5 w-full items-center">
-                <Image
-                  source={{ uri: currentBusinessLogo }}
-                  className="rounded-lg w-16 h-16"
-                />
-                <Text className="flex-1 text-2xl font-bold text-center">
-                  {currentBusinessName}
+        className="w-full h-1/4 pt-[25%] rounded-b-[40px] "
+      ></View>
+      <View className="px-[10%] -mt-20">
+        <View className="w-full border-2 rounded-xl">
+          <View className="items-center px-6 bg-[#F7F8F8] rounded-xl">
+            <View className="flex-row pt-5 w-full items-center">
+              <Image
+                source={{ uri: currentBusinessLogo }}
+                className="rounded-lg w-16 h-16"
+              />
+              <Text className="flex-1 text-2xl font-bold text-center">
+                {currentBusinessName}
+              </Text>
+            </View>
+            <FlatList
+              data={stampArray}
+              renderItem={({ item }) => {
+                if (item) {
+                  return <SmallStamp color={"#000"} />;
+                } else {
+                  return <SmallEmptyStamp />;
+                }
+              }}
+              className="w-full py-4"
+              horizontal={true}
+            ></FlatList>
+            <View className="flex-row gap-2 py-4">
+              <View className="flex-row">
+                <AntDesign name="phone" size={16} color="black" />
+                <Text className="text-xs font-semibold pl-1">
+                  {currentBusinessPhone}
                 </Text>
               </View>
-              <FlatList
-                data={stampArray}
-                renderItem={({ item }) => {
-                  if (item) {
-                    return <SmallStamp color={"#000"} />;
-                  } else {
-                    return <SmallEmptyStamp />;
-                  }
-                }}
-                className="w-full py-4"
-                horizontal={true}
-              ></FlatList>
-              <View className="flex-row gap-2 py-4">
-                <View className="flex-row">
-                  <AntDesign name="phone" size={16} color="black" />
-                  <Text className="text-xs font-semibold pl-1">
-                    {currentBusinessPhone}
-                  </Text>
-                </View>
-                <View className="flex-row">
-                  <AntDesign name="mail" size={16} color="black" />
-                  <Text className="text-xs font-semibold pl-1">
-                    {currentBusinessEmail}
-                  </Text>
-                </View>
+              <View className="flex-row">
+                <AntDesign name="mail" size={16} color="black" />
+                <Text className="text-xs font-semibold pl-1">
+                  {currentBusinessEmail}
+                </Text>
               </View>
             </View>
           </View>
         </View>
       </View>
 
-      <View className="py-6">
-        <View className="flex-row justify-between w-full px-12">
+      <View className="py-4 px-[10%]">
+        <View className="flex-row justify-between w-full">
           <Text>Your Progress:</Text>
           <Text className="text-[#7B7B7B]">{`$${currentCarry_over_amt} / $${currentSpending_per_point}`}</Text>
         </View>
-        <View className="w-full px-12 py-1">
+        <View className="w-full py-1">
           <View className="relative w-full h-3 border border-[#999999] rounded-full">
             <View
               style={{
@@ -312,13 +392,13 @@ const LoyaltyCardPage = () => {
             ></View>
           </View>
         </View>
-        <View className="flex-row justify-between w-full px-12">
+        <View className="flex-row justify-between w-full">
           <Text>{`$${currentCarry_over_amt}`}</Text>
           <Text>{`$${currentSpending_per_point}`}</Text>
         </View>
       </View>
 
-      <View className="flex-row h-12 px-10 w-full">
+      <View className="flex-row px-[5%] w-full">
         <Pressable
           onPress={handleRewardButtonPress}
           disabled={!isDetailsSelected}
@@ -326,6 +406,7 @@ const LoyaltyCardPage = () => {
             {
               opacity: pressed ? 0.5 : 1.0,
               flex: 1,
+              paddingVertical: 4,
               borderStyle: "solid",
               borderColor: isDetailsSelected ? "#B1B1B1" : currentPrimaryColor,
               borderWidth: 2,
@@ -333,7 +414,7 @@ const LoyaltyCardPage = () => {
             },
           ]}
         >
-          <View className="w-full h-full justify-center items-center">
+          <View className="w-full justify-center items-center">
             <Text className="text-lg">Rewards</Text>
           </View>
         </Pressable>
@@ -344,6 +425,7 @@ const LoyaltyCardPage = () => {
             {
               opacity: pressed ? 0.5 : 1.0,
               flex: 1,
+              paddingVertical: 4,
               borderStyle: "solid",
               borderColor: isDetailsSelected ? currentPrimaryColor : "#B1B1B1",
               borderWidth: 2,
@@ -351,23 +433,19 @@ const LoyaltyCardPage = () => {
             },
           ]}
         >
-          <View className="w-full h-full justify-center items-center">
+          <View className="w-full justify-center items-center">
             <Text className="text-lg">Details</Text>
           </View>
         </Pressable>
       </View>
 
       {isDetailsSelected ? (
-        <ScrollView
-          className="h-full px-12 pt-4"
-          contentContainerStyle={{ paddingBottom: 64 }}
-        >
-          <Text className="text-lg font-semibold pb-2">
-            About {currentBusinessName}
-          </Text>
-          <Text className="pb-8">{currentBusinessDescription}</Text>
-          <MapView className="w-full aspect-square" />
-        </ScrollView>
+        <DetailsSection
+          currentBusinessAddress={currentBusinessAddress}
+          currentBusinessName={currentBusinessName}
+          currentBusinessDescription={currentBusinessDescription}
+          currentBusinessLogo={currentBusinessLogo}
+        />
       ) : (
         <RewardsSection />
       )}

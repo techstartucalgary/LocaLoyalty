@@ -5,6 +5,7 @@ type RefetchFunc = () => void;
 type WalletState = {
 	currentBusinessID: number;
 	currentBusinessName: string;
+	currentBusinessAddress: string;
 	currentBusinessLogo: string;
 	currentBusinessEmail: string;
 	currentBusinessPhone: string;
@@ -18,6 +19,7 @@ type WalletState = {
 	refetchFunc: () => void;
 	setCurrentBusinessID: (id: number) => void;
 	setCurrentBusinessName: (name: string) => void;
+	setCurrentBusinessAddress: (address: string) => void;
 	setCurrentBusinessLogo: (image: string) => void;
 	setCurrentBusinessEmail: (email: string) => void;
 	setCurrentBusinessPhone: (phone: string) => void;
@@ -34,6 +36,7 @@ type WalletState = {
 export const useWalletStore = create<WalletState>((set) => ({
 	currentBusinessID: 0,
 	currentBusinessName: "",
+	currentBusinessAddress: "",
 	currentBusinessLogo: "",
 	currentBusinessEmail: "",
 	currentBusinessPhone: "",
@@ -51,11 +54,14 @@ export const useWalletStore = create<WalletState>((set) => ({
 	setCurrentBusinessName: (name) => {
 		set({ currentBusinessName: name });
 	},
+	setCurrentBusinessAddress: (address) => {
+		set({ currentBusinessAddress: address });
+	},
 	setCurrentBusinessEmail: (email) => {
-		set({ currentBusinessEmail: email })
+		set({ currentBusinessEmail: email });
 	},
 	setCurrentBusinessPhone: (phone) => {
-		set({ currentBusinessPhone: phone })
+		set({ currentBusinessPhone: phone });
 	},
 	setCurrentBusinessLogo: (image) => {
 		set({ currentBusinessLogo: image });
@@ -73,10 +79,10 @@ export const useWalletStore = create<WalletState>((set) => ({
 		set({ currentPrimaryColor: color });
 	},
 	setCurrentCarry_over_amt: (carry_over_amt: number) => {
-		set({ currentCarry_over_amt: carry_over_amt })
+		set({ currentCarry_over_amt: carry_over_amt });
 	},
 	setCurrentSpending_per_point: (spending_per_point: number) => {
-		set({ currentSpending_per_point: spending_per_point })
+		set({ currentSpending_per_point: spending_per_point });
 	},
 	setCurrentLoyaltyID: (loyaltyID: number) => {
 		set({ currentLoyaltyID: loyaltyID })
@@ -85,4 +91,3 @@ export const useWalletStore = create<WalletState>((set) => ({
 		set({ refetchFunc: func });
 	},
 }));
-
