@@ -25,5 +25,7 @@ router.post("/add-loyalty-card", customerController.addCard)
 // API endpoint to get all redeemables
 router.get("/redeemables", customerController.getRedeemables)
 
+// API endpoint to redeem a reward
+router.post("/redeem", customerController.redeemReward)
 
 export default router;

@@ -4,6 +4,7 @@ import {
   getAllLoyaltyCardsOfCustomer,
   addLoyaltyCard,
   getRedeemable,
+  redeemRewardUpdatePoints,
 } from "../../database/db_interface";
 
 export const getAllCards = async (req: Request, res: Response) => {
@@ -101,5 +102,42 @@ export const getRedeemables = async (req: Request, res: Response) => {
     console.error("Error retrieving redeemables: ", error)
     res.status(500).json({ message: "Internal server error. Error retrieving redeemables" });
 
+  }
+}
+
+
+export const redeemReward = async (req: Request, res: Response) => {
+  try {
+    // Retrieve Clerk user ID from the authentication information
+    const clerkId = req.auth.userId;
+
+    if (!clerkId) {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
+
+    // Use the helper function to get the customer ID based on Clerk ID
+    const customer = await getCustomerFromClerkID(clerkId);
+
+    if (!customer) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+
+    console.log(`customer`, customer);
+    console.log(`req body`, req.body);
+
+    const loyalty_id = parseInt(req.body.loyalty_id)
+    const reward_id = parseInt(req.body.reward_id)
+
+    const success = await redeemRewardUpdatePoints(loyalty_id, reward_id)
+
+    // Send the success message back in the response
+    if (success === false) {
+      throw Error()
+    } else {
+      res.status(200).json({ success: true, message: "Successfully redeemed reward" });
+    }
+  } catch (error) {
+    console.error("Error redeem reward: ", error)
+    res.status(500).json({ message: "Internal server error. Error redeeming reward" });
   }
 }

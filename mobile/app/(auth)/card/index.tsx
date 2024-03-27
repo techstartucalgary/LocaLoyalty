@@ -29,6 +29,7 @@ type Card = {
   primaryColor: string;
   spending_per_point: string;
   carry_over_amt: number;
+  loyalty_id: number;
 };
 
 const Card = ({
@@ -43,6 +44,7 @@ const Card = ({
   primaryColor,
   carry_over_amt,
   spending_per_point,
+  loyalty_id,
 }: Card) => {
   const {
     setCurrentBusinessID,
@@ -56,6 +58,7 @@ const Card = ({
     setCurrentPrimaryColor,
     setCurrentCarry_over_amt,
     setCurrentSpending_per_point,
+    setCurrentLoyaltyID,
   } = useWalletStore();
 
   function handleCardClick(cardPressed: Card) {
@@ -70,6 +73,7 @@ const Card = ({
     setCurrentPrimaryColor(cardPressed.primaryColor);
     setCurrentCarry_over_amt(cardPressed.carry_over_amt);
     setCurrentSpending_per_point(parseFloat(cardPressed.spending_per_point));
+    setCurrentLoyaltyID(cardPressed.loyalty_id);
   }
 
   const slug: string = `./card/${businessName}`;
@@ -100,6 +104,7 @@ const Card = ({
               primaryColor: primaryColor,
               carry_over_amt: carry_over_amt,
               spending_per_point: spending_per_point,
+              loyalty_id: loyalty_id
             });
           }}
         >
@@ -154,6 +159,7 @@ const Card = ({
 
 const CardList = () => {
   const { getToken } = useAuth();
+  const { setRefetchFunc } = useWalletStore();
 
   const fetchLoyaltyCards = async () => {
     return fetchAPI(
@@ -169,6 +175,11 @@ const CardList = () => {
     queryKey: ["loyaltyCards"],
     queryFn: fetchLoyaltyCards,
   });
+
+  // Set refetch func for loyalty cards in global state
+  useEffect(() => {
+    setRefetchFunc(refetch)
+  }, [refetch])
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -192,6 +203,7 @@ const CardList = () => {
     points_amt: number;
     carry_over_amt: number;
     vendor_id: number;
+    loyalty_id: number;
   }[] = data;
 
   return (
@@ -221,6 +233,7 @@ const CardList = () => {
                 primaryColor={item.color}
                 spending_per_point={item.spending_per_point}
                 carry_over_amt={item.carry_over_amt}
+                loyalty_id={item.loyalty_id}
               />
             );
           }}

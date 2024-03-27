@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { fetchAPI } from "../../../utils/generalAxios";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useAuth } from "@clerk/clerk-expo";
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -18,16 +18,50 @@ const RedeemCard = ({
   business_logo,
   points_cost,
   reward_id,
+  loyalty_id,
   reward_name,
   vendor_name,
+  refetchFunc,
 }: {
   business_logo: string;
   points_cost: number;
   reward_id: number;
+  loyalty_id: number;
   reward_name: string;
   vendor_name: string;
+  refetchFunc: () => void;
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
+
+  const { getToken } = useAuth();
+
+  const redeemReward = async () => {
+    return fetchAPI(
+      process.env.EXPO_PUBLIC_NGROK + "/customer/redeem",
+      "POST",
+      await getToken(),
+      {
+        points_cost: points_cost,
+        reward_id: reward_id,
+        loyalty_id: loyalty_id,
+      },
+      {}
+    );
+  };
+
+  const redeemMutation = useMutation({
+    mutationFn: redeemReward,
+    onSuccess: () => {
+      console.log("Success");
+      console.log(`Success data`, redeemMutation.data);
+      refetchFunc() // refetch all loyalty card info
+      setModalVisible(false)
+    }
+  })
+
+  function handleRedeem(points_cost: number) {
+    redeemMutation.mutate()
+  }
 
   return (
     <View className="pb-10">
@@ -44,45 +78,49 @@ const RedeemCard = ({
             className="mx-12 bg-white rounded-lg pt-6 px-8 items-center"
             activeOpacity={1}
           >
-            <View className="w-full items-center">
-              <Text className="text-2xl font-bold text-[#153463]">
-                To Redeem
-              </Text>
-              <Text className="text-lg font-medium text-[#153463]">
-                {reward_name}
-              </Text>
-              <Text className="text-lg italic font-semibold text-[#ACACAC]">
-                {vendor_name}
-              </Text>
-              <View className="flex-row items-start pt-2 px-4">
-                <View className="p-2">
-                  <Ionicons name="warning-outline" size={24} color={"#000"} />
-                </View>
-                <Text className="text-lg">
-                  Please confirm that the store approves of this redemption.
-                  Once you redeem the stamp at this store, it will be
-                  permanently removed from your Ready to Redeem Rewards.
+            {redeemMutation.isPending ? (
+              <ActivityIndicator className="pt-16" />
+            ) : (
+              <View className="w-full items-center">
+                <Text className="text-2xl font-bold text-[#153463]">
+                  To Redeem
                 </Text>
-              </View>
-              <View className="pt-4 w-full flex-row justify-around">
-                <TouchableOpacity
-                  className="w-28 bg-[#9C3232] px-4 py-2 rounded-full"
-                  onPress={() => setModalVisible(false)}
-                >
-                  <Text className="text-center text-white text-lg">
-                    Cancel
+                <Text className="text-lg font-medium text-[#153463]">
+                  {reward_name}
+                </Text>
+                <Text className="text-lg italic font-semibold text-[#ACACAC]">
+                  {vendor_name}
+                </Text>
+                <View className="flex-row items-start pt-2 px-4">
+                  <View className="p-2">
+                    <Ionicons name="warning-outline" size={24} color={"#000"} />
+                  </View>
+                  <Text className="text-lg">
+                    Please confirm that the store approves of this redemption.
+                    Once you redeem the stamp at this store, it will be
+                    permanently removed from your Ready to Redeem Rewards.
                   </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  className="w-28 bg-[#81DA8A] px-4 py-2 rounded-full"
-                  onPress={() => setModalVisible(false)}
-                >
-                  <Text className="text-center text-white text-lg">
-                    Confirm
-                  </Text>
-                </TouchableOpacity>
+                </View>
+                <View className="pt-4 w-full flex-row justify-around">
+                  <TouchableOpacity
+                    className="w-28 bg-[#9C3232] px-4 py-2 rounded-full"
+                    onPress={() => setModalVisible(false)}
+                  >
+                    <Text className="text-center text-white text-lg">
+                      Cancel
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    className="w-28 bg-[#81DA8A] px-4 py-2 rounded-full"
+                    onPress={() => handleRedeem(points_cost)}
+                  >
+                    <Text className="text-center text-white text-lg">
+                      Confirm
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
+            )}
           </TouchableOpacity>
         </View>
       </Modal>
@@ -144,6 +182,7 @@ const RedeemList = () => {
     business_logo: string;
     points_cost: number;
     reward_id: number;
+    loyalty_id: number;
     reward_name: string;
     vendor_name: string;
   }[] = data;
@@ -167,8 +206,10 @@ const RedeemList = () => {
                 business_logo={item.business_logo}
                 points_cost={item.points_cost}
                 reward_id={item.reward_id}
+                loyalty_id={item.loyalty_id}
                 reward_name={item.reward_name}
                 vendor_name={item.vendor_name}
+                refetchFunc={refetch}
               />
             );
           }}
