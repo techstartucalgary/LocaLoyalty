@@ -6,8 +6,8 @@ January 18 2024
 */
 
 import { SocketAddress } from "net";
-import { db } from "./dbObj.ts";
-import * as schema from "./schema.ts";
+import { db } from "./dbObj";
+import * as schema from "./schema";
 import { SQLWrapper, and, eq, notInArray, sql } from "drizzle-orm";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import {
@@ -121,9 +121,9 @@ export async function addLoyaltyCard(
 // Adds a new point redemption
 // Timestamp auto generated
 async function addPointRedemption(
-  loyalty_id, //TODO: enforce types
-  history_id,
-  points_redeemed
+  loyalty_id: number, //TODO: enforce types
+  history_id: number,
+  points_redeemed: number
 ) {
   //take timestamp
   const stamp = new Date().toDateString();
@@ -240,10 +240,10 @@ async function addTransaction(
 
 // Adds a new reward to a vendor program
 async function addReward(
-  vendor_id, //TODO: enforce types
-  name,
-  description,
-  points_cost
+  vendor_id: number, //TODO: enforce types
+  name: string,
+  description: string,
+  points_cost: number
 ) {
   // Insert reward information
   await db.insert(schema.reward).values({
@@ -415,7 +415,7 @@ export async function addVendorReward(
 
 // Gets the loyalty card object
 // Input: the loyalty car ID
-async function getLoyaltyCard(loyalty_id) {
+async function getLoyaltyCard(loyalty_id: number) {
   const result = await db
     .select()
     .from(schema.loyalty_card)
@@ -432,7 +432,7 @@ async function getLoyaltyCard(loyalty_id) {
 
 // Gets the point redemption history object
 // Input: the loyalty card ID
-async function getPointRedemptionHistory(loyalty_id) {
+async function getPointRedemptionHistory(loyalty_id: number) {
   const result = await db
     .select()
     .from(schema.point_redemption_history)
@@ -449,7 +449,7 @@ async function getPointRedemptionHistory(loyalty_id) {
 
 // Gets the transaction object
 // Input: the transaction ID
-async function getTransaction(transaction_id) {
+async function getTransaction(transaction_id: number) {
   const result = await db
     .select()
     .from(schema.transaction)
@@ -466,7 +466,7 @@ async function getTransaction(transaction_id) {
 
 // Gets the reward object
 // Input: the reward ID
-async function getReward(reward_id) {
+async function getReward(reward_id: number) {
   const result = await db
     .select()
     .from(schema.reward)
@@ -498,6 +498,7 @@ export async function getAllVendorsExceptWallet(customer_id: number) {
     business_image: string | null;
     description: string | null;
   }[] = [];
+
   // if the customer has no vendors in wallet then just get all vendors to display
   if (vendorsAlreadyInWallet.length === 0) {
     results = await db
@@ -536,6 +537,8 @@ export async function getAllVendorsExceptWallet(customer_id: number) {
   for (let i = 0; i < results.length; i++) {
     // Get s3 image url based on the key stored in the db
     const { business_image, ...remainder } = results[i];
+
+    if (!business_image) continue;
 
     // Make s3 connection
     const s3 = new S3Client({
@@ -663,7 +666,7 @@ export async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
 }
 
 export async function getRedeemable(customer_id: number) {
-  const results = await db.execute(sql`SELECT c.name as vendor_name, c.business_logo, c.loyalty_id, r.name as reward_name, r.points_cost, r.reward_id
+  const results = await db.run(sql`SELECT c.name as vendor_name, c.business_logo, c.loyalty_id, r.name as reward_name, r.points_cost, r.reward_id
 FROM reward r
 INNER JOIN (SELECT v.name, v.business_logo, b.vendor_id, b.points_amt, b.loyalty_id
 FROM vendor v
@@ -681,7 +684,7 @@ WHERE c.points_amt >= r.points_cost;`)
     vendor_name: string,
   }[]
 
-  const redeemables = results.rows as unknown as Redeemables; // Shitty typescript casting
+  const redeemables = results.rows as Redeemables; // Shitty typescript casting
 
   const redeemablesWithURL: Redeemables = [];
 
@@ -719,7 +722,7 @@ WHERE c.points_amt >= r.points_cost;`)
 
 // Gets all point redemption history for a given loyalty card
 // Input: the loyalty_id of the loyalty card
-async function getAllPointRedemptionHistoryOfCard(loyalty_id) {
+async function getAllPointRedemptionHistoryOfCard(loyalty_id: number) {
   const results = await db
     .select()
     .from(schema.point_redemption_history)
@@ -736,7 +739,7 @@ async function getAllPointRedemptionHistoryOfCard(loyalty_id) {
 
 // Gets all previous transactions for a given loyalty card
 // Input: the loyalty_id of the loyalty card
-async function getAllTransactionsOfCard(loyalty_id) {
+async function getAllTransactionsOfCard(loyalty_id: number) {
   const results = await db
     .select()
     .from(schema.transaction)
@@ -889,7 +892,6 @@ export async function displayOnboardingCards(vendor_id: number) {
 
   const onboardingCards = results.rows as unknown as CompletionCardsData; // Shitty typescript casting
 
-  console.log("Here are the results", onboardingCards);
   return onboardingCards;
 }
 
@@ -933,6 +935,7 @@ export function checkIsBusinessInformationComplete(
   ].every((field) => field !== undefined && field !== "");
 }
 
+/*
 // Edits one attribute of a loyalty card
 // Input: The loyalty_id, the attribute name, and the new attribute value
 // Returns 1 if successfull, or null if the query failed
@@ -958,7 +961,9 @@ async function editLoyaltyCard(loyalty_id, attribute, newValue) {
     return null;
   }
 }
+*/
 
+/*
 // Edits one attribute of a point redemption history
 // Input: The history_id, the attribute name, and the new attribute value
 // Returns 1 if successfull, or null if the query failed
@@ -984,7 +989,9 @@ async function editPointRedemptionHistory(history_id, attribute, newValue) {
     return null;
   }
 }
+*/
 
+/*
 // Edits one attribute of a transaction
 // Input: The transaction_id, the attribute name, and the new attribute value
 // Returns 1 if successfull, or null if the query failed
@@ -1036,3 +1043,4 @@ async function editReward(reward_id, attribute, newValue) {
     return null;
   }
 }
+*/
