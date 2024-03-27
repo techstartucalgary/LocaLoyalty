@@ -62,27 +62,28 @@ export const RewardsPreview = () => {
 
   return (
     <div className="flex flex-col gap-3 w-5/6 mx-auto">
-      {definedRewards
-        .sort((a, b) => a.requiredStamps - b.requiredStamps)
-        .map((item) => {
-          return (
-            <div
-              key={item.reward_id}
-              className="border-black border-2 rounded-md p-4 flex items-center justify-between"
-            >
-              <p className="font-semibold text-xl">{item.title}</p>
-              <div className="flex items-center gap-3">
-                <p className="font-semibold text-xl">{item.requiredStamps}</p>
-                <Image
-                  alt=""
-                  width={40}
-                  height={40}
-                  src={"/assets/defaultStamp.png"}
-                />
+      {definedRewards &&
+        definedRewards
+          .sort((a, b) => a.requiredStamps - b.requiredStamps)
+          .map((item) => {
+            return (
+              <div
+                key={item.reward_id}
+                className="border-black border-2 rounded-md p-4 flex items-center justify-between"
+              >
+                <p className="font-semibold text-xl">{item.title}</p>
+                <div className="flex items-center gap-3">
+                  <p className="font-semibold text-xl">{item.requiredStamps}</p>
+                  <Image
+                    alt=""
+                    width={40}
+                    height={40}
+                    src={"/assets/defaultStamp.png"}
+                  />
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
     </div>
   );
 };
