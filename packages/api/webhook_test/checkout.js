@@ -7,7 +7,7 @@ bread loaf id: GBV9R3WWJHPEE
 cheese bun id: X7JAEET37MWVR
 */
 
-import dotenv from "dotenv";
+const fetch = require('node-fetch');
 
 const options = {
     method: 'POST',
