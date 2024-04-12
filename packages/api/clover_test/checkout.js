@@ -5,6 +5,7 @@ https://docs.clover.com/reference/ordercreateatomicorder
 merchant id: 8830RN7Z4YNE1
 bread loaf id: GBV9R3WWJHPEE
 cheese bun id: X7JAEET37MWVR
+order id: R1Z7PCHEAE0V0
 */
 
 const fetch = require('node-fetch');
@@ -36,7 +37,7 @@ const options = {
                 filterCategories: 'false',
                 isHidden: 'false',
                 isDeleted: 'false',
-                id: 'GAM80DMM3DEDG' //random order id?
+                id: 'R1Z7PCHEAE0V0', //random order id?
             },
             groupLineItems: 'false'
         }
