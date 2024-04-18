@@ -17,6 +17,8 @@ import { useAuth } from "@clerk/clerk-expo";
 import { fetchAPI } from "../../../utils/generalAxios";
 import { useQuery } from "@tanstack/react-query";
 import MapView, { Callout, Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import * as Linking from "expo-linking";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const RewardsSection = () => {
 	const { getToken, isLoaded, isSignedIn } = useAuth();
@@ -75,6 +77,61 @@ const RewardsSection = () => {
 	);
 };
 
+const Map = ({
+	businessLogo,
+	businessName,
+	location,
+	address,
+}: {
+	businessLogo: string;
+	businessName: string;
+	location: {
+		lat: number;
+		lng: number;
+	};
+	address: string;
+}) => {
+	const openGoogleMapsWithAddress = async (address: string) => {
+		console.log("open attempt");
+
+		const encodedAddress = encodeURIComponent(address);
+		const url = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
+		const supported = await Linking.canOpenURL(url);
+		if (supported) {
+			Linking.openURL(url);
+		} else {
+			console.error("Can't open Google Maps");
+		}
+	};
+
+	return (
+		<MapView
+			className="w-full aspect-square"
+			provider={PROVIDER_GOOGLE}
+			initialRegion={{
+				latitude: location.lat,
+				longitude: location.lng,
+				latitudeDelta: 0.0922,
+				longitudeDelta: 0.0421,
+			}}
+		>
+			<Marker coordinate={{ latitude: location.lat, longitude: location.lng }}>
+				<Callout onPress={() => openGoogleMapsWithAddress(address)}>
+					<View className="flex-row items-center p-2">
+						<Image
+							source={{ uri: businessLogo }}
+							className="rounded-lg w-12 h-12"
+						/>
+						<Text className="text-xl font-bold pl-2 underline">
+							{businessName}
+						</Text>
+					</View>
+				</Callout>
+			</Marker>
+		</MapView>
+	);
+};
+
 const DetailsSection = ({
 	currentBusinessName,
 	currentBusinessAddress,
@@ -110,8 +167,6 @@ const DetailsSection = ({
 		queryFn: fetchCoordinates,
 	});
 
-	console.log(`data`, data);
-
 	return (
 		<ScrollView
 			className="h-full px-[10%] pt-4"
@@ -121,34 +176,18 @@ const DetailsSection = ({
 				About {currentBusinessName}
 			</Text>
 			<Text className="pb-8">{currentBusinessDescription}</Text>
-			{isError && <Text>Failed to load map...</Text>}
+			{isError && data.results && data.results.length > 0 && (
+				<Text>Failed to load map...</Text>
+			)}
 			{fetchStatus === "fetching" ? (
 				<ActivityIndicator className="pt-16" />
 			) : (
-				<MapView
-					className="w-full aspect-square"
-					provider={PROVIDER_GOOGLE}
-					initialRegion={{
-						latitude: 51.074615,
-						longitude: -114.128393,
-						latitudeDelta: 0.0922,
-						longitudeDelta: 0.0421,
-					}}
-				>
-					<Marker coordinate={{ latitude: 51.074615, longitude: -114.128393 }}>
-						<Callout>
-							<View className="flex-row items-center p-2">
-								<Image
-									source={{ uri: currentBusinessLogo }}
-									className="rounded-lg w-12 h-12"
-								/>
-								<Text className="text-xl font-bold pl-2">
-									{currentBusinessName}
-								</Text>
-							</View>
-						</Callout>
-					</Marker>
-				</MapView>
+				<Map
+					businessLogo={currentBusinessLogo}
+					businessName={currentBusinessName}
+					location={data.results[0].geometry.location}
+					address={currentBusinessAddress}
+				/>
 			)}
 		</ScrollView>
 	);
