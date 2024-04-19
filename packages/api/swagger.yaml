@@ -30,12 +30,12 @@ paths:
     get:
       tags:
         - business
-      summary: Get all of the onboarding cards of the vendor 
+      summary: Get all of the onboarding cards of the vendor
       description: Display all of the unfinished onboarding cards associated with a particular user. Must provide valid auth field in header.
       responses:
         200:
-          description: Successful response 
-          content: 
+          description: Successful response
+          content:
             application/json:
               schema:
                 $ref: "#/components/schemas/BusinessOnboardingCards"
@@ -227,6 +227,30 @@ paths:
           description: Successful response
         500:
           description: Failure
+  /business/qr:
+    get:
+      tags:
+        - business
+      summary: get a printable pdf of the QR code
+      description: queries vendor table in the backend for the qr code, then generates a pdf that is returned
+      operationId: getBusinessSecretQr
+      responses:
+        "200":
+          description: A PDF file secret QR code
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+              description: Specifies the name and extension of the file.
+        "400":
+          description: Invalid request parameters.
+        "500":
+          description: Server error.
 components:
   schemas:
     BusinessProfile:
@@ -287,7 +311,7 @@ components:
           type: string
           example: "/auth/profile"
         buttonText:
-          type: string 
+          type: string
           example: "Connect"
         isCompleted:
           type: boolean

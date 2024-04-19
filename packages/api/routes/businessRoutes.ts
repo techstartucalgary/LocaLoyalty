@@ -1,6 +1,8 @@
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import multer from "multer";
+import QRCode from "qrcode";
+const PDFDocument = require("pdfkit");
 import {
   S3Client,
   PutObjectCommand,
@@ -22,6 +24,7 @@ import {
   displayOnboardingCards,
   setOnboardingStatusComplete,
   checkIsBusinessInformationComplete,
+  getBusinessQrCode,
 } from "../../database/db_interface";
 
 const router = express.Router();
@@ -49,20 +52,6 @@ const s3 = new S3Client({
 // Sample route
 router.get("/sample", (req: Request, res: Response) => {
   res.send({ message: "This is a sample response" });
-});
-
-//reference code for how to get a url for an image stored in S3
-router.get("/test-s3-get", async (req: Request, res: Response) => {
-  const url = await getSignedUrl(
-    s3,
-    new GetObjectCommand({
-      Bucket: process.env.BUCKET_NAME,
-      Key: "Zhang'sBakery", //this is the imageName that will be stored into the database
-    }),
-    { expiresIn: 3600 }
-  );
-
-  res.send({ url: url });
 });
 
 router.get("/profile", async (req: Request, res: Response) => {
@@ -267,6 +256,63 @@ router.post("/loyalty-program", async (req: Request, res: Response) => {
     });
 
     res.status(200).json({ message: "Profile updated successfully" });
+  } catch (Error: unknown) {
+    res.status(500).json({ message: "Something went wrong..." });
+  }
+});
+
+router.get("/qr", async (req: Request, res: Response) => {
+  try {
+    //query db for qr_code field in the db
+    let qr_code_text = await getBusinessQrCode(req.auth.userId);
+
+    //if qr code text does not exist, generate one
+    if (!qr_code_text) {
+      console.log("no qr code to retrieve");
+    }
+
+    //creating the actual qr code
+    // Generate QR code as a data buffer
+    QRCode.toBuffer(
+      qr_code_text!,
+      {
+        type: "png",
+        color: {
+          dark: "#000000", // Black dots
+          light: "#FFFFFF", // White background
+        },
+      },
+      function (err, buffer) {
+        if (err) {
+          console.error("Failed to generate QR code:", err);
+          return res.status(500).send("Failed to generate QR code.");
+        }
+
+        // Create a PDF document
+        let doc = new PDFDocument();
+        res.setHeader("Content-Type", "application/pdf");
+        res.setHeader(
+          "Content-Disposition",
+          'attachment; filename="localoyalty_secret_qr.pdf"'
+        );
+
+        // Pipe the PDF into the HTTP response
+        doc.pipe(res);
+
+        // Add QR code image from buffer
+        doc.image(buffer, 0, 0, {
+          fit: [250, 250], // Controls the size to fit the image into
+          align: "center", // Horizontal alignment (options: 'center', 'left', 'right')
+          valign: "center", // Vertical alignment (options: 'top', 'center', 'bottom')
+        });
+
+        // Add any additional PDF content here
+        doc.fontSize(12).text("Here is your QR Code!", 100, 300);
+
+        // Finalize the PDF and end the document
+        doc.end();
+      }
+    );
   } catch (Error: unknown) {
     res.status(500).json({ message: "Something went wrong..." });
   }
