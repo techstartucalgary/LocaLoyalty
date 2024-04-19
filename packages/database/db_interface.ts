@@ -898,6 +898,17 @@ export function checkIsBusinessInformationComplete(
   ].every((field) => field !== undefined && field !== "");
 }
 
+export async function getBusinessQrCode(clerk_id: string) {
+  let result = await db
+    .select({
+      qr_code: schema.vendor.qr_code,
+    })
+    .from(schema.vendor)
+    .where(eq(schema.vendor.clerk_id, clerk_id));
+
+  return result[0].qr_code;
+}
+
 /*
 // Edits one attribute of a loyalty card
 // Input: The loyalty_id, the attribute name, and the new attribute value
