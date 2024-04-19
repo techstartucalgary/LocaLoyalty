@@ -62,6 +62,7 @@ import {
   RewardsPreview,
   Variant1,
 } from "./LoyaltyCardVariations";
+import { SecretQRSection } from "./QRCodeSections";
 
 export const OptionHeader = ({
   title,
@@ -345,6 +346,7 @@ export default function LoyaltyProgram() {
               <TabsList>
                 <TabsTrigger value="settings">Settings</TabsTrigger>
                 <TabsTrigger value="design">Design</TabsTrigger>
+                <TabsTrigger value="qr-code">QR Codes</TabsTrigger>
               </TabsList>
               <TabsContent value="settings">
                 <div className="ml-10">
@@ -360,6 +362,11 @@ export default function LoyaltyProgram() {
                   <ActiveStampSection />
                   <LogoBackgroundSection />
                   <ColorThemeSection />
+                </div>
+              </TabsContent>
+              <TabsContent value="qr-code">
+                <div className="ml-10">
+                  <SecretQRSection />
                 </div>
               </TabsContent>
             </Tabs>
