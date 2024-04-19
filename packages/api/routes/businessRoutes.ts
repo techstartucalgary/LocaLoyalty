@@ -299,15 +299,19 @@ router.get("/qr", async (req: Request, res: Response) => {
         // Pipe the PDF into the HTTP response
         doc.pipe(res);
 
+        // Add any additional PDF content here
+        doc
+          .fontSize(30)
+          .text(
+            "Warning! This is the secret key for giving stamps. Do not keep out in the public"
+          );
+
         // Add QR code image from buffer
-        doc.image(buffer, 0, 0, {
+        doc.image(buffer, {
           fit: [250, 250], // Controls the size to fit the image into
           align: "center", // Horizontal alignment (options: 'center', 'left', 'right')
           valign: "center", // Vertical alignment (options: 'top', 'center', 'bottom')
         });
-
-        // Add any additional PDF content here
-        doc.fontSize(12).text("Here is your QR Code!", 100, 300);
 
         // Finalize the PDF and end the document
         doc.end();
