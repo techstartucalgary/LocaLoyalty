@@ -56,6 +56,7 @@ export const vendor = sqliteTable("vendor", {
   stamp_life: int("stamp_life"),
   card_layout: int("card_layout"),
   stamp_design_id: int("stamp_design_id"),
+  qr_code: text("qr_code"),
 });
 
 // onboarding_vendor
@@ -74,7 +75,9 @@ export const loyalty_card = sqliteTable("loyalty_card", {
 });
 
 // Point Redemption History
-export const point_redemption_history = sqliteTable("point_redemption_history",{
+export const point_redemption_history = sqliteTable(
+  "point_redemption_history",
+  {
     history_id: serial("history_id").primaryKey(),
     loyalty_id: int("loyalty_id"), //references loyalty_card.loyalty_id
     points_redeemed: int("points_redeemed").notNull(),
