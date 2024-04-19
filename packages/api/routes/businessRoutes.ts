@@ -322,4 +322,27 @@ router.get("/qr", async (req: Request, res: Response) => {
   }
 });
 
+// Helper function for "/random-key" route 
+// Returns 16 bytes encoded as a hexadecimal string
+function generateRandomKey(length: number): string {
+  const randomBytes = new Uint8Array(length);
+  crypto.getRandomValues(randomBytes);
+
+  let hexString = '';
+  randomBytes.forEach((byte: number) => {
+      hexString += byte.toString(16).padStart(2, '0');
+  });
+  return hexString;
+}
+
+router.get("/random-key", (req: Request, res: Response) => {
+  try {
+      const key = generateRandomKey(16);
+      res.status(200).json({ key: key });
+  } catch (error) {
+      console.error("Failed to generate random key:", error);
+      res.status(500).json({ message: "Failed to generate random key." });
+  }
+});
+
 export default router;
