@@ -26,6 +26,21 @@ paths:
       responses:
         200:
           description: Successful response
+  /business/api/onboarding:
+    get:
+      tags:
+        - business
+      summary: Get all of the onboarding cards of the vendor
+      description: Display all of the unfinished onboarding cards associated with a particular user. Must provide valid auth field in header.
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BusinessOnboardingCards"
+        500:
+          description: Vendor or onboarding cards cannot be found
   /business/profile:
     get:
       tags:
@@ -41,7 +56,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/BusinessProfile"
         500:
-          description: User Does not exist in DB
+          description: User does not exist in DB
     post:
       tags:
         - business
@@ -212,6 +227,30 @@ paths:
           description: Successful response
         500:
           description: Failure
+  /business/qr:
+    get:
+      tags:
+        - business
+      summary: get a printable pdf of the QR code
+      description: queries vendor table in the backend for the qr code, then generates a pdf that is returned
+      operationId: getBusinessSecretQr
+      responses:
+        "200":
+          description: A PDF file secret QR code
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+              description: Specifies the name and extension of the file.
+        "400":
+          description: Invalid request parameters.
+        "500":
+          description: Server error.
 components:
   schemas:
     BusinessProfile:
@@ -253,6 +292,30 @@ components:
         description:
           type: string
           example: "this is a really cool store"
+    BusinessOnboardingCards:
+      type: object
+      properties:
+        onboarding_id:
+          type: number
+          example: 1
+        icon:
+          type: string
+          example: "/assets/clover.svg"
+        title:
+          type: string
+          example: "Connect your Clover account"
+        priority:
+          type: number
+          example: 1
+        directory:
+          type: string
+          example: "/auth/profile"
+        buttonText:
+          type: string
+          example: "Connect"
+        isCompleted:
+          type: boolean
+          example: true
     BusinessLoyaltyProgram:
       type: object
       properties:

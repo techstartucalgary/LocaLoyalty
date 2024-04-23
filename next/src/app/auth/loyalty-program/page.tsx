@@ -19,7 +19,7 @@ import {
   ColorThemeSection
 } from "./DesignSections";
 import { fetchAPI } from "@/utils/generalAxios";
-import { useAuthStore, useLoyaltyProgramStore } from "@/utils/store";
+import { useLoyaltyProgramStore } from "@/utils/store";
 import { useAuth } from "@clerk/nextjs";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
@@ -58,7 +58,6 @@ export const OptionHeader = ({
 
 export default function LoyaltyProgram() {
   const { getToken } = useAuth();
-  const { token, setToken } = useAuthStore();
   const {
     refetchIndicator,
     stampCount,
@@ -73,7 +72,7 @@ export default function LoyaltyProgram() {
     return fetchAPI(
       "http://localhost:5001/business/loyalty-program",
       "GET",
-      token,
+      await getToken(),
       null,
       {}
     );
@@ -82,7 +81,6 @@ export default function LoyaltyProgram() {
   const { data, error, isLoading, refetch } = useQuery({
     queryKey: ["loyaltyProgramData"],
     queryFn: fetchLoyaltyProgramData,
-    enabled: !!token,
   });
 
   useEffect(() => {
@@ -107,16 +105,6 @@ export default function LoyaltyProgram() {
     setStampCount,
     setStampLife,
   ]);
-
-  useEffect(() => {
-    async function fetchToken() {
-      const toFetch = await getToken();
-      setToken(toFetch);
-    }
-
-    fetchToken();
-  }, [getToken, setToken]);
-
   return (
     <>
       <p className="text-2xl font-semibold pt-10 pb-5">

@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
-import { getAllRewardsOfVendor, getAllVendorsExceptWallet, getCustomerFromClerkID } from "../../database/db_interface";
-import { vendorsList } from "../dummyData/dummyData";
-import { log } from "console";
+import {
+  getAllRewardsOfVendor,
+  getAllVendorsExceptWallet,
+  getCustomerFromClerkID,
+} from "../../database/db_interface";
 
 // export const addCard = async (req: Request, res: Response) => {
 //   try {
@@ -66,6 +68,7 @@ export const index = async (req: Request, res: Response) => {
 
     const vendors = await getAllVendorsExceptWallet(customer_id); // Retrieve all list of vendors from the database
 
+    console.log(vendors);
 
     // Send the vendors back in the response
     res.status(200).json(vendors);
@@ -95,6 +98,8 @@ export const getRewards = async (req: Request, res: Response) => {
     res.status(200).json(rewards);
   } catch (error) {
     console.error("Error fetching rewards:", error);
-    res.status(500).json({ message: "Internal server error. Error fetching rewards." });
+    res
+      .status(500)
+      .json({ message: "Internal server error. Error fetching rewards." });
   }
 };
