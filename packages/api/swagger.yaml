@@ -251,6 +251,29 @@ paths:
           description: Invalid request parameters.
         "500":
           description: Server error.
+    post:
+      tags:
+        - business
+      summary: regenerate key for QR and return PDF
+      description: updates qr key in vendor table and generates PDF to return
+      operationId: udpateBusinessSecretQr
+      responses:
+        "200":
+          description: A PDF file secret QR code
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+              description: Specifies the name and extension of the file.
+        "400":
+          description: Invalid request parameters.
+        "500":
+          description: Server error.
 components:
   schemas:
     BusinessProfile:

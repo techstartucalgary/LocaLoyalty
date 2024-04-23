@@ -906,7 +906,17 @@ export async function getBusinessQrCode(clerk_id: string) {
     .from(schema.vendor)
     .where(eq(schema.vendor.clerk_id, clerk_id));
 
-  return result[0].qr_code;
+  return result != null ? result[0].qr_code : null;
+}
+
+export async function updateBusinessQrCode(
+  clerk_id: string,
+  new_qr_code: string
+) {
+  await db
+    .update(schema.vendor)
+    .set({ qr_code: new_qr_code })
+    .where(eq(schema.vendor.clerk_id, clerk_id));
 }
 
 /*
