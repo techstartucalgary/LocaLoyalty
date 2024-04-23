@@ -1,5 +1,5 @@
 "use client";
-import { useAuthStore, useLoyaltyProgramStore } from "@/utils/store";
+import { useLoyaltyProgramStore } from "@/utils/store";
 import { fetchAPI } from "@/utils/generalAxios";
 import { OptionHeader } from "./page";
 import { Button } from "@/components/ui/button";
