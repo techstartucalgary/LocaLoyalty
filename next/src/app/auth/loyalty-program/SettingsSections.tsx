@@ -159,7 +159,7 @@ export const DefineRewardSection = () => {
     <div className="border-b-2 border-slate-300 py-5">
       <div className="flex justify-between">
         <OptionHeader
-          title="Define reward"
+          title="Define rewards"
           info="Create rewards that your customers can cash their stamps out for!"
         />
         <CreateRewardDialog />
