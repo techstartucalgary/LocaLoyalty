@@ -1,6 +1,4 @@
 import dotenv from "dotenv";
-import { ClerkExpressRequireAuth, StrictAuthProp } from "@clerk/clerk-sdk-node";
-import express, { Application } from "express";
 import cors from "cors";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
@@ -9,6 +7,9 @@ import customerRoutes from "./routes/customerRoutes";
 import { Webhook } from "svix";
 import { addVendor } from "../database/db_interface_vendor";
 import { addCustomer, editCustomer } from "../database/db_interface_customer";
+import Cookies from "cookies";
+import express, { Request, Response, Application, NextFunction } from "express";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 const swaggerDocument = YAML.load("./swagger.yaml");
 
@@ -21,7 +22,9 @@ const app: Application = express();
 
 declare global {
   namespace Express {
-    interface Request extends StrictAuthProp {}
+    interface Request {
+      userId: string;
+    }
   }
 }
 
@@ -34,10 +37,53 @@ app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true })); // parses data sent in HTTP request bodies, especially in web forms
 app.use(express.json()); // parses incoming request bodies that are in JSON format.
 
+//Custom middleware for authentication
+const ClerkAuthMiddleware = (publicKey: string) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    //const publicKey = process.env.CLERK_WEBSITE_PEM_PUBLIC_KEY;
+    const cookies = new Cookies(req, res);
+    const sessToken = cookies.get("__session");
+    const token = req.headers.authorization?.split(" ")[1] || null;
+
+    if (sessToken === undefined && token === undefined) {
+      return res.status(401).json({ error: "Not signed in" });
+    }
+
+    try {
+      let decoded: string | JwtPayload;
+      if (token) {
+        decoded = jwt.verify(token, publicKey!);
+      } else {
+        decoded = jwt.verify(sessToken!, publicKey!);
+      }
+
+      (req.userId = decoded.sub as string), // 'sub' is typically used as the user identifier in JWTs
+        // You can add more user-related details here if needed
+
+        next();
+    } catch (error) {
+      console.log(error);
+
+      return res.status(403).json({
+        error: "Invalid Token",
+        details: "The provided token is not valid or has expired.",
+      });
+    }
+  };
+};
+
 // 2) Routes
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-app.use("/business", ClerkExpressRequireAuth(), businessRoutes);
-app.use("/customer", ClerkExpressRequireAuth(), customerRoutes);
+app.use(
+  "/business",
+  ClerkAuthMiddleware(process.env.CLERK_WEBSITE_PEM_PUBLIC_KEY!),
+  businessRoutes
+);
+app.use(
+  "/customer",
+  ClerkAuthMiddleware(process.env.CLERK_MOBILE_PEM_PUBLIC_KEY!),
+  customerRoutes
+);
 
 // 3) webhooks for login
 app.post("/mobile-webhook", async (req, res) => {
