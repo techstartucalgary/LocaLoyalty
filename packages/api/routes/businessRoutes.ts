@@ -28,7 +28,7 @@ import {
   checkIsBusinessInformationComplete,
   getBusinessQrCode,
   updateBusinessQrCode,
-} from "../../database/db_interface";
+} from "../../database/db_interface_vendor";
 
 const router = express.Router();
 
