@@ -11,9 +11,10 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { fetchAPI } from "../../../utils/generalAxios";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useAuth } from "@clerk/clerk-expo";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { useRedeemStore } from "../../../utils/redeemStore";
+import { useWalletStore } from "../../../utils/walletStore";
 
 const RedeemCard = ({
 	business_logo,
@@ -22,7 +23,7 @@ const RedeemCard = ({
 	loyalty_id,
 	reward_name,
 	vendor_name,
-	refetchFunc,
+	redeemRefetchFunc,
 }: {
 	business_logo: string;
 	points_cost: number;
@@ -30,9 +31,11 @@ const RedeemCard = ({
 	loyalty_id: number;
 	reward_name: string;
 	vendor_name: string;
-	refetchFunc: () => void;
+	redeemRefetchFunc: () => void;
 }) => {
 	const [modalVisible, setModalVisible] = useState(false);
+
+	const { walletRefetchFunc } = useWalletStore();
 
 	const { getToken } = useAuth();
 
@@ -55,9 +58,9 @@ const RedeemCard = ({
 		onSuccess: () => {
 			console.log("Success");
 			console.log(`Success data`, redeemMutation.data);
-			refetchFunc(); // refetch all loyalty card info
+			redeemRefetchFunc(); // refetch all loyalty card info
+			walletRefetchFunc();
 			setModalVisible(false);
-			router.back();
 		},
 	});
 
@@ -172,6 +175,12 @@ const RedeemList = () => {
 		queryFn: fetchRedeemables,
 	});
 
+	const { setRedeemRefetchFunc } = useRedeemStore();
+	// Set refetch func for loyalty cards in global state
+	useEffect(() => {
+		setRedeemRefetchFunc(refetch);
+	}, [refetch]);
+
 	const [refreshing, setRefreshing] = useState(false);
 
 	async function handleRefresh() {
@@ -211,7 +220,7 @@ const RedeemList = () => {
 								loyalty_id={item.loyalty_id}
 								reward_name={item.reward_name}
 								vendor_name={item.vendor_name}
-								refetchFunc={refetch}
+								redeemRefetchFunc={refetch}
 							/>
 						);
 					}}

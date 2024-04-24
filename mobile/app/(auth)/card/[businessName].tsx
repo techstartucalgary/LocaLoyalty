@@ -20,6 +20,7 @@ import { fetchAPI } from "../../../utils/generalAxios";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import MapView, { Callout, Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { router } from "expo-router";
+import { useRedeemStore } from "../../../utils/redeemStore";
 
 const Reward = ({
 	requiredStamps,
@@ -35,8 +36,9 @@ const Reward = ({
 		currentBusinessName,
 		currentCompletedStamps,
 		currentLoyaltyID,
-		refetchFunc,
+		walletRefetchFunc,
 	} = useWalletStore();
+	const { redeemRefetchFunc } = useRedeemStore();
 
 	const [modalVisible, setModalVisible] = useState(false);
 	const [modalReward, setModalReward] = useState("");
@@ -68,7 +70,8 @@ const Reward = ({
 		onSuccess: () => {
 			console.log("Success");
 			console.log(`Success data`, redeemMutation.data);
-			refetchFunc(); // refetch all loyalty card info
+			walletRefetchFunc(); // refetch all loyalty card info
+			redeemRefetchFunc();
 			setModalVisible(false);
 			router.back();
 		},

@@ -23,9 +23,12 @@ router.get("/rewards/:vendorID", vendorController.getRewards);
 router.post("/add-loyalty-card", customerController.addCard);
 
 // API endpoint to get all redeemables
-router.get("/redeemables", customerController.getRedeemables)
+router.get("/redeemables", customerController.getRedeemables);
 
 // API endpoint to redeem a reward
-router.post("/redeem", customerController.redeemReward)
+router.post("/redeem", customerController.redeemReward);
+
+// API endpoint to authenticate the scanning of the barcode
+router.post("/scanBarcode", customerController.scanBarcode);
 
 export default router;
