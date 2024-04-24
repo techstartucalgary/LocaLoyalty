@@ -5,8 +5,7 @@ export async function fetchAPI(
   method: string,
   token: string | null,
   data: object | FormData | null = null,
-  params = {},
-  responseType: "json" | "blob" = "json"
+  params = {}
 ) {
   try {
     const headers: Record<string, string> = {
@@ -23,15 +22,10 @@ export async function fetchAPI(
       url: url,
       headers: headers,
       params: params,
-      responseType: responseType,
       ...(data && { data: data }),
     };
 
     const response = await axios(options);
-
-    if (responseType === "blob") {
-      return response; // Return entire response for blob to handle it properly for downloads
-    }
 
     return response.data;
   } catch (error) {

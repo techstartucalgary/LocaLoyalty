@@ -1,10 +1,8 @@
 import { Link, Stack, Tabs } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, Feather } from "@expo/vector-icons";
 import { Pressable, Text, View } from "react-native";
 import { useAuth, useUser } from "@clerk/clerk-expo";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { cardData } from "../../content/temp-card-data";
-import { useWalletStore } from "../../utils/walletStore";
 
 export const LogoutButton = () => {
 	const { signOut } = useAuth();
@@ -39,9 +37,9 @@ const TabsPage = () => {
 				<Tabs.Screen
 					name="card"
 					options={{
-						tabBarLabel: "New Wallet",
+						tabBarLabel: "Wallet",
 						tabBarIcon: ({ color, size }) => (
-							<Ionicons name="wallet" size={size} color={color} />
+							<Ionicons name="wallet-outline" size={size} color={color} />
 						),
 					}}
 				/>
@@ -67,6 +65,24 @@ const TabsPage = () => {
 						headerRight: () => <LogoutButton />,
 					}}
 					redirect={!isSignedIn}
+				/>
+				<Tabs.Screen
+					name="explore"
+					options={{
+						tabBarLabel: "Browse",
+						tabBarIcon: ({ color, size }) => (
+							<Ionicons name="location-outline" size={size} color={color} />
+						),
+					}}
+				/>
+				<Tabs.Screen
+					name="redeem"
+					options={{
+						tabBarLabel: "Rewards",
+						tabBarIcon: ({ color, size }) => (
+							<Ionicons name="gift-outline" size={size} color={color} />
+						),
+					}}
 				/>
 				<Tabs.Screen
 					name="tutorial"

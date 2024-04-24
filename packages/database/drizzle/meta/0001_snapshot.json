@@ -1,57 +1,57 @@
 {
   "version": "5",
-  "dialect": "mysql",
-  "id": "9337632d-62a2-49e5-9f33-323bb1cad71d",
-  "prevId": "1df1fbb1-221a-4979-a28b-a9bc931f5eee",
+  "dialect": "sqlite",
+  "id": "69df1fdb-0720-4d1d-af4b-1b77e98c3198",
+  "prevId": "7b10ee90-2227-4c2e-bb02-7651a6b2f820",
   "tables": {
     "customer": {
       "name": "customer",
       "columns": {
         "customer_id": {
           "name": "customer_id",
-          "type": "serial",
-          "primaryKey": false,
+          "type": "integer",
+          "primaryKey": true,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "fname": {
           "name": "fname",
-          "type": "varchar(256)",
+          "type": "text(256)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "lname": {
           "name": "lname",
-          "type": "varchar(256)",
+          "type": "text(256)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "email": {
           "name": "email",
-          "type": "varchar(256)",
+          "type": "text(256)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "address": {
           "name": "address",
-          "type": "varchar(256)",
+          "type": "text(256)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "phone": {
           "name": "phone",
-          "type": "varchar(16)",
+          "type": "text(16)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "clerk_id": {
           "name": "clerk_id",
-          "type": "varchar(32)",
+          "type": "text(32)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -59,14 +59,7 @@
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "customer_customer_id": {
-          "name": "customer_customer_id",
-          "columns": [
-            "customer_id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "loyalty_card": {
@@ -74,35 +67,35 @@
       "columns": {
         "loyalty_id": {
           "name": "loyalty_id",
-          "type": "serial",
-          "primaryKey": false,
+          "type": "integer",
+          "primaryKey": true,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "customer_id": {
           "name": "customer_id",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "vendor_id": {
           "name": "vendor_id",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "points_amt": {
           "name": "points_amt",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "carry_over_amt": {
           "name": "carry_over_amt",
-          "type": "decimal",
+          "type": "numeric",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -110,14 +103,95 @@
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "loyalty_card_loyalty_id": {
-          "name": "loyalty_card_loyalty_id",
-          "columns": [
-            "loyalty_id"
-          ]
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "onboarding": {
+      "name": "onboarding",
+      "columns": {
+        "onboarding_id": {
+          "name": "onboarding_id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "icon": {
+          "name": "icon",
+          "type": "text(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "title": {
+          "name": "title",
+          "type": "text(256)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "priority": {
+          "name": "priority",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "directory": {
+          "name": "directory",
+          "type": "text(256)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "buttonText": {
+          "name": "buttonText",
+          "type": "text(32)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
         }
       },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "onboarding_vendor": {
+      "name": "onboarding_vendor",
+      "columns": {
+        "onboarding_vendor": {
+          "name": "onboarding_vendor",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "onboarding_id": {
+          "name": "onboarding_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "vendor_id": {
+          "name": "vendor_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "isCompleted": {
+          "name": "isCompleted",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "point_redemption_history": {
@@ -125,28 +199,28 @@
       "columns": {
         "history_id": {
           "name": "history_id",
-          "type": "serial",
-          "primaryKey": false,
+          "type": "integer",
+          "primaryKey": true,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "loyalty_id": {
           "name": "loyalty_id",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "points_redeemed": {
           "name": "points_redeemed",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "timestamp": {
           "name": "timestamp",
-          "type": "timestamp",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -154,14 +228,7 @@
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "point_redemption_history_history_id": {
-          "name": "point_redemption_history_history_id",
-          "columns": [
-            "history_id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "reward": {
@@ -169,21 +236,21 @@
       "columns": {
         "reward_id": {
           "name": "reward_id",
-          "type": "serial",
-          "primaryKey": false,
+          "type": "integer",
+          "primaryKey": true,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "vendor_id": {
           "name": "vendor_id",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "name": {
           "name": "name",
-          "type": "varchar(256)",
+          "type": "text(256)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -197,7 +264,7 @@
         },
         "points_cost": {
           "name": "points_cost",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -205,14 +272,30 @@
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "reward_reward_id": {
-          "name": "reward_reward_id",
-          "columns": [
-            "reward_id"
-          ]
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "stamp_design": {
+      "name": "stamp_design",
+      "columns": {
+        "stamp_design_id": {
+          "name": "stamp_design_id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "path": {
+          "name": "path",
+          "type": "text(256)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         }
       },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "transaction": {
@@ -220,49 +303,49 @@
       "columns": {
         "transaction_id": {
           "name": "transaction_id",
-          "type": "serial",
-          "primaryKey": false,
+          "type": "integer",
+          "primaryKey": true,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "loyalty_id": {
           "name": "loyalty_id",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "vendor_id": {
           "name": "vendor_id",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "purchase_amt": {
           "name": "purchase_amt",
-          "type": "decimal",
+          "type": "numeric",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "points_earned": {
           "name": "points_earned",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "timestamp": {
           "name": "timestamp",
-          "type": "timestamp",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "payment_type": {
           "name": "payment_type",
-          "type": "varchar(256)",
+          "type": "text(256)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -270,14 +353,7 @@
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "transaction_transaction_id": {
-          "name": "transaction_transaction_id",
-          "columns": [
-            "transaction_id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "vendor": {
@@ -285,35 +361,49 @@
       "columns": {
         "vendor_id": {
           "name": "vendor_id",
-          "type": "serial",
-          "primaryKey": false,
+          "type": "integer",
+          "primaryKey": true,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "name": {
           "name": "name",
-          "type": "varchar(256)",
+          "type": "text(256)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "email": {
           "name": "email",
-          "type": "varchar(256)",
+          "type": "text(256)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
+        "business_email": {
+          "name": "business_email",
+          "type": "text(256)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "address": {
           "name": "address",
-          "type": "varchar(256)",
+          "type": "text(256)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "phone": {
           "name": "phone",
-          "type": "varchar(16)",
+          "type": "text(16)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "business_phone": {
+          "name": "business_phone",
+          "type": "text(16)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -327,7 +417,21 @@
         },
         "color": {
           "name": "color",
-          "type": "varchar(16)",
+          "type": "text(16)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "color2": {
+          "name": "color2",
+          "type": "text(16)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "color3": {
+          "name": "color3",
+          "type": "text(16)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -341,42 +445,42 @@
         },
         "spending_per_point": {
           "name": "spending_per_point",
-          "type": "decimal",
+          "type": "numeric",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "max_points": {
           "name": "max_points",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "clerk_id": {
           "name": "clerk_id",
-          "type": "varchar(32)",
+          "type": "text(32)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "city": {
           "name": "city",
-          "type": "varchar(50)",
+          "type": "text(50)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "province": {
           "name": "province",
-          "type": "varchar(30)",
+          "type": "text(30)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "postal_code": {
           "name": "postal_code",
-          "type": "varchar(6)",
+          "type": "text(6)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -397,14 +501,35 @@
         },
         "merchant_id": {
           "name": "merchant_id",
-          "type": "varchar(13)",
+          "type": "text(13)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "clover_api_key": {
           "name": "clover_api_key",
-          "type": "varchar(200)",
+          "type": "text(200)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "stamp_life": {
+          "name": "stamp_life",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "card_layout": {
+          "name": "card_layout",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "stamp_design_id": {
+          "name": "stamp_design_id",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -412,18 +537,11 @@
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "vendor_vendor_id": {
-          "name": "vendor_vendor_id",
-          "columns": [
-            "vendor_id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     }
   },
-  "schemas": {},
+  "enums": {},
   "_meta": {
     "schemas": {},
     "tables": {},

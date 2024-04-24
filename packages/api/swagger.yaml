@@ -26,6 +26,21 @@ paths:
       responses:
         200:
           description: Successful response
+  /business/api/onboarding:
+    get:
+      tags:
+        - business
+      summary: Get all of the onboarding cards of the vendor
+      description: Display all of the unfinished onboarding cards associated with a particular user. Must provide valid auth field in header.
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BusinessOnboardingCards"
+        500:
+          description: Vendor or onboarding cards cannot be found
   /business/profile:
     get:
       tags:
@@ -41,7 +56,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/BusinessProfile"
         500:
-          description: User Does not exist in DB
+          description: User does not exist in DB
     post:
       tags:
         - business
@@ -58,6 +73,128 @@ paths:
           description: Successful response
         500:
           description: Failure
+  /customer/vendors:
+    get:
+      tags:
+        - customer
+      summary: Get the list of all vendors that are not already added to a user's wallet
+      description: Display all of the registered vendors which are not in the authenticated user's wallet. Must provide valid auth field in header
+      operationId: getAllVendors
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VendorList"
+        500:
+          description: Error fetching vendors
+  /customer/loyalty-cards:
+    get:
+      tags:
+        - customer
+      summary: Get the list of vendors associated with a particular user
+      description: Display all of the vendors associated with a particular user (ie. the vendors added to the user's wallet). Must provide valid auth field in header
+      operationId: getAllLoyaltyCards
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoyaltyCards"
+        500:
+          description: Error fetching loyalty cards
+  /customer/rewards/{vendorID}:
+    get:
+      tags:
+        - customer
+      summary: Get the list of all the rewards for a particular vendor
+      description: Get all the rewards for a given vendor's loyalty card. Must provide valid auth field in header
+      operationId: getAllRewards
+      parameters:
+        - name: vendorID
+          in: path
+          description: ID of vendor needed to get rewards
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    reward_id:
+                      type: number
+                      description: The unique indentifier of the reward
+                      example: 43
+                    title:
+                      type: string
+                      description: The title of the reward
+                      example: "Free Pineapple Bun"
+                    requiredStamps:
+                      type: number
+                      description: The number of stamps required to redeem the reward
+                      example: 5
+        500:
+          description: Error fetching rewards
+  /customer/add-loyalty-card:
+    post:
+      tags:
+        - customer
+      summary: Add a new card to a user's wallet
+      description: Add a new card to an authenticated user. Must provide valid auth field in header
+      operationId: addLoyaltyCard
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoyaltyCardToAdd"
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: number
+                description: The unique identifier of the newly created loyalty card
+                example: 23
+        500:
+          description: Error adding new loyalty card
+  /business/stamp-design:
+    get:
+      tags:
+        - business
+      summary: Get the stamp design variations from DB
+      description: Queries stamp_design table.
+      operationId: getStampDesigns
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  stampDesigns:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        stamp_design_id:
+                          type: number
+                          example: 1
+                        path:
+                          type: string
+                          example: "/assets/star.svg"
+        500:
+          description: could not retrieve designs
   /business/loyalty-program:
     get:
       tags:
@@ -90,6 +227,53 @@ paths:
           description: Successful response
         500:
           description: Failure
+  /business/qr:
+    get:
+      tags:
+        - business
+      summary: get a printable pdf of the QR code
+      description: queries vendor table in the backend for the qr code, then generates a pdf that is returned
+      operationId: getBusinessSecretQr
+      responses:
+        "200":
+          description: A PDF file secret QR code
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+              description: Specifies the name and extension of the file.
+        "400":
+          description: Invalid request parameters.
+        "500":
+          description: Server error.
+    post:
+      tags:
+        - business
+      summary: regenerate key for QR and return PDF
+      description: updates qr key in vendor table and generates PDF to return
+      operationId: udpateBusinessSecretQr
+      responses:
+        "200":
+          description: A PDF file secret QR code
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+              description: Specifies the name and extension of the file.
+        "400":
+          description: Invalid request parameters.
+        "500":
+          description: Server error.
 components:
   schemas:
     BusinessProfile:
@@ -131,6 +315,30 @@ components:
         description:
           type: string
           example: "this is a really cool store"
+    BusinessOnboardingCards:
+      type: object
+      properties:
+        onboarding_id:
+          type: number
+          example: 1
+        icon:
+          type: string
+          example: "/assets/clover.svg"
+        title:
+          type: string
+          example: "Connect your Clover account"
+        priority:
+          type: number
+          example: 1
+        directory:
+          type: string
+          example: "/auth/profile"
+        buttonText:
+          type: string
+          example: "Connect"
+        isCompleted:
+          type: boolean
+          example: true
     BusinessLoyaltyProgram:
       type: object
       properties:
@@ -159,6 +367,83 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Reward"
+        cardLayout:
+          type: number
+          example: 1
+        stampDesignId:
+          type: number
+          example: 1
+        color1:
+          type: string
+          example: "#ABC123"
+        color2:
+          type: string
+          example: "#ABC123"
+        color3:
+          type: string
+          example: "#ABC123"
+
+    LoyaltyCards:
+      type: array
+      items:
+        $ref: "#/components/schemas/LoyaltyCard"
+    LoyaltyCard:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the vendor for the loyalty card
+          example: "Zhang's Bakery"
+        email:
+          type: string
+          description: The email of the vendor for the loyalty card
+          example: "test@gmail.com"
+        address:
+          type: string
+          description: The address of the vendor for the loyalty card
+          example: "123 Real Addy Dr NW"
+        phone:
+          type: string
+          description: The phone number of the vendor for the loyalty card
+          example: "+11234567890"
+        color:
+          type: string
+          description: The primary color of the vendor as a hex value
+          example: "#29524A"
+        max_points:
+          type: number
+          description: The maximum points on the loyalty card for the vendor
+          example: 10
+        spending_per_point:
+          type: string
+          description: The amount in dollars needed to be spent at the vendor before a point is rewarded
+          example: "4"
+        business_logo:
+          type: string
+          description: A URL to the S3 object for the business image, expires in 3600 seconds.
+        desc:
+          type: string
+          description: A description of the vendor
+          example: "An up and coming bakery in Sunnyside with a twist on the traditional Chinese bakery. Not only can you get staples like pineapple buns and egg toast, they even have things like deep fried peri peri chicken buns!"
+        points_amt:
+          type: number
+          description: The number of reward points a user has accumulated for a loyalty card so far
+          example: 3
+        carry_over_amt:
+          type: number
+          description: The value in dollars that informs the progress to the next reward point in dollars
+          example: 3.5
+        vendor_id:
+          type: number
+          description: The unique identifier for the vendor
+          example: 56
+    LoyaltyCardToAdd:
+      type: object
+      properties:
+        vendor_id:
+          type: number
+          description: The unique identifier for the vendor who's loyalty card you want to add to wallet
+          example: 12
     Reward:
       type: object
       properties:
@@ -171,3 +456,26 @@ components:
         requiredStamps:
           type: number
           example: 3
+    VendorList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Vendor"
+    Vendor:
+      type: object
+      properties:
+        vendor_id:
+          type: integer
+          format: int32
+          description: The unique identifier for the vendor
+        name:
+          type: string
+          maxLength: 256
+          description: The name of the vendor
+        business_image:
+          type: string
+          maxLength: 256
+          description: A URL to the S3 object for the business image, expires in 3600 seconds.
+        description:
+          type: string
+          maxLength: 256
+          description: A description of the vendor

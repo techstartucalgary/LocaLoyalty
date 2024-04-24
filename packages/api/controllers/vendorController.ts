@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
-import { addVendor } from "../../database/db_interface";
-import { vendorsList } from "../dummyData/dummyData";
+import {
+  getAllRewardsOfVendor,
+  getAllVendorsExceptWallet,
+  getCustomerFromClerkID,
+} from "../../database/db_interface";
 
 // export const addCard = async (req: Request, res: Response) => {
 //   try {
@@ -46,9 +49,57 @@ import { vendorsList } from "../dummyData/dummyData";
 // Method to list all vendors
 export const index = async (req: Request, res: Response) => {
   try {
-    const vendors = vendorsList; // Retrieve all dummy list of vendors from the database
+    // Retrieve Clerk user ID from the authentication information
+    const clerkId = req.auth.userId;
+
+    if (!clerkId) {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
+
+    // Use the helper function to get the customer ID based on Clerk ID
+    const customer = await getCustomerFromClerkID(clerkId);
+
+    if (!customer) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+
+    // Assuming the customer object contains a customer_id field
+    const customer_id = customer[0].customer_id;
+
+    const vendors = await getAllVendorsExceptWallet(customer_id); // Retrieve all list of vendors from the database
+
+    console.log(vendors);
+
+    // Send the vendors back in the response
     res.status(200).json(vendors);
   } catch (error) {
     res.status(500).json({ message: "Error fetching vendors", error });
+  }
+};
+
+// Method to get all rewards for a given vendor
+export const getRewards = async (req: Request, res: Response) => {
+  try {
+    // Retrieve Clerk user ID from the authentication information
+    const clerkId = req.auth.userId;
+
+    if (!clerkId) {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
+
+    // Use the helper function to get all rewards for a given vendor
+    const rewards = await getAllRewardsOfVendor(parseInt(req.params.vendorID));
+
+    if (!rewards) {
+      return res.status(404).json({ message: "Rewards not found" });
+    }
+
+    // Send the rewards back in the response
+    res.status(200).json(rewards);
+  } catch (error) {
+    console.error("Error fetching rewards:", error);
+    res
+      .status(500)
+      .json({ message: "Internal server error. Error fetching rewards." });
   }
 };

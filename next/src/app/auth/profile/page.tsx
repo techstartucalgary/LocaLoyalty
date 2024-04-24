@@ -1,7 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { fetchAPI } from "@/utils/generalAxios";
-import { useAuthStore } from "@/utils/store";
 import { useAuth } from "@clerk/nextjs";
 import {
   AlertDialog,
@@ -57,13 +56,12 @@ export default function Profile() {
   };
 
   const { getToken } = useAuth();
-  const { token, setToken } = useAuthStore();
 
   const fetchInitialProfileData = async () => {
     return fetchAPI(
       "http://localhost:5001/business/profile",
       "GET",
-      token,
+      await getToken(),
       null,
       {}
     );
@@ -92,7 +90,7 @@ export default function Profile() {
     return fetchAPI(
       "http://localhost:5001/business/profile",
       "POST",
-      token,
+      await getToken(),
       formData,
       {
         /* headers (if necessary) */
@@ -122,7 +120,6 @@ export default function Profile() {
   const { data, error, isLoading } = useQuery({
     queryKey: ["initialProfileData"],
     queryFn: fetchInitialProfileData,
-    enabled: !!token,
   });
 
   const [isEditing, setIsEditing] = useState(false);
@@ -137,15 +134,6 @@ export default function Profile() {
       setProfileData(data);
     }
   }, [data]);
-
-  useEffect(() => {
-    async function fetchToken() {
-      const toFetch = await getToken();
-      setToken(toFetch);
-    }
-
-    fetchToken();
-  }, [getToken, setToken]);
 
   const handleTextInputChange = (
     fieldName: keyof ProfileData,

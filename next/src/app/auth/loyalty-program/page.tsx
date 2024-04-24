@@ -18,7 +18,6 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
 import { IoIosInformationCircleOutline } from "react-icons/io";
 import { PiFlower, PiFlowerFill } from "react-icons/pi";
 import {
@@ -54,7 +53,7 @@ import {
   StampLifeSection,
 } from "./SettingsSections";
 import { fetchAPI } from "@/utils/generalAxios";
-import { useAuthStore, useLoyaltyProgramStore } from "@/utils/store";
+import { useLoyaltyProgramStore } from "@/utils/store";
 import { useAuth } from "@clerk/nextjs";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
@@ -63,6 +62,7 @@ import {
   RewardsPreview,
   Variant1,
 } from "./LoyaltyCardVariations";
+import { SecretQRSection } from "./QRCodeSections";
 
 export const OptionHeader = ({
   title,
@@ -93,7 +93,6 @@ export const OptionHeader = ({
 
 export default function LoyaltyProgram() {
   const { getToken } = useAuth();
-  const { token, setToken } = useAuthStore();
   const {
     refetchIndicator,
     stampCount,
@@ -108,7 +107,7 @@ export default function LoyaltyProgram() {
     return fetchAPI(
       "http://localhost:5001/business/loyalty-program",
       "GET",
-      token,
+      await getToken(),
       null,
       {}
     );
@@ -117,7 +116,6 @@ export default function LoyaltyProgram() {
   const { data, error, isLoading, refetch } = useQuery({
     queryKey: ["loyaltyProgramData"],
     queryFn: fetchLoyaltyProgramData,
-    enabled: !!token,
   });
 
   useEffect(() => {
@@ -142,15 +140,6 @@ export default function LoyaltyProgram() {
     setStampCount,
     setStampLife,
   ]);
-
-  useEffect(() => {
-    async function fetchToken() {
-      const toFetch = await getToken();
-      setToken(toFetch);
-    }
-
-    fetchToken();
-  }, [getToken, setToken]);
 
   const CardLayoutStyleSection = () => {
     const {
@@ -357,6 +346,7 @@ export default function LoyaltyProgram() {
               <TabsList>
                 <TabsTrigger value="settings">Settings</TabsTrigger>
                 <TabsTrigger value="design">Design</TabsTrigger>
+                <TabsTrigger value="qr-code">QR Codes</TabsTrigger>
               </TabsList>
               <TabsContent value="settings">
                 <div className="ml-10">
@@ -372,6 +362,11 @@ export default function LoyaltyProgram() {
                   <ActiveStampSection />
                   <LogoBackgroundSection />
                   <ColorThemeSection />
+                </div>
+              </TabsContent>
+              <TabsContent value="qr-code">
+                <div className="ml-10">
+                  <SecretQRSection />
                 </div>
               </TabsContent>
             </Tabs>
