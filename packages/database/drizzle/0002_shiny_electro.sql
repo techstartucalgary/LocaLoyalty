@@ -1,0 +1,1 @@
+ALTER TABLE vendor ADD `qr_code` text;

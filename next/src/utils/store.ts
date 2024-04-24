@@ -106,7 +106,8 @@ export const useLoyaltyProgramStore = create<LoyaltyProgramState>((set) => ({
     })),
   setStampCount: (value) => set({ stampCount: value }),
   setScaleAmount: (value) => set({ scaleAmount: value }),
-  setDefinedRewards: (defined) => set({ definedRewards: defined }),
+  setDefinedRewards: (defined) =>
+    set({ definedRewards: defined ? defined : [] }),
   addReward: (toAdd) =>
     set((state) => ({
       definedRewards: [...state.definedRewards, toAdd],
