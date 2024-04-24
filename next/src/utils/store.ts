@@ -1,5 +1,6 @@
 // counterStore.ts
 import { create } from "zustand";
+import { Star1Icon } from "@/app/auth/loyalty-program/DesignSections"; 
 
 export interface CompletionCardProps {
   onboarding_id: number;
@@ -39,6 +40,8 @@ interface Reward {
   requiredStamps: number;
 }
 
+type IconType = React.FunctionComponent<{ color: string, size: number }>;
+
 type LoyaltyProgramState = {
   refetchIndicator: number;
   businessName: string;
@@ -63,16 +66,22 @@ type LoyaltyProgramState = {
   setScaleAmount: (value: string) => void;
   setDefinedRewards: (defined: Reward[]) => void;
   addReward: (toAdd: Reward) => void;
-
-  // Design Tab
-  cardLayoutStyle: number;
-  incrementCardLayoutStyle: () => void;
-  decrementCardLayoutStyle: () => void;
-
   deleteReward: (toDelete: Reward) => void;
   updateReward: (initial: Reward, changed: Reward) => void;
   setIsEditing: () => void;
   incrementRefetch: () => void;
+
+  // Design Tab
+  cardLayoutStyle: number;
+  activeStamp: IconType;
+  activeStampValue: string;
+  colors: [string, string, string];
+  colorLabels: [string, string, string];
+  setActiveStamp: (icon: IconType) => void;
+  setActiveStampValue: (value: string) => void;
+  incrementCardLayoutStyle: () => void;
+  decrementCardLayoutStyle: () => void;
+  setColorTheme: (color: string, index: number) => void;
 };
 
 export const useLoyaltyProgramStore = create<LoyaltyProgramState>((set) => ({
@@ -112,24 +121,6 @@ export const useLoyaltyProgramStore = create<LoyaltyProgramState>((set) => ({
     set((state) => ({
       definedRewards: [...state.definedRewards, toAdd],
     })),
-
-  // Design Tab
-  cardLayoutStyle: 1,
-  incrementCardLayoutStyle: () =>
-    set((state) => ({
-      cardLayoutStyle:
-        state.cardLayoutStyle < 10
-          ? state.cardLayoutStyle + 1
-          : state.cardLayoutStyle,
-    })),
-  decrementCardLayoutStyle: () =>
-    set((state) => ({
-      cardLayoutStyle:
-        state.cardLayoutStyle > 1
-          ? state.cardLayoutStyle - 1
-          : state.cardLayoutStyle,
-    })),
-
   deleteReward: (toDelete) => {
     set((state) => ({
       definedRewards: state.definedRewards.filter(
@@ -160,5 +151,36 @@ export const useLoyaltyProgramStore = create<LoyaltyProgramState>((set) => ({
     set((state) => ({
       refetchIndicator: state.refetchIndicator + 1,
     }));
-  },
+  },  
+  // Design Tab
+  cardLayoutStyle: 1,
+  activeStamp: Star1Icon,
+  activeStampValue: "star1",
+  colors: ['#000000', '#F6F6F6', '#FFFFFF'],
+  colorLabels: ['Primary', 'Secondary', 'Tertiary'],
+  setActiveStamp: (icon) => set({ activeStamp: icon }),
+  setActiveStampValue: (value: string) => 
+    set((state) => ({
+      activeStampValue: value,
+    })),
+    incrementCardLayoutStyle: () =>
+      set((state) => ({
+        cardLayoutStyle:
+          state.cardLayoutStyle < 10
+            ? state.cardLayoutStyle + 1
+            : state.cardLayoutStyle,
+      })),
+    decrementCardLayoutStyle: () =>
+      set((state) => ({
+        cardLayoutStyle:
+          state.cardLayoutStyle > 1
+            ? state.cardLayoutStyle - 1
+            : state.cardLayoutStyle,
+      })),
+  setColorTheme: (color, index) =>
+    set((state) => {
+      const newColors = [...state.colors] as [string, string, string];
+      newColors[index] = color;
+      return { colors: newColors };
+    }),
 }));
