@@ -118,9 +118,7 @@ router.post(
         body.postal_code,
         imageName,
         logoName,
-        body.description,
-        body.merchant_id,
-        body.clover_api_key
+        body.description
       );
 
       const isProfileComplete = checkIsBusinessInformationComplete(body);
@@ -322,26 +320,26 @@ router.get("/qr", async (req: Request, res: Response) => {
   }
 });
 
-// Helper function for "/random-key" route 
+// Helper function for "/random-key" route
 // Returns 16 bytes encoded as a hexadecimal string
 function generateRandomKey(length: number): string {
   const randomBytes = new Uint8Array(length);
   crypto.getRandomValues(randomBytes);
 
-  let hexString = '';
+  let hexString = "";
   randomBytes.forEach((byte: number) => {
-      hexString += byte.toString(16).padStart(2, '0');
+    hexString += byte.toString(16).padStart(2, "0");
   });
   return hexString;
 }
 
 router.get("/random-key", (req: Request, res: Response) => {
   try {
-      const key = generateRandomKey(16);
-      res.status(200).json({ key: key });
+    const key = generateRandomKey(16);
+    res.status(200).json({ key: key });
   } catch (error) {
-      console.error("Failed to generate random key:", error);
-      res.status(500).json({ message: "Failed to generate random key." });
+    console.error("Failed to generate random key:", error);
+    res.status(500).json({ message: "Failed to generate random key." });
   }
 });
 

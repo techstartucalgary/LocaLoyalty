@@ -125,40 +125,6 @@ app.post("/website-webhook", async (req, res) => {
   }
 });
 
-/*
-//clover webhook
-// Define a POST route to handle webhook requests from Clover
-app.post("/clover-webhook", (req, res) => {
-  // Handle the webhook payload received from Clover
-  console.log("Webhook received from Clover:", req.body);
-  console.log("headers: ", req.headers["x-clover-auth"]);
-
-  //if (req.headers["x-clover-auth"] === "4968dfc7-7a2b-4dd0-a99c-6ddc6b5817b6") {
-  //req.body.merchants["3TC5X7503JFR1"].map((item: { object: any }) => {
-  //console.log(item.object);
-  //});
-  //}
-
-  
-    {
-[1]   '3TC5X7503JFR1': [
-[1]     {
-[1]       objectId: 'C:C34N6GM2XQ4NM',
-[1]       type: 'UPDATE',
-[1]       ts: 1700974938870,
-[1]       object: [Object]
-[1]     }
-[1]   ]
-[1] }
-  
-
-  // Process the data received from the webhook (e.g., perform actions based on the data)
-
-  // Send a response to acknowledge receipt of the webhook
-  res.status(200).send("Webhook received successfully");
-});
-*/
-
 app.get("/", (req, res) => {
   res.send("Hello");
 });

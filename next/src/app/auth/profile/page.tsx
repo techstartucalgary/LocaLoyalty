@@ -33,8 +33,6 @@ export default function Profile() {
     city: string;
     province: string;
     postal_code: string;
-    merchant_id: string;
-    clover_api_key: string;
     business_image: File | null;
     business_logo: File | null;
     description: string;
@@ -48,8 +46,6 @@ export default function Profile() {
     city: "",
     province: "",
     postal_code: "",
-    merchant_id: "",
-    clover_api_key: "",
     business_image: null,
     business_logo: null,
     description: "",
@@ -287,88 +283,61 @@ export default function Profile() {
                 </p>
               </div>
 
-              <div>
-                <p className="text-xl font-bold">Clover Details</p>
-                <div className="flex flex-col gap-3 ml-5 mt-3">
-                  <ProfileTextInput
-                    id="merchantID"
-                    title="Merchant ID"
-                    disabled={!isEditing}
-                    placeholder="123456789"
-                    value={profileData.merchant_id}
-                    onChange={(e) =>
-                      handleTextInputChange("merchant_id", e.target.value)
-                    }
-                  />
-
-                  <ProfileTextInput
-                    id="apiKey"
-                    title="API Key"
-                    disabled={!isEditing}
-                    placeholder=""
-                    value={profileData.clover_api_key}
-                    onChange={(e) =>
-                      handleTextInputChange("clover_api_key", e.target.value)
-                    }
-                  />
-                </div>
-
-                {isEditing ? (
-                  <div className="mt-5 ml-5 flex gap-5">
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button className="w-20 bg-white text-black hover:bg-red-500 border-2 hover:text-white border-black hover:border-none">
+              {isEditing ? (
+                <div className="mt-5 ml-5 flex gap-5">
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button className="w-20 bg-white text-black hover:bg-red-500 border-2 hover:text-white border-black hover:border-none">
+                        Cancel
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          Are you absolutely sure?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This action cannot be undone. This will permanently
+                          delete all your edits to your profile information
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel className="w-20 bg-white text-black hover:bg-red-500 border-2 hover:text-white border-black hover:border-none">
                           Cancel
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>
-                            Are you absolutely sure?
-                          </AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This action cannot be undone. This will permanently
-                            delete all your edits to your profile information
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel className="w-20 bg-white text-black hover:bg-red-500 border-2 hover:text-white border-black hover:border-none">
-                            Cancel
-                          </AlertDialogCancel>
-                          <AlertDialogAction
-                            className="w-20 bg-black hover:bg-white hover:border-2 hover:text-black border-black"
-                            onClick={() => {
-                              setIsEditing(false);
-                              setProfileData(savedProfileData);
-                            }}
-                          >
-                            Continue
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                    <Button
-                      className="w-20 bg-black hover:bg-white hover:border-2 hover:text-black border-black"
-                      onClick={() => {
-                        setIsEditing(false);
-                        setSavedProfileData(profileData);
-                        mutation.mutate();
-                      }}
-                    >
-                      Save
-                    </Button>
-                  </div>
-                ) : (
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                          className="w-20 bg-black hover:bg-white hover:border-2 hover:text-black border-black"
+                          onClick={() => {
+                            setIsEditing(false);
+                            setProfileData(savedProfileData);
+                          }}
+                        >
+                          Continue
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                   <Button
-                    className="w-20 bg-black hover:bg-white hover:border-2 hover:text-black border-black  mt-5 ml-5"
+                    className="w-20 bg-black hover:bg-white hover:border-2 hover:text-black border-black"
                     onClick={() => {
-                      setIsEditing(true);
+                      setIsEditing(false);
+                      setSavedProfileData(profileData);
+                      mutation.mutate();
                     }}
                   >
-                    Edit
+                    Save
                   </Button>
-                )}
-              </div>
+                </div>
+              ) : (
+                <Button
+                  className="w-20 bg-black hover:bg-white hover:border-2 hover:text-black border-black  mt-5 ml-5"
+                  onClick={() => {
+                    setIsEditing(true);
+                  }}
+                >
+                  Edit
+                </Button>
+              )}
             </div>
           </div>
         </div>
