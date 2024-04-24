@@ -157,7 +157,81 @@ async function addPointRedemption(
 
 	return result;
 }
-/*
+
+export async function redeemRewardUpdatePoints(
+	loyalty_id: number,
+	reward_id: number
+) {
+	const loyaltyCardInfo = await db
+		.select()
+		.from(schema.loyalty_card)
+		.where(eq(schema.loyalty_card.loyalty_id, loyalty_id));
+
+	//if there is an error return null
+	if (Object.keys(loyaltyCardInfo).length === 0) {
+		console.log("Database query failed");
+		return false;
+	}
+
+	const rewardInfo = await db
+		.select()
+		.from(schema.reward)
+		.where(eq(schema.reward.reward_id, reward_id));
+
+	//if there is an error return null
+	if (Object.keys(rewardInfo).length === 0) {
+		console.log("Database query failed");
+		return false;
+	}
+
+	console.log("HERE");
+
+	// Check if the customer is allowed to redeem the reward
+	if (loyaltyCardInfo[0].points_amt < rewardInfo[0].points_cost) {
+		return false;
+	}
+
+	await db
+		.update(schema.loyalty_card)
+		.set({
+			points_amt: sql`${schema.loyalty_card.points_amt} - ${rewardInfo[0].points_cost}`, // Decrement the points_amt on the loyalty card by the reward point cost
+		})
+		.where(eq(schema.loyalty_card.loyalty_id, loyalty_id));
+}
+
+export async function authenticateBarcode(barcodeData: any) {
+	// const loyaltyCardInfo = await db
+	// 	.select()
+	// 	.from(schema.loyalty_card)
+	// 	.where(eq(schema.loyalty_card.loyalty_id, loyalty_id));
+	// //if there is an error return null
+	// if (Object.keys(loyaltyCardInfo).length === 0) {
+	// 	console.log("Database query failed");
+	// 	return false;
+	// }
+	// const rewardInfo = await db
+	// 	.select()
+	// 	.from(schema.reward)
+	// 	.where(eq(schema.reward.reward_id, reward_id));
+	// //if there is an error return null
+	// if (Object.keys(rewardInfo).length === 0) {
+	// 	console.log("Database query failed");
+	// 	return false;
+	// }
+	// console.log("HERE");
+	// // Check if the customer is allowed to redeem the reward
+	// if (loyaltyCardInfo[0].points_amt < rewardInfo[0].points_cost) {
+	// 	return false;
+	// }
+	// await db
+	// 	.update(schema.loyalty_card)
+	// 	.set({
+	// 		points_amt: sql`${schema.loyalty_card.points_amt} - ${rewardInfo[0].points_cost}`, // Decrement the points_amt on the loyalty card by the reward point cost
+	// 	})
+	// 	.where(eq(schema.loyalty_card.loyalty_id, loyalty_id));
+	return true;
+}
+
 // Adds a new transaction a customer completed
 async function addTransaction(
 	loyalty_id, //TODO: enforce types
@@ -201,7 +275,6 @@ async function addTransaction(
 
 	return result[0].id;
 }
-*/
 
 // Adds a new reward to a vendor program
 async function addReward(
@@ -561,6 +634,7 @@ export async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
 		points_amt: number;
 		carry_over_amt: number;
 		vendor_id: number;
+		loyalty_id: number;
 	};
 
 	let loyaltyCardInfo: LoyaltyCard[] = [];
@@ -621,6 +695,7 @@ export async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
 				points_amt: card.points_amt,
 				carry_over_amt: parseFloat(card.carry_over_amt),
 				vendor_id: card.program_id,
+				loyalty_id: card.loyalty_id,
 			});
 		}
 	}
@@ -630,19 +705,20 @@ export async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
 
 export async function getRedeemable(customer_id: number) {
 	const results =
-		await db.run(sql`SELECT c.name as vendor_name, c.business_logo, r.name as reward_name, r.points_cost, r.reward_id
-        FROM reward r
-        INNER JOIN (SELECT v.name, v.business_logo, b.vendor_id, b.points_amt
-        FROM vendor v
-        INNER JOIN (SELECT vendor_id, points_amt 
-        FROM loyalty_card lc
-        WHERE customer_id = ${customer_id}) AS b ON b.vendor_id = v.vendor_id) AS c ON r.vendor_id = c.vendor_id
-        WHERE c.points_amt >= r.points_cost;`);
+		await db.run(sql`SELECT c.name as vendor_name, c.business_logo, c.loyalty_id, r.name as reward_name, r.points_cost, r.reward_id
+FROM reward r
+INNER JOIN (SELECT v.name, v.business_logo, b.vendor_id, b.points_amt, b.loyalty_id
+FROM vendor v
+INNER JOIN (SELECT vendor_id, points_amt, loyalty_id
+FROM loyalty_card lc
+WHERE customer_id = ${customer_id}) AS b ON b.vendor_id = v.vendor_id) AS c ON r.vendor_id = c.vendor_id
+WHERE c.points_amt >= r.points_cost;`);
 
 	type Redeemables = {
 		business_logo: string;
 		points_cost: number;
 		reward_id: number;
+		loyalty_id: number;
 		reward_name: string;
 		vendor_name: string;
 	}[];

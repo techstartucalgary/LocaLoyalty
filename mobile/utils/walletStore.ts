@@ -1,5 +1,7 @@
 import { create } from "zustand";
 
+type RefetchFunc = () => void;
+
 type WalletState = {
 	currentBusinessID: number;
 	currentBusinessName: string;
@@ -13,6 +15,8 @@ type WalletState = {
 	currentPrimaryColor: string;
 	currentCarry_over_amt: number;
 	currentSpending_per_point: number;
+	currentLoyaltyID: number;
+	walletRefetchFunc: () => void;
 	setCurrentBusinessID: (id: number) => void;
 	setCurrentBusinessName: (name: string) => void;
 	setCurrentBusinessAddress: (address: string) => void;
@@ -25,6 +29,8 @@ type WalletState = {
 	setCurrentPrimaryColor: (color: string) => void;
 	setCurrentCarry_over_amt: (carry_over_amt: number) => void;
 	setCurrentSpending_per_point: (spending_per_point: number) => void;
+	setCurrentLoyaltyID: (loyaltyID: number) => void;
+	setWalletRefetchFunc: (func: RefetchFunc) => void;
 };
 
 export const useWalletStore = create<WalletState>((set) => ({
@@ -40,6 +46,8 @@ export const useWalletStore = create<WalletState>((set) => ({
 	currentPrimaryColor: "",
 	currentCarry_over_amt: 0,
 	currentSpending_per_point: 0,
+	currentLoyaltyID: 0,
+	walletRefetchFunc: () => {},
 	setCurrentBusinessID: (id) => {
 		set({ currentBusinessID: id });
 	},
@@ -75,5 +83,11 @@ export const useWalletStore = create<WalletState>((set) => ({
 	},
 	setCurrentSpending_per_point: (spending_per_point: number) => {
 		set({ currentSpending_per_point: spending_per_point });
+	},
+	setCurrentLoyaltyID: (loyaltyID: number) => {
+		set({ currentLoyaltyID: loyaltyID });
+	},
+	setWalletRefetchFunc: (func: RefetchFunc) => {
+		set({ walletRefetchFunc: func });
 	},
 }));
