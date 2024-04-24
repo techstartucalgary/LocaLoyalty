@@ -214,7 +214,7 @@ export const EditSection = ({
   const sendModifiedLoyaltyProgramData = async () => {
     // Make the API call with formData
     return fetchAPI(
-      "http://localhost:5001/business/loyalty-program",
+      process.env.NEXT_PUBLIC_SERVER_ADDRESS + "/business/loyalty-program",
       "POST",
       await getToken(),
       {

@@ -59,7 +59,7 @@ export default function Profile() {
 
   const fetchInitialProfileData = async () => {
     return fetchAPI(
-      "http://localhost:5001/business/profile",
+      process.env.NEXT_PUBLIC_SERVER_ADDRESS + "/business/profile",
       "GET",
       await getToken(),
       null,
@@ -88,7 +88,7 @@ export default function Profile() {
 
     // Make the API call with formData
     return fetchAPI(
-      "http://localhost:5001/business/profile",
+      process.env.NEXT_PUBLIC_SERVER_ADDRESS + "/business/profile",
       "POST",
       await getToken(),
       formData,

@@ -35,7 +35,7 @@ export default function AuthHome() {
 
   const fetchOnboardingData = async () => {
     return fetchAPI(
-      "http://localhost:5001/business/api/onboarding",
+      process.env.NEXT_PUBLIC_SERVER_ADDRESS + "/business/api/onboarding",
       "GET",
       await getToken(),
       null,
