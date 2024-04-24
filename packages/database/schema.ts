@@ -51,8 +51,6 @@ export const vendor = sqliteTable("vendor", {
   postal_code: varchar("postal_code", { length: 6 }),
   business_image: text("business_image"),
   business_logo: text("business_logo"),
-  merchant_id: varchar("merchant_id", { length: 13 }),
-  clover_api_key: varchar("clover_api_key", { length: 200 }),
   stamp_life: int("stamp_life"),
   card_layout: int("card_layout"),
   stamp_design_id: int("stamp_design_id"),
