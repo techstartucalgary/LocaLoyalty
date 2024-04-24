@@ -11,7 +11,7 @@ import {
 export const getAllVendors = async (req: Request, res: Response) => {
   try {
     // Retrieve Clerk user ID from the authentication information
-    const clerkId = req.auth.userId;
+    const clerkId = req.userId;
 
     if (!clerkId) {
       return res.status(401).json({ message: "User not authenticated" });
@@ -41,7 +41,7 @@ export const getAllVendors = async (req: Request, res: Response) => {
 export const getAllCards = async (req: Request, res: Response) => {
   try {
     // Retrieve Clerk user ID from the authentication information
-    const clerkId = req.auth.userId;
+    const clerkId = req.userId;
 
     if (!clerkId) {
       return res.status(401).json({ message: "User not authenticated" });
@@ -79,7 +79,7 @@ export const getAllCards = async (req: Request, res: Response) => {
 export const addCard = async (req: Request, res: Response) => {
   try {
     // Retrieve Clerk user ID from the authentication information
-    const clerkId = req.auth.userId;
+    const clerkId = req.userId;
 
     if (!clerkId) {
       return res.status(401).json({ message: "User not authenticated" });
@@ -106,18 +106,16 @@ export const addCard = async (req: Request, res: Response) => {
     res.status(200).json(loyalty_id);
   } catch (error) {
     console.error("Error adding new card to wallet: ", error);
-    res
-      .status(500)
-      .json({
-        message: "Internal server error. Error adding new card to wallet",
-      });
+    res.status(500).json({
+      message: "Internal server error. Error adding new card to wallet",
+    });
   }
 };
 
 export const getRedeemables = async (req: Request, res: Response) => {
   try {
     // Retrieve Clerk user ID from the authentication information
-    const clerkId = req.auth.userId;
+    const clerkId = req.userId;
 
     if (!clerkId) {
       return res.status(401).json({ message: "User not authenticated" });

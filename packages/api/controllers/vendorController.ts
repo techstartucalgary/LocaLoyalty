@@ -46,7 +46,7 @@ import { getAllRewardsOfVendor } from "../../database/db_interface_vendor";
 export const getRewards = async (req: Request, res: Response) => {
   try {
     // Retrieve Clerk user ID from the authentication information
-    const clerkId = req.auth.userId;
+    const clerkId = req.userId;
 
     if (!clerkId) {
       return res.status(401).json({ message: "User not authenticated" });
