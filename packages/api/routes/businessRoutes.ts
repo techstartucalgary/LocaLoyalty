@@ -10,6 +10,8 @@ import {
 } from "@aws-sdk/client-s3";
 import crypto from "crypto";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import Cookies from "cookies";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import {
   editVendor,
   getVendor,
@@ -51,7 +53,37 @@ const s3 = new S3Client({
 });
 
 // Sample route
-router.get("/sample", (req: Request, res: Response) => {
+router.get("/sample", async (req: Request, res: Response) => {
+  const publicKey = process.env.CLERK_WEBSITE_PEM_PUBLIC_KEY;
+  const cookies = new Cookies(req, res);
+  const sessToken = cookies.get("__session");
+  const token = req.headers.authorization;
+
+  if (sessToken === undefined && token === undefined) {
+    res.status(401).json({ error: "not signed in" });
+    return;
+  }
+
+  try {
+    let decoded: string | JwtPayload;
+    if (token) {
+      decoded = jwt.verify(token, publicKey!);
+      res.status(200).json({ sessToken: decoded });
+      return;
+    } else {
+      decoded = jwt.verify(sessToken!, publicKey!);
+      res.status(200).json({ sessToken: decoded });
+      return;
+    }
+  } catch (error) {
+    console.log(error);
+
+    res.status(400).json({
+      error: "Invalid Token",
+    });
+    return;
+  }
+
   res.send({ message: "This is a sample response" });
 });
 
