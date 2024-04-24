@@ -3,7 +3,7 @@ import {
   getAllRewardsOfVendor,
   getAllVendorsExceptWallet,
   getCustomerFromClerkID,
-} from "../../database/db_interface";
+} from "../../database/db_interface_vendor";
 
 // export const addCard = async (req: Request, res: Response) => {
 //   try {
