@@ -119,9 +119,7 @@ router.post(
         body.postal_code,
         imageName,
         logoName,
-        body.description,
-        body.merchant_id,
-        body.clover_api_key
+        body.description
       );
 
       const isProfileComplete = checkIsBusinessInformationComplete(body);

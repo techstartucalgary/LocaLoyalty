@@ -300,12 +300,6 @@ components:
         postalCode:
           type: string
           example: "A1B2C3"
-        merchantID:
-          type: string
-          example: "123456789"
-        apiKey:
-          type: string
-          example: "oqpweiopqwepioqiweop"
         businessImage:
           type: string
           description: "Either a file or a url that will be used to render the image"
@@ -323,10 +317,10 @@ components:
           example: 1
         icon:
           type: string
-          example: "/assets/clover.svg"
+          example: "/assets/qr.svg"
         title:
           type: string
-          example: "Connect your Clover account"
+          example: "Print out your QR code"
         priority:
           type: number
           example: 1

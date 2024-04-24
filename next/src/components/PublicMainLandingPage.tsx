@@ -108,20 +108,6 @@ const PublicLanding = () => {
         </div>
       </div>
 
-      <div className="flex flex-col items-center pt-10">
-        <div className="text-center">
-          <h1 className="font-bold text-4xl">Seamless Integration</h1>
-          <p className="font-normal text-3xl pt-5">
-            With your favourite Point of Sales software
-          </p>
-        </div>
-
-        <div className="flex gap-20 pt-10">
-          <Image src="/assets/clover2.png" alt="" width={215} height={52.5} />
-          <Image src="/assets/Square.png" alt="" width={209} height={52.5} />
-        </div>
-      </div>
-
       <div className="flex items-center justify-center gap-4">
         <Image src="/assets/Image4.png" alt="" width={474} height={352} />
         <div>

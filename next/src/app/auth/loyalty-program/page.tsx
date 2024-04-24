@@ -105,7 +105,7 @@ export default function LoyaltyProgram() {
 
   const fetchLoyaltyProgramData = async (): Promise<any> => {
     return fetchAPI(
-      "http://localhost:5001/business/loyalty-program",
+      process.env.NEXT_PUBLIC_SERVER_ADDRESS + "/business/loyalty-program",
       "GET",
       await getToken(),
       null,

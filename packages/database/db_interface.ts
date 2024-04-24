@@ -286,9 +286,7 @@ export async function editVendor(
   postal_code: string,
   business_image: string,
   business_logo: string,
-  description: string,
-  merchant_id: string,
-  clover_api_key: string
+  description: string
 ) {
   await db
     .update(schema.vendor)
@@ -301,8 +299,6 @@ export async function editVendor(
       province: province,
       postal_code: postal_code,
       description: description,
-      merchant_id: merchant_id,
-      clover_api_key: clover_api_key,
     })
     .where(eq(schema.vendor.clerk_id, clerk_id));
 
