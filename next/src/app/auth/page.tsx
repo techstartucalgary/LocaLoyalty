@@ -35,7 +35,7 @@ export default function AuthHome() {
 
   const fetchOnboardingData = async () => {
     return fetchAPI(
-      "http://localhost:5001/business/api/onboarding",
+      process.env.NEXT_PUBLIC_SERVER_ADDRESS + "/business/api/onboarding",
       "GET",
       await getToken(),
       null,
@@ -69,18 +69,8 @@ export default function AuthHome() {
           <div className="w-2/3 flex flex-col items-center gap-5 text-left">
             <Progress value={calculateProfileCompletion(completionCards)} />
             <div className="w-full flex flex-col gap-2">
-              <p className="text-xl font-semibold text-left w-full">
+              <p className="text-2xl font-semibold text-left w-full">
                 Complete your profile to start your loyalty rewards program!
-              </p>
-              <p className="w-full text-slate-600">
-                Kick start your journey by connecting to your Clover account,
-                providing essential business details, and crafting your unique
-                loyalty program structure. By completing your profile, you
-                unlock exclusive benefits and a streamlined experience for both
-                you and your customers. Don&apos;t miss out on the opportunity
-                to enhance customer satisfaction and boost your business. Set up
-                your profile now, and watch your loyalty program propel your
-                success!
               </p>
             </div>
           </div>

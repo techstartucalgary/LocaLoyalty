@@ -3,7 +3,7 @@ import * as customerController from "../controllers/customerController";
 import * as vendorController from "../controllers/vendorController";
 
 const router = express.Router();
-router.use(express.json())
+router.use(express.json());
 
 // Sample route
 router.get("/sample", (req, res) => {
@@ -11,7 +11,7 @@ router.get("/sample", (req, res) => {
 });
 
 // API endpoint to browse all of the available vendors
-router.get("/vendors", vendorController.index);
+router.get("/vendors", customerController.getAllVendors);
 
 // API endpoint to view all of the associated vendors
 router.get("/loyalty-cards", customerController.getAllCards);
@@ -20,10 +20,9 @@ router.get("/loyalty-cards", customerController.getAllCards);
 router.get("/rewards/:vendorID", vendorController.getRewards);
 
 // API endpoint to add a new loyalty card to a users wallet
-router.post("/add-loyalty-card", customerController.addCard)
+router.post("/add-loyalty-card", customerController.addCard);
 
 // API endpoint to get all redeemables
-router.get("/redeemables", customerController.getRedeemables)
-
+router.get("/redeemables", customerController.getRedeemables);
 
 export default router;

@@ -10,6 +10,8 @@ import {
 } from "@aws-sdk/client-s3";
 import crypto from "crypto";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import Cookies from "cookies";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import {
   editVendor,
   getVendor,
@@ -26,7 +28,7 @@ import {
   checkIsBusinessInformationComplete,
   getBusinessQrCode,
   updateBusinessQrCode,
-} from "../../database/db_interface";
+} from "../../database/db_interface_vendor";
 
 const router = express.Router();
 
@@ -51,12 +53,12 @@ const s3 = new S3Client({
 });
 
 // Sample route
-router.get("/sample", (req: Request, res: Response) => {
+router.get("/sample", async (req: Request, res: Response) => {
   res.send({ message: "This is a sample response" });
 });
 
 router.get("/profile", async (req: Request, res: Response) => {
-  let profileData = await getVendor(req.auth.userId);
+  let profileData = await getVendor(req.userId);
   res.send(profileData);
 });
 
@@ -74,7 +76,7 @@ router.post(
         ? files.business_image[0]
         : null;
       const businessLogo = files.business_logo ? files.business_logo[0] : null;
-      const vendor = await getVendorFromClerkID(req.auth.userId);
+      const vendor = await getVendorFromClerkID(req.userId);
       const vendor_id = vendor![0].vendor_id;
 
       let imageName = "";
@@ -109,7 +111,7 @@ router.post(
       let body = req.body;
 
       await editVendor(
-        req.auth.userId,
+        req.userId,
         body.name,
         body.business_email,
         body.business_phone,
@@ -119,9 +121,7 @@ router.post(
         body.postal_code,
         imageName,
         logoName,
-        body.description,
-        body.merchant_id,
-        body.clover_api_key
+        body.description
       );
 
       const isProfileComplete = checkIsBusinessInformationComplete(body);
@@ -141,7 +141,7 @@ router.post(
 // API routes for retrieving onboarding
 router.get("/api/onboarding", async (req: Request, res: Response) => {
   try {
-    const vendor = await getVendorFromClerkID(req.auth.userId);
+    const vendor = await getVendorFromClerkID(req.userId);
     const vendor_id = vendor![0].vendor_id;
     const results = await displayOnboardingCards(vendor_id);
 
@@ -153,7 +153,7 @@ router.get("/api/onboarding", async (req: Request, res: Response) => {
 
 router.get("/loyalty-program", async (req: Request, res: Response) => {
   try {
-    const vendor = await getVendorFromClerkID(req.auth.userId);
+    const vendor = await getVendorFromClerkID(req.userId);
     const vendor_id = vendor![0].vendor_id;
     const loyaltyInfo = await getVendorLoyaltyProgramInfo(vendor_id);
     const rewards = await getAllRewardsOfVendor(vendor_id);
@@ -210,7 +210,7 @@ router.post("/loyalty-program", async (req: Request, res: Response) => {
     let body = req.body;
 
     //get the initial vendor id
-    const vendor = await getVendorFromClerkID(req.auth.userId);
+    const vendor = await getVendorFromClerkID(req.userId);
     const vendor_id = vendor![0].vendor_id;
 
     //update basic values like stampLife, stampCount, scaleAmount
@@ -328,12 +328,12 @@ function generateQRCode(qr_code_text: string, res: Response) {
 router.get("/qr", async (req: Request, res: Response) => {
   try {
     //query db for qr_code field in the db
-    let qr_code_text = await getBusinessQrCode(req.auth.userId);
+    let qr_code_text = await getBusinessQrCode(req.userId);
 
     //if qr code text does not exist, generate one and insert into the correct spot in the vendor table
     if (!qr_code_text || qr_code_text == "") {
       qr_code_text = generateRandomKey(16);
-      await updateBusinessQrCode(req.auth.userId, qr_code_text);
+      await updateBusinessQrCode(req.userId, qr_code_text);
     }
 
     generateQRCode(qr_code_text, res);
@@ -345,7 +345,7 @@ router.get("/qr", async (req: Request, res: Response) => {
 router.post("/qr", async (req: Request, res: Response) => {
   try {
     const qr_code_text = generateRandomKey(16);
-    await updateBusinessQrCode(req.auth.userId, qr_code_text);
+    await updateBusinessQrCode(req.userId, qr_code_text);
     generateQRCode(qr_code_text, res);
   } catch (error) {
     console.error("Failed to generate random key:", error);

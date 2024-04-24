@@ -71,7 +71,7 @@ export default function LoyaltyProgram() {
 
   const fetchLoyaltyProgramData = async (): Promise<any> => {
     return fetchAPI(
-      "http://localhost:5001/business/loyalty-program",
+      process.env.NEXT_PUBLIC_SERVER_ADDRESS + "/business/loyalty-program",
       "GET",
       await getToken(),
       null,
@@ -117,15 +117,14 @@ export default function LoyaltyProgram() {
           <div className="flex flex-col w-3/5">
             <Tabs defaultValue="settings" className="">
               <TabsList>
-                <TabsTrigger value="settings">Settings</TabsTrigger>
-                <TabsTrigger value="design">Design</TabsTrigger>
-                <TabsTrigger value="qr-code">QR Codes</TabsTrigger>
+                <TabsTrigger value="settings">1. Settings</TabsTrigger>
+                <TabsTrigger value="design">2. Design</TabsTrigger>
+                <TabsTrigger value="qr-code">3. QR Codes</TabsTrigger>
               </TabsList>
               <TabsContent value="settings">
                 <div className="ml-10">
                   <StampLifeSection />
                   <StampCountSection />
-                  <ScaleRewardSection />
                   <DefineRewardSection />
                 </div>
               </TabsContent>
@@ -151,7 +150,6 @@ export default function LoyaltyProgram() {
             </p>
             <div className="mx-auto flex flex-col gap-5 w-5/6">
               <Variant1 />
-              <LoyaltyProgress />
               <RewardsPreview />
             </div>
           </div>
