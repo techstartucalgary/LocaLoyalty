@@ -7,7 +7,8 @@ import YAML from "yamljs";
 import businessRoutes from "./routes/businessRoutes";
 import customerRoutes from "./routes/customerRoutes";
 import { Webhook } from "svix";
-import { addCustomer, addVendor, editCustomer } from "../database/db_interface";
+import { addVendor } from "../database/db_interface_vendor";
+import { addCustomer, editCustomer } from "../database/db_interface_customer";
 
 const swaggerDocument = YAML.load("./swagger.yaml");
 

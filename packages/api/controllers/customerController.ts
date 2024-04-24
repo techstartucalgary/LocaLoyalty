@@ -1,10 +1,12 @@
 import { Request, Response } from "express";
 import {
+  getRedeemable
+} from "../../database/db_interface_vendor";
+import {
+  addLoyaltyCard, 
   getCustomerFromClerkID,
-  getAllLoyaltyCardsOfCustomer,
-  addLoyaltyCard,
-  getRedeemable,
-} from "../../database/db_interface";
+  getAllLoyaltyCardsOfCustomer
+} from "../../database/db_interface_customer";
 
 export const getAllCards = async (req: Request, res: Response) => {
   try {
