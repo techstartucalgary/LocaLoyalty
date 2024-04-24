@@ -40,7 +40,6 @@ app.use(express.json()); // parses incoming request bodies that are in JSON form
 //Custom middleware for authentication
 const ClerkAuthMiddleware = (publicKey: string) => {
   return async (req: Request, res: Response, next: NextFunction) => {
-    //const publicKey = process.env.CLERK_WEBSITE_PEM_PUBLIC_KEY;
     const cookies = new Cookies(req, res);
     const sessToken = cookies.get("__session");
     const token = req.headers.authorization?.split(" ")[1] || null;
@@ -57,10 +56,8 @@ const ClerkAuthMiddleware = (publicKey: string) => {
         decoded = jwt.verify(sessToken!, publicKey!);
       }
 
-      (req.userId = decoded.sub as string), // 'sub' is typically used as the user identifier in JWTs
-        // You can add more user-related details here if needed
-
-        next();
+      req.userId = decoded.sub as string;
+      next();
     } catch (error) {
       console.log(error);
 
