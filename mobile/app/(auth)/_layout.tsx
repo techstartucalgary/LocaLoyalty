@@ -22,7 +22,6 @@ export const LogoutButton = () => {
 	);
 };
 
-
 const TabsPage = () => {
 	const { isSignedIn } = useAuth();
 
@@ -51,6 +50,17 @@ const TabsPage = () => {
 							<Ionicons name="home-outline" size={size} color={color} />
 						),
 						tabBarLabel: "Home",
+					}}
+					redirect={!isSignedIn}
+				/>
+				<Tabs.Screen
+					name="scanner"
+					options={{
+						headerTitle: "Scanner",
+						tabBarIcon: ({ color, size }) => (
+							<Ionicons name="scan" size={size} color={color} />
+						),
+						tabBarLabel: "Scanner",
 					}}
 					redirect={!isSignedIn}
 				/>
