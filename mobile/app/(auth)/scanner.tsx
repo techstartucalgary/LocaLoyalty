@@ -34,7 +34,8 @@ const Scanner = () => {
 		setScanned(true);
 		setModalVisible(true);
 		setBarcodeData(data);
-		alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+		setModalText("qrcode type: " + type + "\ndata:" + data);
+		// alert(`Bar code with type ${type} and data ${data} has been scanned!`);
 	};
 
 	if (hasPermission === null) {
@@ -44,32 +45,32 @@ const Scanner = () => {
 		return <Text>No access to camera</Text>;
 	}
 
-	const scanBarcode = async () => {
-		return fetchAPI(
-			// TODO: Implement endpoint
-			process.env.EXPO_PUBLIC_NGROK + "/customer/scanBarcode",
-			"POST",
-			await getToken(),
-			{
-				barcodeData: barcodeData,
-			},
-			{}
-		);
-	};
+	// const scanBarcode = async () => {
+	// 	return fetchAPI(
+	// 		// TODO: Implement endpoint
+	// 		process.env.EXPO_PUBLIC_NGROK + "/customer/scanBarcode",
+	// 		"POST",
+	// 		await getToken(),
+	// 		{
+	// 			barcodeData: barcodeData,
+	// 		},
+	// 		{}
+	// 	);
+	// };
 
-	const scanMutation = useMutation({
-		mutationFn: scanBarcode,
-		onSuccess: () => {
-			console.log("Success");
-			console.log(`Success data`, scanMutation.data);
-			// walletRefetchFunc(); // refetch all loyalty card info
-			// redeemRefetchFunc();
-			setModalText("Successfully scanned barcode to authenticate");
-		},
-	});
+	// const scanMutation = useMutation({
+	// 	mutationFn: scanBarcode,
+	// 	onSuccess: () => {
+	// 		console.log("Success");
+	// 		console.log(`Success data`, scanMutation.data);
+	// 		// walletRefetchFunc(); // refetch all loyalty card info
+	// 		// redeemRefetchFunc();
+	// 		setModalText("Successfully scanned barcode to authenticate");
+	// 	},
+	// });
 
 	return (
-		<View className="p-16">
+		<View className="p-4">
 			<Modal
 				animationType="fade"
 				transparent={true}
