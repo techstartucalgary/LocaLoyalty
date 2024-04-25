@@ -39,6 +39,8 @@ import {
   Smile1Icon,
   Smile2Icon,
 } from "./DesignIcons";
+import { useAuth } from "@clerk/nextjs";
+import { useQuery } from "@tanstack/react-query";
 
 function hexToRgb(hex: string) {
   hex = hex.replace(/^#/, "");
@@ -101,42 +103,43 @@ export const CardLayoutStyleSection = () => {
   );
 };
 
+//make api call to get updated stamp designs
+export const activeStampOptions = [
+  { value: "star1", label: "Star 1", Icon: Star1Icon },
+  { value: "star2", label: "Star 2", Icon: Star2Icon },
+  { value: "heart1", label: "Heart 1", Icon: Heart1Icon },
+  { value: "heart2", label: "Heart 2", Icon: Heart2Icon },
+  { value: "check1", label: "Check 1", Icon: Check1Icon },
+  { value: "check2", label: "Check 2", Icon: Check2Icon },
+  { value: "hearts1", label: "Hearts 1", Icon: Hearts1Icon },
+  { value: "hearts2", label: "Hearts 2", Icon: Hearts2Icon },
+  { value: "coffee1", label: "Coffee 1", Icon: Coffee1Icon },
+  { value: "coffee2", label: "Coffee 2", Icon: Coffee2Icon },
+  { value: "tea1", label: "Tea 1", Icon: Tea1Icon },
+  { value: "tea2", label: "Tea 2", Icon: Tea2Icon },
+  { value: "chefhat1", label: "Chef Hat 1", Icon: ChefHat1Icon },
+  { value: "chefhat2", label: "Chef Hat 2", Icon: ChefHat2Icon },
+  { value: "trophy1", label: "Trophy 1", Icon: Trophy1Icon },
+  { value: "trophy2", label: "Trophy 2", Icon: Trophy2Icon },
+  {
+    value: "shiningheart1",
+    label: "Shining Heart 1",
+    Icon: ShiningHeart1Icon,
+  },
+  {
+    value: "shiningheart2",
+    label: "Shining Heart 2",
+    Icon: ShiningHeart2Icon,
+  },
+  { value: "moon1", label: "Moon 1", Icon: Moon1Icon },
+  { value: "moon2", label: "Moon 2", Icon: Moon2Icon },
+  { value: "smile1", label: "Smile 1", Icon: Smile1Icon },
+  { value: "smile2", label: "Smile 2", Icon: Smile2Icon },
+];
+
 export const ActiveStampSection = () => {
   const { setActiveStamp, activeStampValue, setActiveStampValue, isEditing } =
     useLoyaltyProgramStore();
-
-  const activeStampOptions = [
-    { value: "star1", label: "Star 1", Icon: Star1Icon },
-    { value: "star2", label: "Star 2", Icon: Star2Icon },
-    { value: "heart1", label: "Heart 1", Icon: Heart1Icon },
-    { value: "heart2", label: "Heart 2", Icon: Heart2Icon },
-    { value: "check1", label: "Check 1", Icon: Check1Icon },
-    { value: "check2", label: "Check 2", Icon: Check2Icon },
-    { value: "hearts1", label: "Hearts 1", Icon: Hearts1Icon },
-    { value: "hearts2", label: "Hearts 2", Icon: Hearts2Icon },
-    { value: "coffee1", label: "Coffee 1", Icon: Coffee1Icon },
-    { value: "coffee2", label: "Coffee 2", Icon: Coffee2Icon },
-    { value: "tea1", label: "Tea 1", Icon: Tea1Icon },
-    { value: "tea2", label: "Tea 2", Icon: Tea2Icon },
-    { value: "chefhat1", label: "Chef Hat 1", Icon: ChefHat1Icon },
-    { value: "chefhat2", label: "Chef Hat 2", Icon: ChefHat2Icon },
-    { value: "trophy1", label: "Trophy 1", Icon: Trophy1Icon },
-    { value: "trophy2", label: "Trophy 2", Icon: Trophy2Icon },
-    {
-      value: "shiningheart1",
-      label: "Shining Heart 1",
-      Icon: ShiningHeart1Icon,
-    },
-    {
-      value: "shiningheart2",
-      label: "Shining Heart 2",
-      Icon: ShiningHeart2Icon,
-    },
-    { value: "moon1", label: "Moon 1", Icon: Moon1Icon },
-    { value: "moon2", label: "Moon 2", Icon: Moon2Icon },
-    { value: "smile1", label: "Smile 1", Icon: Smile1Icon },
-    { value: "smile2", label: "Smile 2", Icon: Smile2Icon },
-  ];
 
   const handleSelect = (value: string) => {
     const selectedOption = activeStampOptions.find(

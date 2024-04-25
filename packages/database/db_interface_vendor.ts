@@ -119,11 +119,20 @@ export async function editVendorLoyaltyProgram(
   stampCount: number,
   scaleAmount: string,
   cardLayout: number,
-  stampDesignId: number,
+  stampValue: string,
   color1: string,
   color2: string,
   color3: string
 ) {
+  let result = await db
+    .select({
+      stamp_design_id: schema.stamp_design.stamp_design_id,
+    })
+    .from(schema.stamp_design)
+    .where(eq(schema.stamp_design.value, stampValue));
+
+  let stampDesignId = result[0].stamp_design_id;
+
   await db
     .update(schema.vendor)
     .set({
@@ -176,12 +185,16 @@ export async function getVendorLoyaltyProgramInfo(vendor_id: number) {
       stampCount: schema.vendor.max_points,
       scaleAmount: schema.vendor.spending_per_point,
       cardLayout: schema.vendor.card_layout,
-      stampDesignId: schema.vendor.stamp_design_id,
+      stampValue: schema.stamp_design.value,
       color1: schema.vendor.color,
       color2: schema.vendor.color2,
       color3: schema.vendor.color3,
     })
     .from(schema.vendor)
+    .leftJoin(
+      schema.stamp_design,
+      eq(schema.vendor.stamp_design_id, schema.stamp_design.stamp_design_id)
+    )
     .where(eq(schema.vendor.vendor_id, vendor_id));
 
   //if there is an error return null

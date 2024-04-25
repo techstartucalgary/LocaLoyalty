@@ -15,8 +15,9 @@ import {
 } from "./SettingsSections";
 import {
   CardLayoutStyleSection,
-  ActiveStampSection, 
-  ColorThemeSection
+  ActiveStampSection,
+  ColorThemeSection,
+  activeStampOptions,
 } from "./DesignSections";
 import { fetchAPI } from "@/utils/generalAxios";
 import { useLoyaltyProgramStore } from "@/utils/store";
@@ -67,6 +68,9 @@ export default function LoyaltyProgram() {
     setStampCount,
     setScaleAmount,
     setDefinedRewards,
+    setColorTheme,
+    setActiveStampValue,
+    setActiveStamp,
   } = useLoyaltyProgramStore();
 
   const fetchLoyaltyProgramData = async (): Promise<any> => {
@@ -96,6 +100,17 @@ export default function LoyaltyProgram() {
       setStampCount(data.stampCount);
       setScaleAmount(data.scaleAmount);
       setDefinedRewards(data.definedRewards);
+      setColorTheme(data.color1, 0);
+      setColorTheme(data.color2, 1);
+      setColorTheme(data.color3, 2);
+
+      const selectedOption = activeStampOptions.find(
+        (option) => option.value === data.stampValue
+      );
+      if (selectedOption) {
+        setActiveStamp(selectedOption.Icon);
+        setActiveStampValue(data.stampValue);
+      }
     }
   }, [
     data,
