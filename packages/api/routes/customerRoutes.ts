@@ -11,7 +11,7 @@ router.get("/sample", (req, res) => {
 });
 
 // API endpoint to browse all of the available vendors
-router.get("/vendors", vendorController.index);
+router.get("/vendors", customerController.getAllVendors);
 
 // API endpoint to view all of the associated vendors
 router.get("/loyalty-cards", customerController.getAllCards);
@@ -24,11 +24,14 @@ router.post("/add-loyalty-card", customerController.addCard);
 
 // API endpoint to get all redeemables
 router.get("/redeemables", customerController.getRedeemables);
+<<<<<<< HEAD
 
 // API endpoint to redeem a reward
 router.post("/redeem", customerController.redeemReward);
 
 // API endpoint to authenticate the scanning of the barcode
 router.post("/scanBarcode", customerController.scanBarcode);
+=======
+>>>>>>> e748fc45fa298d9bad2d84cdb7afb692f7a3c853
 
 export default router;

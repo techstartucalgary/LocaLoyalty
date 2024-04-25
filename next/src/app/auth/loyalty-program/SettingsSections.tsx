@@ -159,7 +159,7 @@ export const DefineRewardSection = () => {
     <div className="border-b-2 border-slate-300 py-5">
       <div className="flex justify-between">
         <OptionHeader
-          title="Define reward"
+          title="Define rewards"
           info="Create rewards that your customers can cash their stamps out for!"
         />
         <CreateRewardDialog />
@@ -207,6 +207,8 @@ export const EditSection = ({
     scaleAmount,
     definedRewards,
     incrementRefetch,
+    colors,
+    activeStampValue,
   } = useLoyaltyProgramStore();
 
   const { getToken } = useAuth();
@@ -214,7 +216,7 @@ export const EditSection = ({
   const sendModifiedLoyaltyProgramData = async () => {
     // Make the API call with formData
     return fetchAPI(
-      "http://localhost:5001/business/loyalty-program",
+      process.env.NEXT_PUBLIC_SERVER_ADDRESS + "/business/loyalty-program",
       "POST",
       await getToken(),
       {
@@ -222,6 +224,10 @@ export const EditSection = ({
         stampCount: stampCount,
         scaleAmount: scaleAmount,
         definedRewards: definedRewards,
+        color1: colors[0],
+        color2: colors[1],
+        color3: colors[2],
+        stampValue: activeStampValue,
       },
       {
         /* headers (if necessary) */
