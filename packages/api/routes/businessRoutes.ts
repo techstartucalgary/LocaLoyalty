@@ -183,7 +183,7 @@ router.get("/loyalty-program", async (req: Request, res: Response) => {
       scaleAmount: loyaltyInfo![0].scaleAmount,
       definedRewards: rewards,
       cardLayout: loyaltyInfo![0].cardLayout,
-      stampDesignId: loyaltyInfo![0].stampDesignId,
+      stampValue: loyaltyInfo![0].stampValue,
       color1: loyaltyInfo![0].color1,
       color2: loyaltyInfo![0].color2,
       color3: loyaltyInfo![0].color3,
@@ -209,6 +209,8 @@ router.post("/loyalty-program", async (req: Request, res: Response) => {
   try {
     let body = req.body;
 
+    console.log(body);
+
     //get the initial vendor id
     const vendor = await getVendorFromClerkID(req.userId);
     const vendor_id = vendor![0].vendor_id;
@@ -220,7 +222,7 @@ router.post("/loyalty-program", async (req: Request, res: Response) => {
       body.stampCount,
       body.scaleAmount,
       body.cardLayout,
-      body.stampDesignId,
+      body.stampValue,
       body.color1,
       body.color2,
       body.color3

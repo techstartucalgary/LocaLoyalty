@@ -207,6 +207,8 @@ export const EditSection = ({
     scaleAmount,
     definedRewards,
     incrementRefetch,
+    colors,
+    activeStampValue,
   } = useLoyaltyProgramStore();
 
   const { getToken } = useAuth();
@@ -222,6 +224,10 @@ export const EditSection = ({
         stampCount: stampCount,
         scaleAmount: scaleAmount,
         definedRewards: definedRewards,
+        color1: colors[0],
+        color2: colors[1],
+        color3: colors[2],
+        stampValue: activeStampValue,
       },
       {
         /* headers (if necessary) */
