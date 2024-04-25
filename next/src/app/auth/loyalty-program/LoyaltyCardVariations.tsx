@@ -15,8 +15,12 @@ const CurrentStamps = () => {
       }`}
     >
       {Array.from({ length: stampCount }, (_, i) => i + 1).map((number) => (
-        <div className="rounded-full p-3" style={{ backgroundColor: colors[0] }}>
-          <ActiveStampIcon key={number} color={colors[2]} size={30} />
+        <div
+          key={number}
+          className="rounded-full p-3"
+          style={{ backgroundColor: colors[0] }}
+        >
+          <ActiveStampIcon color={colors[2]} size={30} />
         </div>
       ))}
     </div>
@@ -61,24 +65,28 @@ export const RewardsPreview = () => {
 
   return (
     <div className="flex flex-col gap-3 w-5/6 mx-auto">
-      {definedRewards && definedRewards
-        .sort((a, b) => a.requiredStamps - b.requiredStamps)
-        .map((item) => {
-          return (
-            <div
-              key={item.reward_id}
-              className="border-black border-2 rounded-md p-4 flex items-center justify-between"
-            >
-              <p className="font-semibold text-xl">{item.title}</p>
-              <div className="flex items-center gap-3">
-                <p className="font-semibold text-xl">{item.requiredStamps}</p>
-                <div className="rounded-full p-3" style={{ backgroundColor: colors[0] }}>
-                  <ActiveStampIcon color={colors[2]} size={20} />
+      {definedRewards &&
+        definedRewards
+          .sort((a, b) => a.requiredStamps - b.requiredStamps)
+          .map((item) => {
+            return (
+              <div
+                key={item.reward_id}
+                className="border-black border-2 rounded-md p-4 flex items-center justify-between"
+              >
+                <p className="font-semibold text-xl">{item.title}</p>
+                <div className="flex items-center gap-3">
+                  <p className="font-semibold text-xl">{item.requiredStamps}</p>
+                  <div
+                    className="rounded-full p-3"
+                    style={{ backgroundColor: colors[0] }}
+                  >
+                    <ActiveStampIcon color={colors[2]} size={20} />
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
     </div>
   );
 };
@@ -87,10 +95,18 @@ export const Variant1 = () => {
   const { businessName, businessLogo, colors } = useLoyaltyProgramStore();
 
   return (
-    <div className="border-black border-2 rounded-lg px-5 py-7 flex flex-col gap-7 drop-shadow-lg" style={{ backgroundColor: colors[1] }}>
+    <div
+      className="border-black border-2 rounded-lg px-5 py-7 flex flex-col gap-7 drop-shadow-lg"
+      style={{ backgroundColor: colors[1] }}
+    >
       <div className="flex items-center justify-center gap-10">
-        <Image alt="" src={businessLogo} width={100} height={100} />
-        <p className="text-4xl font-semibold" style={{ color: colors[0] }}>{businessName}</p>
+        {businessLogo ? (
+          <Image alt="" src={businessLogo} width={100} height={100} />
+        ) : null}
+
+        <p className="text-4xl font-semibold" style={{ color: colors[0] }}>
+          {businessName}
+        </p>
       </div>
       <CurrentStamps />
       <Contact />

@@ -8,13 +8,13 @@ export const Star1Icon = ({ color, size }: { color: string; size: number }) => (
     <path
       fill="none"
       stroke={color}
-      stroke-width="1.5"
+      strokeWidth="1.5"
       d="M9.153 5.408C10.42 3.136 11.053 2 12 2c.947 0 1.58 1.136 2.847 3.408l.328.588c.36.646.54.969.82 1.182c.28.213.63.292 1.33.45l.636.144c2.46.557 3.689.835 3.982 1.776c.292.94-.546 1.921-2.223 3.882l-.434.507c-.476.557-.715.836-.822 1.18c-.107.345-.071.717.001 1.46l.066.677c.253 2.617.38 3.925-.386 4.506c-.766.582-1.918.051-4.22-1.009l-.597-.274c-.654-.302-.981-.452-1.328-.452c-.347 0-.674.15-1.328.452l-.596.274c-2.303 1.06-3.455 1.59-4.22 1.01c-.767-.582-.64-1.89-.387-4.507l.066-.676c.072-.744.108-1.116 0-1.46c-.106-.345-.345-.624-.821-1.18l-.434-.508c-1.677-1.96-2.515-2.941-2.223-3.882c.293-.941 1.523-1.22 3.983-1.776l.636-.144c.699-.158 1.048-.237 1.329-.45c.28-.213.46-.536.82-1.182z"
     />
   </svg>
 );
 
-export const Star2Icon = ({ color, size }: { color: string; size: number }) => (
+const Star2Icon = ({ color, size }: { color: string; size: number }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
@@ -28,13 +28,7 @@ export const Star2Icon = ({ color, size }: { color: string; size: number }) => (
   </svg>
 );
 
-export const Heart1Icon = ({
-  color,
-  size,
-}: {
-  color: string;
-  size: number;
-}) => (
+const Heart1Icon = ({ color, size }: { color: string; size: number }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
@@ -48,13 +42,7 @@ export const Heart1Icon = ({
   </svg>
 );
 
-export const Heart2Icon = ({
-  color,
-  size,
-}: {
-  color: string;
-  size: number;
-}) => (
+const Heart2Icon = ({ color, size }: { color: string; size: number }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
@@ -68,23 +56,17 @@ export const Heart2Icon = ({
   </svg>
 );
 
-export const Check1Icon = ({
-  color,
-  size,
-}: {
-  color: string;
-  size: number;
-}) => (
+const Check1Icon = ({ color, size }: { color: string; size: number }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
     height={size}
     viewBox="0 0 24 24"
   >
-    <g fill="none" stroke={color} stroke-width="1.5">
+    <g fill="none" stroke={color} strokeWidth="1.5">
       <circle cx="12" cy="12" r="10" />
       <path
-        stroke-linecap="round"
+        strokeLinecap="round"
         stroke-linejoin="round"
         d="m8.5 12.5l2 2l5-5"
       />
@@ -92,13 +74,7 @@ export const Check1Icon = ({
   </svg>
 );
 
-export const Check2Icon = ({
-  color,
-  size,
-}: {
-  color: string;
-  size: number;
-}) => (
+const Check2Icon = ({ color, size }: { color: string; size: number }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
@@ -114,13 +90,7 @@ export const Check2Icon = ({
   </svg>
 );
 
-export const Hearts1Icon = ({
-  color,
-  size,
-}: {
-  color: string;
-  size: number;
-}) => (
+const Hearts1Icon = ({ color, size }: { color: string; size: number }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
@@ -134,13 +104,7 @@ export const Hearts1Icon = ({
   </svg>
 );
 
-export const Hearts2Icon = ({
-  color,
-  size,
-}: {
-  color: string;
-  size: number;
-}) => (
+const Hearts2Icon = ({ color, size }: { color: string; size: number }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
@@ -158,36 +122,24 @@ export const Hearts2Icon = ({
   </svg>
 );
 
-export const Coffee1Icon = ({
-  color,
-  size,
-}: {
-  color: string;
-  size: number;
-}) => (
+const Coffee1Icon = ({ color, size }: { color: string; size: number }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
     height={size}
     viewBox="0 0 24 24"
   >
-    <g fill="none" stroke={color} stroke-width="1.5">
+    <g fill="none" stroke={color} strokeWidth="1.5">
       <path d="M3.284 11.266c-.133-2-.2-2.999.393-3.632C4.27 7 5.272 7 7.276 7h5.449c2.003 0 3.005 0 3.598.634c.593.633.526 1.633.393 3.632l-.343 5.133c-.177 2.655-.265 3.982-1.13 4.792c-.865.809-2.196.809-4.856.809h-.774c-2.66 0-3.99 0-4.856-.81c-.865-.809-.953-2.136-1.13-4.79zM17 17h1a4 4 0 0 0 0-8h-1m-1 9H4" />
       <path
-        stroke-linecap="round"
+        strokeLinecap="round"
         d="m6.05 5.061l.411-.575a.707.707 0 0 0-.165-.987a.707.707 0 0 1-.165-.986l.41-.575m7.51 3.123l.41-.575a.707.707 0 0 0-.165-.987a.707.707 0 0 1-.165-.986l.41-.575m-4.49 3.123l.41-.575a.707.707 0 0 0-.165-.987a.707.707 0 0 1-.165-.986l.41-.575"
       />
     </g>
   </svg>
 );
 
-export const Coffee2Icon = ({
-  color,
-  size,
-}: {
-  color: string;
-  size: number;
-}) => (
+const Coffee2Icon = ({ color, size }: { color: string; size: number }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
@@ -213,18 +165,18 @@ export const Coffee2Icon = ({
   </svg>
 );
 
-export const Tea1Icon = ({ color, size }: { color: string; size: number }) => (
+const Tea1Icon = ({ color, size }: { color: string; size: number }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
     height={size}
     viewBox="0 0 24 24"
   >
-    <g fill="none" stroke={color} stroke-width="1.5">
+    <g fill="none" stroke={color} strokeWidth="1.5">
       <path d="M2.315 12.698c-.05-.427-.075-.641-.064-.817a2 2 0 0 1 1.646-1.85c.174-.031.389-.031.82-.031h10.567c.43 0 .645 0 .819.03a2 2 0 0 1 1.646 1.85c.01.177-.014.39-.064.818l-.401 3.428A5.515 5.515 0 0 1 11.807 21H8.193a5.515 5.515 0 0 1-5.477-4.874z" />
       <path d="M17 17h2a3 3 0 1 0 0-6h-1.5" />
       <path
-        stroke-linecap="round"
+        strokeLinecap="round"
         stroke-linejoin="round"
         d="M10 2a1.414 1.414 0 0 0 0 2a1.414 1.414 0 0 1 0 2M5 7.5l.116-.116A1.44 1.44 0 0 0 5.25 5.5a1.441 1.441 0 0 1 .134-1.884L5.5 3.5m9 4l.116-.116A1.44 1.44 0 0 0 14.75 5.5a1.441 1.441 0 0 1 .134-1.884L15 3.5"
       />
@@ -232,7 +184,7 @@ export const Tea1Icon = ({ color, size }: { color: string; size: number }) => (
   </svg>
 );
 
-export const Tea2Icon = ({ color, size }: { color: string; size: number }) => (
+const Tea2Icon = ({ color, size }: { color: string; size: number }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
@@ -248,13 +200,7 @@ export const Tea2Icon = ({ color, size }: { color: string; size: number }) => (
   </svg>
 );
 
-export const ChefHat1Icon = ({
-  color,
-  size,
-}: {
-  color: string;
-  size: number;
-}) => (
+const ChefHat1Icon = ({ color, size }: { color: string; size: number }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
@@ -268,22 +214,16 @@ export const ChefHat1Icon = ({
       />
       <path
         stroke={color}
-        stroke-linecap="round"
+        strokeLinecap="round"
         stroke-linejoin="round"
-        stroke-width="1.5"
+        strokeWidth="1.5"
         d="M5 18h14"
       />
     </g>
   </svg>
 );
 
-export const ChefHat2Icon = ({
-  color,
-  size,
-}: {
-  color: string;
-  size: number;
-}) => (
+const ChefHat2Icon = ({ color, size }: { color: string; size: number }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
@@ -303,40 +243,28 @@ export const ChefHat2Icon = ({
   </svg>
 );
 
-export const Trophy1Icon = ({
-  color,
-  size,
-}: {
-  color: string;
-  size: number;
-}) => (
+const Trophy1Icon = ({ color, size }: { color: string; size: number }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
     height={size}
     viewBox="0 0 24 24"
   >
-    <g fill="none" stroke={color} stroke-width="1.5">
+    <g fill="none" stroke={color} strokeWidth="1.5">
       <path d="M12 16c-5.76 0-6.78-5.74-6.96-10.294c-.051-1.266-.076-1.9.4-2.485c.475-.586 1.044-.682 2.183-.874A26.374 26.374 0 0 1 12 2c1.784 0 3.253.157 4.377.347c1.139.192 1.708.288 2.184.874c.476.586.45 1.219.4 2.485c-.18 4.553-1.2 10.294-6.96 10.294Z" />
-      <path stroke-linecap="round" d="M12 16v3" />
+      <path strokeLinecap="round" d="M12 16v3" />
       <path
-        stroke-linecap="round"
+        strokeLinecap="round"
         stroke-linejoin="round"
         d="M15.5 22h-7l.34-1.696a1 1 0 0 1 .98-.804h4.36a1 1 0 0 1 .98.804z"
       />
       <path d="m19 5l.949.316c.99.33 1.485.495 1.768.888c.283.393.283.915.283 1.958v.073c0 .86 0 1.291-.207 1.643c-.207.352-.584.561-1.336.98L17.5 12.5M5 5l-.949.316c-.99.33-1.485.495-1.768.888C2 6.597 2 7.12 2 8.162v.073c0 .86 0 1.291.207 1.643c.207.352.584.561 1.336.98L6.5 12.5m4.646-6.477C11.526 5.34 11.716 5 12 5c.284 0 .474.34.854 1.023l.098.176c.108.194.162.29.246.354c.085.064.19.088.4.135l.19.044c.738.167 1.107.25 1.195.532c.088.283-.164.577-.667 1.165l-.13.152c-.143.167-.215.25-.247.354c-.032.104-.021.215 0 .438l.02.203c.076.785.114 1.178-.115 1.352c-.23.174-.576.015-1.267-.303l-.178-.082c-.197-.09-.295-.135-.399-.135c-.104 0-.202.045-.399.135l-.178.082c-.691.319-1.037.477-1.267.303c-.23-.174-.191-.567-.115-1.352l.02-.203c.021-.223.032-.334 0-.438c-.032-.103-.104-.187-.247-.354l-.13-.152c-.503-.588-.755-.882-.667-1.165c.088-.282.457-.365 1.195-.532l.19-.044c.21-.047.315-.07.4-.135c.084-.064.138-.16.246-.354z" />
-      <path stroke-linecap="round" d="M18 22H6" />
+      <path strokeLinecap="round" d="M18 22H6" />
     </g>
   </svg>
 );
 
-export const Trophy2Icon = ({
-  color,
-  size,
-}: {
-  color: string;
-  size: number;
-}) => (
+const Trophy2Icon = ({ color, size }: { color: string; size: number }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
@@ -356,7 +284,7 @@ export const Trophy2Icon = ({
   </svg>
 );
 
-export const ShiningHeart1Icon = ({
+const ShiningHeart1Icon = ({
   color,
   size,
 }: {
@@ -376,15 +304,15 @@ export const ShiningHeart1Icon = ({
       />
       <path
         stroke={color}
-        stroke-linecap="round"
-        stroke-width="1.5"
+        strokeLinecap="round"
+        strokeWidth="1.5"
         d="M12 2v2m0 16v2M2 12h2m16 0h2M6 18l.343-.343M17.657 6.343L18 6m0 12l-.343-.343M6.343 6.343L6 6"
       />
     </g>
   </svg>
 );
 
-export const ShiningHeart2Icon = ({
+const ShiningHeart2Icon = ({
   color,
   size,
 }: {
@@ -410,7 +338,7 @@ export const ShiningHeart2Icon = ({
   </svg>
 );
 
-export const Moon1Icon = ({ color, size }: { color: string; size: number }) => (
+const Moon1Icon = ({ color, size }: { color: string; size: number }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
@@ -430,7 +358,7 @@ export const Moon1Icon = ({ color, size }: { color: string; size: number }) => (
   </svg>
 );
 
-export const Moon2Icon = ({ color, size }: { color: string; size: number }) => (
+const Moon2Icon = ({ color, size }: { color: string; size: number }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
@@ -448,13 +376,7 @@ export const Moon2Icon = ({ color, size }: { color: string; size: number }) => (
   </svg>
 );
 
-export const Smile1Icon = ({
-  color,
-  size,
-}: {
-  color: string;
-  size: number;
-}) => (
+const Smile1Icon = ({ color, size }: { color: string; size: number }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
@@ -462,11 +384,11 @@ export const Smile1Icon = ({
     viewBox="0 0 24 24"
   >
     <g fill="none">
-      <circle cx="12" cy="12" r="10" stroke={color} stroke-width="1.5" />
+      <circle cx="12" cy="12" r="10" stroke={color} strokeWidth="1.5" />
       <path
         stroke={color}
-        stroke-linecap="round"
-        stroke-width="1.5"
+        strokeLinecap="round"
+        strokeWidth="1.5"
         d="M9 16c.85.63 1.885 1 3 1s2.15-.37 3-1"
       />
       <path
@@ -478,13 +400,7 @@ export const Smile1Icon = ({
   </svg>
 );
 
-export const Smile2Icon = ({
-  color,
-  size,
-}: {
-  color: string;
-  size: number;
-}) => (
+const Smile2Icon = ({ color, size }: { color: string; size: number }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
@@ -499,3 +415,36 @@ export const Smile2Icon = ({
     />
   </svg>
 );
+
+export const activeStampOptions = [
+  { value: "star1", label: "Star 1", Icon: Star1Icon },
+  { value: "star2", label: "Star 2", Icon: Star2Icon },
+  { value: "heart1", label: "Heart 1", Icon: Heart1Icon },
+  { value: "heart2", label: "Heart 2", Icon: Heart2Icon },
+  { value: "check1", label: "Check 1", Icon: Check1Icon },
+  { value: "check2", label: "Check 2", Icon: Check2Icon },
+  { value: "hearts1", label: "Hearts 1", Icon: Hearts1Icon },
+  { value: "hearts2", label: "Hearts 2", Icon: Hearts2Icon },
+  { value: "coffee1", label: "Coffee 1", Icon: Coffee1Icon },
+  { value: "coffee2", label: "Coffee 2", Icon: Coffee2Icon },
+  { value: "tea1", label: "Tea 1", Icon: Tea1Icon },
+  { value: "tea2", label: "Tea 2", Icon: Tea2Icon },
+  { value: "chefhat1", label: "Chef Hat 1", Icon: ChefHat1Icon },
+  { value: "chefhat2", label: "Chef Hat 2", Icon: ChefHat2Icon },
+  { value: "trophy1", label: "Trophy 1", Icon: Trophy1Icon },
+  { value: "trophy2", label: "Trophy 2", Icon: Trophy2Icon },
+  {
+    value: "shiningheart1",
+    label: "Shining Heart 1",
+    Icon: ShiningHeart1Icon,
+  },
+  {
+    value: "shiningheart2",
+    label: "Shining Heart 2",
+    Icon: ShiningHeart2Icon,
+  },
+  { value: "moon1", label: "Moon 1", Icon: Moon1Icon },
+  { value: "moon2", label: "Moon 2", Icon: Moon2Icon },
+  { value: "smile1", label: "Smile 1", Icon: Smile1Icon },
+  { value: "smile2", label: "Smile 2", Icon: Smile2Icon },
+];

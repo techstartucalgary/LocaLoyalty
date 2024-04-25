@@ -34,10 +34,17 @@ export default function AuthHome() {
   const { completionCards, setCompletionCards } = useOnboardingStore();
 
   const fetchOnboardingData = async () => {
+    const token = await getToken();
+
+    if (!token) {
+      console.error("No token available");
+      return Promise.reject("Authentication token is not available.");
+    }
+
     return fetchAPI(
       process.env.NEXT_PUBLIC_SERVER_ADDRESS + "/business/api/onboarding",
       "GET",
-      await getToken(),
+      token,
       null,
       {}
     );

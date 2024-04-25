@@ -10,8 +10,6 @@ import {
 } from "@aws-sdk/client-s3";
 import crypto from "crypto";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import Cookies from "cookies";
-import jwt, { JwtPayload } from "jsonwebtoken";
 import {
   editVendor,
   getVendor,
@@ -28,7 +26,9 @@ import {
   checkIsBusinessInformationComplete,
   getBusinessQrCode,
   updateBusinessQrCode,
+  assignVendorOnboardingTasks,
 } from "../../database/db_interface_vendor";
+import { error } from "console";
 
 const router = express.Router();
 
@@ -54,6 +54,7 @@ const s3 = new S3Client({
 
 // Sample route
 router.get("/sample", async (req: Request, res: Response) => {
+  await assignVendorOnboardingTasks(req.userId);
   res.send({ message: "This is a sample response" });
 });
 
@@ -157,20 +158,18 @@ router.get("/loyalty-program", async (req: Request, res: Response) => {
     const vendor_id = vendor![0].vendor_id;
     const loyaltyInfo = await getVendorLoyaltyProgramInfo(vendor_id);
     const rewards = await getAllRewardsOfVendor(vendor_id);
+    let url = "";
 
-    if (loyaltyInfo![0]?.businessLogo == null) {
-      // Checks for both undefined and null
-      throw new Error("businessLogo is null or undefined");
+    if (loyaltyInfo![0]?.businessLogo) {
+      url = await getSignedUrl(
+        s3,
+        new GetObjectCommand({
+          Bucket: process.env.BUCKET_NAME,
+          Key: loyaltyInfo![0].businessLogo, //this is the imageName that will be stored into the database
+        }),
+        { expiresIn: 3600 }
+      );
     }
-
-    const url = await getSignedUrl(
-      s3,
-      new GetObjectCommand({
-        Bucket: process.env.BUCKET_NAME,
-        Key: loyaltyInfo![0].businessLogo, //this is the imageName that will be stored into the database
-      }),
-      { expiresIn: 3600 }
-    );
 
     res.status(200).json({
       vendor_id: vendor_id,
@@ -189,6 +188,7 @@ router.get("/loyalty-program", async (req: Request, res: Response) => {
       color3: loyaltyInfo![0].color3,
     });
   } catch (error: unknown) {
+    console.log(error);
     res.status(500).json({ message: "User does not exist" });
   }
 });
@@ -209,8 +209,6 @@ router.post("/loyalty-program", async (req: Request, res: Response) => {
   try {
     let body = req.body;
 
-    console.log(body);
-
     //get the initial vendor id
     const vendor = await getVendorFromClerkID(req.userId);
     const vendor_id = vendor![0].vendor_id;
@@ -230,7 +228,7 @@ router.post("/loyalty-program", async (req: Request, res: Response) => {
 
     //loop through defined rewards dealing with new rewards and updated rewards
     body.definedRewards.map(
-      ({
+      async ({
         reward_id,
         title,
         requiredStamps,
