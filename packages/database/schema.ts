@@ -60,7 +60,8 @@ export const vendor = sqliteTable("vendor", {
 // onboarding_vendor
 export const stamp_design = sqliteTable("stamp_design", {
   stamp_design_id: serial("stamp_design_id").primaryKey(),
-  path: varchar("path", { length: 256 }),
+  value: text("value"),
+  label: text("label"),
 });
 
 // Loyalty Card
