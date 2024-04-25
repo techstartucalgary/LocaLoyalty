@@ -273,7 +273,7 @@ export const DeleteRewardDialog = ({
                 Cancel
               </p>
               <p
-                className="w-1/6 bg-black p-2.5 rounded-md text-white"
+                className="w-1/5 bg-black p-2.5 rounded-md text-white"
                 onClick={() => {
                   deleteReward({
                     reward_id: id,

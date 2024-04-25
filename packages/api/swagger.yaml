@@ -251,6 +251,29 @@ paths:
           description: Invalid request parameters.
         "500":
           description: Server error.
+    post:
+      tags:
+        - business
+      summary: regenerate key for QR and return PDF
+      description: updates qr key in vendor table and generates PDF to return
+      operationId: udpateBusinessSecretQr
+      responses:
+        "200":
+          description: A PDF file secret QR code
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+              description: Specifies the name and extension of the file.
+        "400":
+          description: Invalid request parameters.
+        "500":
+          description: Server error.
 components:
   schemas:
     BusinessProfile:
@@ -277,12 +300,6 @@ components:
         postalCode:
           type: string
           example: "A1B2C3"
-        merchantID:
-          type: string
-          example: "123456789"
-        apiKey:
-          type: string
-          example: "oqpweiopqwepioqiweop"
         businessImage:
           type: string
           description: "Either a file or a url that will be used to render the image"
@@ -300,10 +317,10 @@ components:
           example: 1
         icon:
           type: string
-          example: "/assets/clover.svg"
+          example: "/assets/qr.svg"
         title:
           type: string
-          example: "Connect your Clover account"
+          example: "Print out your QR code"
         priority:
           type: number
           example: 1
