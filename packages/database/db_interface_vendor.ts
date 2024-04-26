@@ -177,15 +177,12 @@ export async function addVendorReward(
   title: string,
   requiredStamps: number
 ) {
-  await db.insert(schema.reward).values({
-    vendor_id: vendor_id,
-    name: title,
-    points_cost: requiredStamps,
-  });
+  await db.run(sql`INSERT INTO reward (vendor_id, name, points_cost) VALUES (${vendor_id}, ${title}, ${requiredStamps})`);
+
 }
 
 export async function getVendorLoyaltyProgramInfo(vendor_id: number) {
-  const results = await db
+  const results = await db  
     .select({
       businessName: schema.vendor.name,
       businessLogo: schema.vendor.business_logo,
