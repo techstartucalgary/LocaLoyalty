@@ -5,7 +5,10 @@ import YAML from "yamljs";
 import businessRoutes from "./routes/businessRoutes";
 import customerRoutes from "./routes/customerRoutes";
 import { Webhook } from "svix";
-import { addVendor } from "../database/db_interface_vendor";
+import {
+  addVendor,
+  assignVendorOnboardingTasks,
+} from "../database/db_interface_vendor";
 import { addCustomer, editCustomer } from "../database/db_interface_customer";
 import Cookies from "cookies";
 import express, { Request, Response, Application, NextFunction } from "express";
@@ -44,15 +47,18 @@ const ClerkAuthMiddleware = (publicKey: string) => {
     const sessToken = cookies.get("__session");
     const token = req.headers.authorization?.split(" ")[1] || null;
 
-    if (sessToken === undefined && token === undefined) {
+    if (!sessToken && !token) {
       return res.status(401).json({ error: "Not signed in" });
     }
 
     try {
-      let decoded: string | JwtPayload;
+      let decoded: string | JwtPayload = "";
+
       if (token) {
         decoded = jwt.verify(token, publicKey!);
-      } else {
+      }
+
+      if (sessToken) {
         decoded = jwt.verify(sessToken!, publicKey!);
       }
 
@@ -148,11 +154,14 @@ app.post("/website-webhook", async (req, res) => {
           break;
         case "user.created":
           await addVendor(
-            data.first_name,
+            "placeholder name",
             data.email_addresses[0].email_address,
             data.phone_numbers[0].phone_number,
             data.id
           );
+
+          await assignVendorOnboardingTasks(data.id);
+
           break;
       }
 

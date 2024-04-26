@@ -4,13 +4,7 @@ API for back-end programs to add to and retreive vendor data from the database.
 
 import { db } from "./dbObj";
 import * as schema from "./schema";
-import { SQLWrapper, and, eq, notInArray, sql } from "drizzle-orm";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import {
-  S3Client,
-  PutObjectCommand,
-  GetObjectCommand,
-} from "@aws-sdk/client-s3";
+import { eq, sql } from "drizzle-orm";
 
 // Adds a new vendor to the database, returns the generated vendor_id
 // NOTE: must input decimal spending_per_point as a string because Drizzle is weird
@@ -38,7 +32,7 @@ export async function addVendor(
 
   //if there is an error return null
   if (Object.keys(result).length === 0) {
-    console.log("Database query failed");
+    console.log("Database query failed add vendor");
     return null;
   }
 
@@ -55,7 +49,7 @@ export async function getVendor(clerk_id: string) {
 
   //if there is an error return null
   if (Object.keys(result).length === 0) {
-    console.log("Database query failed");
+    console.log("Database query failed getVendor");
     return null;
   }
 
@@ -64,6 +58,22 @@ export async function getVendor(clerk_id: string) {
 
 export async function deleteVendorReward(reward_id: number) {
   await db.delete(schema.reward).where(eq(schema.reward.reward_id, reward_id));
+}
+
+export async function assignVendorOnboardingTasks(clerk_id: string) {
+  //insert into onboarding vendor all possible onboarding tasks selected
+  const result = await getVendorFromClerkID(clerk_id);
+  const vendor_id = result![0].vendor_id;
+
+  const onboarding_tasks = await db
+    .select({ id: schema.onboarding.id })
+    .from(schema.onboarding);
+
+  onboarding_tasks.map(async ({ id }) => {
+    await db
+      .insert(schema.onboarding_vendor)
+      .values({ onboarding_id: id, vendor_id: vendor_id, isCompleted: 0 });
+  });
 }
 
 export async function editVendor(
@@ -199,7 +209,7 @@ export async function getVendorLoyaltyProgramInfo(vendor_id: number) {
 
   //if there is an error return null
   if (Object.keys(results).length === 0) {
-    console.log("Database query failed");
+    console.log("Database query failed get vendor loyalty program info");
     return null;
   }
 
@@ -226,7 +236,7 @@ export async function getAllRewardsOfVendor(vendor_id: number) {
 
   //if there is an error return null
   if (Object.keys(results).length === 0) {
-    console.log("Database query failed");
+    console.log("Database query failed get all rewards of vendor");
     return null;
   }
 
@@ -243,7 +253,7 @@ export async function getVendorFromClerkID(clerk_id: string) {
 
   //if there is an error return null
   if (Object.keys(result).length === 0) {
-    console.log("Database query failed");
+    console.log("Database query failed get vendor clerk id");
     return null;
   }
 

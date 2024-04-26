@@ -45,19 +45,8 @@ import { getAllRewardsOfVendor } from "../../database/db_interface_vendor";
 // Method to get all rewards for a given vendor
 export const getRewards = async (req: Request, res: Response) => {
   try {
-    // Retrieve Clerk user ID from the authentication information
-    const clerkId = req.userId;
-
-    if (!clerkId) {
-      return res.status(401).json({ message: "User not authenticated" });
-    }
-
     // Use the helper function to get all rewards for a given vendor
     const rewards = await getAllRewardsOfVendor(parseInt(req.params.vendorID));
-
-    if (!rewards) {
-      return res.status(404).json({ message: "Rewards not found" });
-    }
 
     // Send the rewards back in the response
     res.status(200).json(rewards);

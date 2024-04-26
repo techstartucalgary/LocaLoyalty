@@ -17,8 +17,8 @@ import {
   CardLayoutStyleSection,
   ActiveStampSection,
   ColorThemeSection,
-  activeStampOptions,
 } from "./DesignSections";
+import { activeStampOptions } from "./DesignIcons";
 import { fetchAPI } from "@/utils/generalAxios";
 import { useLoyaltyProgramStore } from "@/utils/store";
 import { useAuth } from "@clerk/nextjs";
@@ -86,6 +86,9 @@ export default function LoyaltyProgram() {
   const { data, error, isLoading, refetch } = useQuery({
     queryKey: ["loyaltyProgramData"],
     queryFn: fetchLoyaltyProgramData,
+    refetchOnWindowFocus: false, // prevent refetching when the window regains focus
+    refetchOnReconnect: false, // prevent refetching when the network status changes
+    retry: false,
   });
 
   useEffect(() => {
@@ -97,12 +100,12 @@ export default function LoyaltyProgram() {
         data.businessEmail
       );
       setStampLife(data.stampLife);
-      setStampCount(data.stampCount);
+      setStampCount(data.stampCount ? data.stampCount : 5);
       setScaleAmount(data.scaleAmount);
       setDefinedRewards(data.definedRewards);
-      setColorTheme(data.color1, 0);
-      setColorTheme(data.color2, 1);
-      setColorTheme(data.color3, 2);
+      setColorTheme(data.color1 ? data.color1 : "#000000", 0);
+      setColorTheme(data.color2 ? data.color2 : "#FFFFFF", 1);
+      setColorTheme(data.color3 ? data.color3 : "#FFFFFF", 2);
 
       const selectedOption = activeStampOptions.find(
         (option) => option.value === data.stampValue
