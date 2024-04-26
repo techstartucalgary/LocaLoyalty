@@ -31,7 +31,7 @@ const Contact = () => {
   const { businessPhone, businessEmail, colors } = useLoyaltyProgramStore();
 
   return (
-    <div className="flex justify-evenly">
+    <div className="flex justify-center gap-10">
       <div className="flex gap-2 items-center">
         <FaPhoneAlt color={colors[0]} />
         <p style={{ color: colors[0] }}>{businessPhone}</p>
@@ -91,6 +91,29 @@ export const RewardsPreview = () => {
   );
 };
 
+export const Variant = () => {
+  const { cardLayoutStyle } = useLoyaltyProgramStore();
+
+  const renderVariant = () => {
+    switch (cardLayoutStyle) {
+      case 1:
+        return <Variant1 />;
+      case 2:
+        return <Variant2 />;
+      case 3:
+        return <Variant3 />;
+      default:
+        return <Variant3 />;; // Handle other cases if needed
+    }
+  };
+
+  return (
+    <div>
+      {renderVariant()}
+    </div>
+  );
+};
+
 export const Variant1 = () => {
   const { businessName, businessLogo, colors } = useLoyaltyProgramStore();
 
@@ -101,7 +124,7 @@ export const Variant1 = () => {
     >
       <div className="flex items-center justify-center gap-10">
         {businessLogo ? (
-          <Image alt="" src={businessLogo} width={100} height={100} />
+          <Image alt="" src={businessLogo} width={100} height={100} className="rounded-lg"/>
         ) : null}
 
         <p className="text-4xl font-semibold" style={{ color: colors[0] }}>
@@ -110,6 +133,60 @@ export const Variant1 = () => {
       </div>
       <CurrentStamps />
       <Contact />
+    </div>
+  );
+};
+
+export const Variant2 = () => {
+  const { businessName, businessLogo, colors } = useLoyaltyProgramStore();
+
+  return (
+    <div
+      className="border-black border-2 rounded-lg flex flex-col gap-[13px] drop-shadow-lg"
+      style={{ backgroundColor: colors[1] }}
+    >
+      <div className="h-[15px]" style={{ backgroundColor: colors[0] }}></div>
+      <div className="flex flex-col gap-7 px-5">
+        <div className="flex items-center justify-center gap-10">
+          {businessLogo ? (
+            <Image alt="" src={businessLogo} width={100} height={100} className="rounded-lg"/>
+          ) : null}
+
+          <p className="text-4xl font-semibold" style={{ color: colors[0] }}>
+            {businessName}
+          </p>
+        </div>
+        <CurrentStamps />
+        <Contact />
+      </div>
+      <div className="h-[15px]" style={{ backgroundColor: colors[0] }}></div>
+    </div>
+  );
+};
+
+export const Variant3 = () => {
+  const { businessName, businessLogo, colors } = useLoyaltyProgramStore();
+
+  return (
+    <div
+      className="border-black border-2 rounded-lg py-7 flex flex-col gap-7 drop-shadow-lg"
+      style={{ backgroundColor: colors[1] }}
+    >
+      <div className=" flex flex-col gap-7 px-5">
+        <div className="flex items-center justify-center gap-10">
+          {businessLogo ? (
+            <Image alt="" src={businessLogo} width={100} height={100} className="rounded-lg" />
+          ) : null}
+
+          <p className="text-4xl font-semibold" style={{ color: colors[0] }}>
+            {businessName}
+          </p>
+        </div>
+        <CurrentStamps />
+      </div>
+      <div className="flex items-center justify-center" style={{ backgroundColor: colors[2] }}>
+        <Contact />
+      </div>
     </div>
   );
 };

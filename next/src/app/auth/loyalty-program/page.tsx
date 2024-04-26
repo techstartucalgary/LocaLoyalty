@@ -27,7 +27,7 @@ import { useEffect } from "react";
 import {
   LoyaltyProgress,
   RewardsPreview,
-  Variant1,
+  Variant,
 } from "./LoyaltyCardVariations";
 import { SecretQRSection } from "./QRCodeSections";
 
@@ -167,7 +167,7 @@ export default function LoyaltyProgram() {
               Loyalty Program Preview
             </p>
             <div className="mx-auto flex flex-col gap-5 w-5/6">
-              <Variant1 />
+              <Variant />
               <RewardsPreview />
             </div>
           </div>
