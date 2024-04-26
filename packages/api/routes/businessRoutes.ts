@@ -54,7 +54,6 @@ const s3 = new S3Client({
 
 // Sample route
 router.get("/sample", async (req: Request, res: Response) => {
-  await assignVendorOnboardingTasks(req.userId);
   res.send({ message: "This is a sample response" });
 });
 
