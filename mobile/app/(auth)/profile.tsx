@@ -1,6 +1,26 @@
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { useState } from "react";
-import { useUser } from "@clerk/clerk-expo";
+import { useAuth, useUser } from "@clerk/clerk-expo";
+import { Link } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+
+export const LogoutButton = () => {
+  const { signOut } = useAuth();
+
+  const doLogout = () => {
+    signOut();
+  };
+
+  return (
+    <TouchableOpacity
+      onPress={doLogout}
+      className="flex flex-row items-center mr-5 space-x-1"
+    >
+      <Text>Logout</Text>
+      <Ionicons name="log-out-outline" size={24} color={"#000000"} />
+    </TouchableOpacity>
+  );
+};
 
 const Profile = () => {
   const { user } = useUser();
@@ -70,6 +90,10 @@ const Profile = () => {
           Update account
         </Text>
       </TouchableOpacity>
+      <Link className="pt-4" href={"/tutorial"}>
+        <Text>go to tutorial</Text>
+      </Link>
+      <LogoutButton></LogoutButton>
     </View>
   );
 };

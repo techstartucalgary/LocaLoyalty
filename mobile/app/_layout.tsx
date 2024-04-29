@@ -48,7 +48,7 @@ const InitialLayout = () => {
       if (!inTabsGroup && newUser) {
         router.replace("/tutorial");
       } else if (!inTabsGroup) {
-        router.replace("/home");
+        router.replace("/card");
       }
     } else if (!isSignedIn) {
       router.replace("login");

@@ -36,6 +36,8 @@ const Reward = ({
 	const {
 		currentBusinessName,
 		currentCompletedStamps,
+		currentPrimaryColor,
+		currentColor3,
 		currentLoyaltyID,
 		walletRefetchFunc,
 	} = useWalletStore();
@@ -156,8 +158,10 @@ const Reward = ({
 				>
 					<Text className="text-xl font-semibold">{title}</Text>
 					<View className="flex-row items-center">
-						<Text className="text-2xl font-medium">{requiredStamps}</Text>
-						<ExtraSmallStamp className="scale-150 px-4" />
+						<Text className="text-2xl font-medium pr-3">{requiredStamps}</Text>
+						<View style={{ backgroundColor: currentPrimaryColor }} className="scale-150 p-1 rounded-full" >
+							<ExtraSmallStamp color={currentColor3} />
+						</View>
 					</View>
 				</View>
 			</TouchableOpacity>
@@ -249,8 +253,8 @@ const Map = ({
 			initialRegion={{
 				latitude: location.lat,
 				longitude: location.lng,
-				latitudeDelta: 0.0922,
-				longitudeDelta: 0.0421,
+				latitudeDelta: 0.010,
+				longitudeDelta: 0.010,
 			}}
 		>
 			<Marker coordinate={{ latitude: location.lat, longitude: location.lng }}>
@@ -342,6 +346,8 @@ const LoyaltyCardPage = () => {
 		currentCompletedStamps,
 		currentMaxStamps,
 		currentPrimaryColor,
+		currentColor2,
+		currentColor3,
 		currentCarry_over_amt,
 		currentSpending_per_point,
 	} = useWalletStore();
@@ -380,13 +386,13 @@ const LoyaltyCardPage = () => {
 			></View>
 			<View className="px-[10%] -mt-20">
 				<View className="w-full border-2 rounded-xl">
-					<View className="items-center px-6 bg-[#F7F8F8] rounded-xl">
+					<View style={{ backgroundColor: currentColor2 }} className="items-center px-6 rounded-xl">
 						<View className="flex-row pt-5 w-full items-center">
 							<Image
 								source={{ uri: currentBusinessLogo }}
 								className="rounded-lg w-16 h-16"
 							/>
-							<Text className="flex-1 text-2xl font-bold text-center">
+							<Text style={{ color: currentPrimaryColor }} className="flex-1 text-2xl font-bold text-center">
 								{currentBusinessName}
 							</Text>
 						</View>
@@ -394,24 +400,25 @@ const LoyaltyCardPage = () => {
 							data={stampArray}
 							renderItem={({ item }) => {
 								if (item) {
-									return <SmallStamp color={"#000"} />;
+									return <View style={{ backgroundColor: currentPrimaryColor }} className="rounded-full p-1 mx-[2px]"><SmallStamp color={currentColor3} /></View>;
 								} else {
-									return <SmallEmptyStamp />;
+									return <View className="pl-2"><SmallEmptyStamp /></View>
 								}
 							}}
 							className="w-full py-4"
 							horizontal={true}
+							contentContainerStyle={{ alignItems: "center" }}
 						></FlatList>
 						<View className="flex-row gap-2 py-4">
 							<View className="flex-row">
-								<AntDesign name="phone" size={16} color="black" />
-								<Text className="text-xs font-semibold pl-1">
+								<AntDesign name="phone" size={16} color={currentPrimaryColor} />
+								<Text style={{ color: currentPrimaryColor }} className="text-xs font-semibold pl-1">
 									{currentBusinessPhone}
 								</Text>
 							</View>
 							<View className="flex-row">
-								<AntDesign name="mail" size={16} color="black" />
-								<Text className="text-xs font-semibold pl-1">
+								<AntDesign name="mail" size={16} color={currentPrimaryColor} />
+								<Text style={{ color: currentPrimaryColor }} className="text-xs font-semibold pl-1">
 									{currentBusinessEmail}
 								</Text>
 							</View>
@@ -420,31 +427,7 @@ const LoyaltyCardPage = () => {
 				</View>
 			</View>
 
-			<View className="py-4 px-[10%]">
-				<View className="flex-row justify-between w-full">
-					<Text>Your Progress:</Text>
-					<Text className="text-[#7B7B7B]">{`$${currentCarry_over_amt} / $${currentSpending_per_point}`}</Text>
-				</View>
-				<View className="w-full py-1">
-					<View className="relative w-full h-3 border border-[#999999] rounded-full">
-						<View
-							style={{
-								backgroundColor: currentPrimaryColor,
-								width: `${
-									(currentCarry_over_amt / currentSpending_per_point) * 100
-								}%`,
-							}}
-							className="absolute h-full rounded-full"
-						></View>
-					</View>
-				</View>
-				<View className="flex-row justify-between w-full">
-					<Text>{`$${currentCarry_over_amt}`}</Text>
-					<Text>{`$${currentSpending_per_point}`}</Text>
-				</View>
-			</View>
-
-			<View className="flex-row px-[5%] w-full">
+			<View className="flex-row pt-8 px-[5%] w-full">
 				<Pressable
 					onPress={handleRewardButtonPress}
 					disabled={!isDetailsSelected}

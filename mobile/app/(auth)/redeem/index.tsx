@@ -40,6 +40,8 @@ const RedeemCard = ({
 	const { getToken } = useAuth();
 
 	const redeemReward = async () => {
+		console.log(loyalty_id);
+
 		return fetchAPI(
 			process.env.EXPO_PUBLIC_NGROK + "/customer/redeem",
 			"POST",

@@ -28,6 +28,8 @@ type Card = {
 	completedStamps: number;
 	maxStamps: number;
 	primaryColor: string;
+	color2: string;
+	color3: string;
 	spending_per_point: string;
 	carry_over_amt: number;
 	loyalty_id: number;
@@ -44,6 +46,8 @@ const Card = ({
 	completedStamps,
 	maxStamps,
 	primaryColor,
+	color2,
+	color3,
 	carry_over_amt,
 	spending_per_point,
 	loyalty_id,
@@ -59,6 +63,8 @@ const Card = ({
 		setCurrentCompletedStamps,
 		setCurrentMaxStamps,
 		setCurrentPrimaryColor,
+		setCurrentColor2,
+		setCurrentColor3,
 		setCurrentCarry_over_amt,
 		setCurrentSpending_per_point,
 		setCurrentLoyaltyID,
@@ -75,6 +81,8 @@ const Card = ({
 		setCurrentCompletedStamps(cardPressed.completedStamps);
 		setCurrentMaxStamps(cardPressed.maxStamps);
 		setCurrentPrimaryColor(cardPressed.primaryColor);
+		setCurrentColor2(cardPressed.color2);
+		setCurrentColor3(cardPressed.color3);
 		setCurrentCarry_over_amt(cardPressed.carry_over_amt);
 		setCurrentSpending_per_point(parseFloat(cardPressed.spending_per_point));
 		setCurrentLoyaltyID(cardPressed.loyalty_id);
@@ -107,6 +115,8 @@ const Card = ({
 							completedStamps: completedStamps,
 							maxStamps: maxStamps,
 							primaryColor: primaryColor,
+							color2: color2,
+							color3: color3,
 							carry_over_amt: carry_over_amt,
 							spending_per_point: spending_per_point,
 							loyalty_id: loyalty_id,
@@ -114,17 +124,17 @@ const Card = ({
 					}}
 				>
 					<View
-						style={{ backgroundColor: primaryColor }}
+						style={{ backgroundColor: color2 }}
 						className="h-full w-full shadow border-2 flex-1 rounded-xl py-2"
 					>
-						<View className="flex-1 items-center px-4 bg-[#F7F8F8]">
+						<View style={{ backgroundColor: color2 }} className="flex-1 items-center px-4">
 							<View className="flex-row px-4 py-6 w-full items-center">
 								<Image
 									source={{ uri: businessLogo }}
 									className="rounded-lg w-16 h-16"
 									style={{ backgroundColor: "#e1e4e8" }}
 								/>
-								<Text className=" text-3xl font-bold text-center flex-1">
+								<Text style={{ color: primaryColor }} className="text-3xl font-bold text-center flex-1">
 									{businessName}
 								</Text>
 							</View>
@@ -132,24 +142,25 @@ const Card = ({
 								data={stampArray}
 								renderItem={({ item }) => {
 									if (item) {
-										return <Stamp color={primaryColor} />;
+										return <View style={{ backgroundColor: primaryColor }} className="rounded-full p-[6px] mx-1"><Stamp color={color3} /></View>;
 									} else {
-										return <EmptyStamp />;
+										return <View className="pl-2"><EmptyStamp /></View>
 									}
 								}}
 								className="w-full py-2"
 								horizontal={true}
+								contentContainerStyle={{ alignItems: "center" }}
 							></FlatList>
 							<View className="flex-row gap-6 py-4">
 								<View className="flex-row">
-									<AntDesign name="phone" size={16} color="black" />
-									<Text className="text-xs font-semibold pl-1">
+									<AntDesign name="phone" size={16} color={primaryColor} />
+									<Text style={{ color: primaryColor }} className="text-xs font-semibold pl-1">
 										{businessPhone}
 									</Text>
 								</View>
 								<View className="flex-row">
-									<AntDesign name="mail" size={16} color="black" />
-									<Text className="text-xs font-semibold pl-1">
+									<AntDesign name="mail" size={16} color={primaryColor} />
+									<Text style={{ color: primaryColor }} className="text-xs font-semibold pl-1">
 										{businessEmail}
 									</Text>
 								</View>
@@ -158,7 +169,7 @@ const Card = ({
 					</View>
 				</TouchableOpacity>
 			</Link>
-		</View>
+		</View >
 	);
 };
 
@@ -200,6 +211,8 @@ const CardList = () => {
 		address: string;
 		phone: string;
 		color: string;
+		color2: string;
+		color3: string;
 		max_points: number;
 		spending_per_point: string;
 		business_logo: string;
@@ -210,6 +223,9 @@ const CardList = () => {
 		vendor_id: number;
 		loyalty_id: number;
 	}[] = data;
+
+	console.log(`cardData`, cardData);
+
 
 	return (
 		<View className="items-center h-full w-full">
@@ -237,6 +253,8 @@ const CardList = () => {
 								completedStamps={item.points_amt} // Get the number of completed stamps for this user
 								maxStamps={item.max_points}
 								primaryColor={item.color}
+								color2={item.color2}
+								color3={item.color3}
 								spending_per_point={item.spending_per_point}
 								carry_over_amt={item.carry_over_amt}
 								loyalty_id={item.loyalty_id}

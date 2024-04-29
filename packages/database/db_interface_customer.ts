@@ -241,6 +241,8 @@ export async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
     address: string | null;
     phone: string | null;
     color: string | null;
+    color2: string | null;
+    color3: string | null;
     max_points: number | null;
     spending_per_point: string | null;
     business_logo: string | null;
@@ -249,6 +251,7 @@ export async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
     points_amt: number;
     carry_over_amt: number;
     vendor_id: number;
+    loyalty_id: number;
   };
 
   let loyaltyCardInfo: LoyaltyCard[] = [];
@@ -265,6 +268,8 @@ export async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
           address: schema.vendor.address,
           phone: schema.vendor.phone,
           color: schema.vendor.color,
+          color2: schema.vendor.color2,
+          color3: schema.vendor.color3,
           max_points: schema.vendor.max_points,
           spending_per_point: schema.vendor.spending_per_point,
           business_logo: schema.vendor.business_logo,
@@ -309,6 +314,7 @@ export async function getAllLoyaltyCardsOfCustomer(customer_id: number) {
         points_amt: card.points_amt,
         carry_over_amt: parseFloat(card.carry_over_amt),
         vendor_id: card.program_id,
+        loyalty_id: card.loyalty_id,
       });
     }
   }
@@ -359,4 +365,80 @@ export async function editCustomer(
               return null
           }     
           */
+}
+
+export async function redeemRewardUpdatePoints(
+  loyalty_id: number,
+  reward_id: number
+) {
+  const loyaltyCardInfo = await db
+    .select()
+    .from(schema.loyalty_card)
+    .where(eq(schema.loyalty_card.loyalty_id, loyalty_id));
+
+  //if there is an error return null
+  if (Object.keys(loyaltyCardInfo).length === 0) {
+    console.log("Database query failed");
+    return false;
+  }
+
+  const rewardInfo = await db
+    .select()
+    .from(schema.reward)
+    .where(eq(schema.reward.reward_id, reward_id));
+
+  //if there is an error return null
+  if (Object.keys(rewardInfo).length === 0) {
+    console.log("Database query failed");
+    return false;
+  }
+
+  console.log("HERE");
+
+  // Check if the customer is allowed to redeem the reward
+  if (loyaltyCardInfo[0].points_amt < rewardInfo[0].points_cost) {
+    return false;
+  }
+
+  await db
+    .update(schema.loyalty_card)
+    .set({
+      points_amt: sql`${schema.loyalty_card.points_amt} - ${rewardInfo[0].points_cost}`, // Decrement the points_amt on the loyalty card by the reward point cost
+    })
+    .where(eq(schema.loyalty_card.loyalty_id, loyalty_id));
+}
+
+export async function authenticateBarcode(barcodeData: any) {
+  console.log(`Inside auth Barcode`, barcodeData);
+
+  const vendorQRCode = await db
+    .select()
+    .from(schema.vendor)
+    .where(eq(schema.vendor.qr_code, barcodeData));
+
+  console.log(`here`, vendorQRCode[0].vendor_id);
+
+  if (vendorQRCode.length > 0) {
+    return vendorQRCode[0].vendor_id
+  } else {
+    return null
+  }
+}
+
+export async function addStampsToLoyaltyCard(customer_id: number, vendor_id: number, stampsToAdd: number) {
+  console.log(`Inside addStampsToLoyaltyCard customer_ID`, customer_id);
+  console.log(`Inside addStampsToLoyaltyCard vendor_id`, vendor_id);
+  console.log(`Inside addStampsToLoyaltyCard stampsToAdd`, stampsToAdd);
+
+  try {
+    await db
+      .update(schema.loyalty_card)
+      .set({
+        points_amt: sql`${schema.loyalty_card.points_amt} + ${stampsToAdd}`,
+      })
+      .where(and(eq(schema.loyalty_card.program_id, vendor_id), eq(schema.loyalty_card.customer_id, customer_id)));
+  } catch (err) {
+    console.error(err)
+  }
+
 }

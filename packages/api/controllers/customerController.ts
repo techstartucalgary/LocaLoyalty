@@ -7,6 +7,7 @@ import {
   getAllVendorsExceptWallet,
   redeemRewardUpdatePoints,
   authenticateBarcode,
+  addStampsToLoyaltyCard,
 } from "../../database/db_interface_customer";
 
 // Method to list all vendors
@@ -148,7 +149,7 @@ export const getRedeemables = async (req: Request, res: Response) => {
 export const redeemReward = async (req: Request, res: Response) => {
   try {
     // Retrieve Clerk user ID from the authentication information
-    const clerkId = req.auth.userId;
+    const clerkId = req.userId;
 
     if (!clerkId) {
       return res.status(401).json({ message: "User not authenticated" });
@@ -164,8 +165,8 @@ export const redeemReward = async (req: Request, res: Response) => {
     console.log(`customer`, customer);
     console.log(`req body`, req.body);
 
-    const loyalty_id = parseInt(req.body.loyalty_id);
-    const reward_id = parseInt(req.body.reward_id);
+    const loyalty_id = req.body.loyalty_id;
+    const reward_id = req.body.reward_id;
 
     console.log(loyalty_id);
     console.log(reward_id);
@@ -191,7 +192,7 @@ export const redeemReward = async (req: Request, res: Response) => {
 export const scanBarcode = async (req: Request, res: Response) => {
   try {
     // Retrieve Clerk user ID from the authentication information
-    const clerkId = req.auth.userId;
+    const clerkId = req.userId;
 
     if (!clerkId) {
       return res.status(401).json({ message: "User not authenticated" });
@@ -207,22 +208,29 @@ export const scanBarcode = async (req: Request, res: Response) => {
     console.log(`customer`, customer);
     console.log(`req body`, req.body);
 
-    const barcodeData = parseInt(req.body.barcodeData);
+    const barcodeData = req.body.barcodeData;
 
     console.log(barcodeData);
 
-    const authenticated = await authenticateBarcode(barcodeData);
+    const vendor_id = await authenticateBarcode(barcodeData);
 
-    if (authenticated) {
+    console.log(`here2`, vendor_id);
+
+
+    if (vendor_id) {
+      console.log("HEREE");
+
       // Send the success message back in the response
       res.status(200).json({
         success: true,
         message: "Successfully scanned barcode and authenticated",
+        vendor_id: vendor_id,
       });
     } else {
+      console.log("HERE2@");
       res.status(403).json({
         success: false,
-        message: "Unknown/unauthenticated barcode",
+        message: "Unknown/unauthenticated/invalid QR code",
       });
     }
   } catch (error) {
@@ -230,5 +238,42 @@ export const scanBarcode = async (req: Request, res: Response) => {
     res
       .status(500)
       .json({ message: "Internal server error. Error scanning barcode" });
+  }
+};
+
+export const addStamps = async (req: Request, res: Response) => {
+  try {
+    // Retrieve Clerk user ID from the authentication information
+    const clerkId = req.userId;
+
+    if (!clerkId) {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
+
+    // Use the helper function to get the customer ID based on Clerk ID
+    const customer = await getCustomerFromClerkID(clerkId);
+
+    if (!customer) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+
+    // Assuming the customer object contains a customer_id field
+    const customer_id = customer[0].customer_id;
+
+    console.log(`customer`, customer);
+    console.log(`req body`, req.body);
+
+    await addStampsToLoyaltyCard(customer_id, req.body.vendor_id, req.body.stampsToAdd);
+
+    // Send the success message back in the response
+    res.status(200).json({
+      success: true,
+      message: "Successfully added stamps to loyalty card",
+    });
+  } catch (error) {
+    console.error("Error adding stamps to loyalty card: ", error);
+    res
+      .status(500)
+      .json({ message: "Internal server error. Error adding stamps to loyalty card" });
   }
 };
